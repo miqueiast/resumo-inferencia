@@ -1,0 +1,246 @@
+% ARQUIVO: parte1_fundamentos.tex
+% (Este arquivo será "puxado" pelo main.tex)
+
+% -------------------------------------------------------------------
+% SEÇÃO 1: Modelagem e Distribuições-Chave (Listas 1 e 3)
+% -------------------------------------------------------------------
+\section{Revisão de Distribuições e Modelagem (Listas 1 e 3)}
+\label{sec:modelagem}
+
+Esta seção cobre os exercícios que pedem para você (a) propor um modelo probabilístico para uma situação real ou (b) calcular probabilidades usando um modelo já estabelecido.
+
+% ---------------------------------
+\subsection{Como Identificar o Exercício}
+O enunciado descreve um "fenômeno aleatório" em vez de fornecer uma fórmula matemática explícita. Ele usa frases-chave que se conectam diretamente a uma distribuição:
+\begin{itemize}
+    \item "Itens classificados como conforme ou não-conforme" ou "número de sucessos em N tentativas" $\rightarrow$ \textbf{Binomial}.
+    \item "Número de carros que chegam... durante um período de uma hora" ou "pedidos por hora" $\rightarrow$ \textbf{Poisson}.
+    \item "Tempo... antes de apresentar defeitos" ou "tempo até o próximo evento" $\rightarrow$ \textbf{Exponencial}.
+    \item "Valores... seguem uma distribuição normal com média..." ou "Medidas antropométricas (peso e altura)" $\rightarrow$ \textbf{Normal}.
+    \item "Tempo de demora pode ser qualquer tempo entre 1 e 20 minutos" $\rightarrow$ \textbf{Uniforme} (Discreta ou Contínua).
+    \item "Lançamento de um dado 12 vezes, $X_i$ é o número de vezes que a face $i$ caiu" $\rightarrow$ \textbf{Multinomial}.
+\end{itemize}
+
+% ---------------------------------
+\subsection{Teoria Necessária: O "Cartão de ID" das Distribuições}
+Para resolver esses problemas, você precisa saber o "Cartão de Identidade" das distribuições mais comuns.
+
+\begin{table}[h]
+\centering
+\caption{Resumo das Principais Distribuições}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Distribuição} & \textbf{Y (O que mede)} & \textbf{Suporte} & \textbf{Parâmetros} & \textbf{E(Y) / V(Y)} \\ \midrule
+Binomial($n, p$) & Nº de sucessos & $k \in \{0, ..., n\}$ & $n, p$ & $np$ / $np(1-p)$ \\
+Poisson($\lambda$) & Nº de eventos & $k \in \{0, 1, ...\}$ & $\lambda$ & $\lambda$ / $\lambda$ \\
+Exponencial($\theta$) & Tempo até evento & $y > 0$ & $\theta$ (taxa) & $1/\theta$ / $1/\theta^2$ \\
+Normal($\mu, \sigma^2$) & Medida contínua & $y \in \mathbb{R}$ & $\mu, \sigma^2$ & $\mu$ / $\sigma^2$ \\
+Uniforme($a, b$) & Sorteio em $\mathbb{R}$ & $y \in [a, b]$ & $a, b$ & $\frac{a+b}{2}$ / $\frac{(b-a)^2}{12}$ \\
+Gama($\alpha, \beta$) & Tempo até $\alpha$-ésimo evento & $y > 0$ & $\alpha, \beta$ & $\alpha\beta$ / $\alpha\beta^2$ \\ \bottomrule
+\end{tabular}
+\label{tab:dist_summary}
+\end{table}
+
+\noindent \textit{Nota:} A parametrização importa! A Exponencial pode ser por taxa ($\theta$) ou escala ($\beta=1/\theta$). A Gama também tem variações. Verifique sempre a f.d.p. usada.
+
+% ---------------------------------
+\subsection{Passo a Passo para Resolução (Modelagem)}
+\begin{enumerate}
+    \item \textbf{Identifique a Variável Aleatória (V.A.):} Qual é o $Y$ no problema? O que está sendo medido? (Contagem, Tempo, Sucesso/Fracasso, Medida Física?).
+    \item \textbf{Identifique o Suporte:} Quais valores $Y$ pode assumir? (Discreto: $\{0, 1, 2, ...\}$? Contínuo: $Y > 0$?). Isso elimina 50% das distribuições.
+    \item \textbf{Conecte ao Processo:} Use as palavras-chave da Seção \ref{sec:modelagem} para escolher a distribuição (Binomial, Poisson, Normal, etc.).
+    \item \textbf{Extraia os Parâmetros:} O texto forneceu $n$ e $p$? Ou $\lambda$? Ou $\mu$ e $\sigma^2$?
+    \item \textbf{Formule o Problema:} Escreva o que o problema pede em notação matemática.
+    \begin{itemize}
+        \item "Pelo menos 10" $\rightarrow \Prob(Y \ge 10)$
+        \item "Não mais de 5" $\rightarrow \Prob(Y \le 5)$
+        \item "Mais de 2" $\rightarrow \Prob(Y > 2)$
+    \end{itemize}
+    \item \textbf{Calcule:}
+    \begin{itemize}
+        \item Para Normal: Padronize $Z = \frac{Y - \mu}{\sigma}$ e use a tabela Z.
+        \item Para Binomial/Poisson: Use a fórmula da f.p. $P(Y=k)$ ou, para probabilidades acumuladas, use a Normal como aproximação (se $n$ for grande ou $\lambda$ for grande).
+    \end{itemize}
+\end{enumerate}
+
+
+% -------------------------------------------------------------------
+% SEÇÃO 2: V.A. Unidimensionais (Lista 2)
+% -------------------------------------------------------------------
+\section{Propriedades de V.A. Unidimensionais (Lista 2)}
+\label{sec:va_uni}
+Esta seção cobre exercícios que fornecem uma V.A. $Y$ (via tabela $p(y)$ ou fórmula $f(y)$) e pedem suas propriedades fundamentais, como Esperança e Variância, ou para verificar se uma função é uma f.d.p. válida.
+
+% ---------------------------------
+\subsection{Como Identificar o Exercício}
+O enunciado fornece uma função matemática explícita e pede:
+\begin{itemize}
+    \item "Encontre a esperança e variância...".
+    \item "Verifique se... é uma função densidade de probabilidade".
+    \item "Calcule $E(Y)$ e $E(Y(Y-1))$...".
+\end{itemize}
+A V.A. é dada por:
+\begin{itemize}
+    \item \textbf{Caso Discreto:} Uma tabela $p(y_i)$ ou uma fórmula $p(y; \theta)$ com suporte em $y=1, 2, ...$.
+    \item \textbf{Caso Contínuo:} Uma fórmula $f(y)$ com um intervalo, ex: "se $0 \le y \le 1$".
+\end{itemize}
+
+% ---------------------------------
+\subsection{Teoria Necessária}
+
+\begin{definicao}[f.d.p. Válida]
+Uma função $f(y)$ é uma f.d.p. válida se:
+\begin{enumerate}
+    \item $f(y) \ge 0$ para todo $y$ no suporte.
+    \item $\int_{-\infty}^{\infty} f(y) dy = 1$ (ou $\sum p(y_i) = 1$ no caso discreto).
+\end{enumerate}
+\end{definicao}
+
+\begin{definicao}[Esperança (Valor Esperado)]
+É a média ponderada de $Y$:
+$$ \E(Y) = \begin{cases} 
+      \sum_{y} y \cdot p(y) & \text{Discreto} \\
+      \int_{-\infty}^{\infty} y \cdot f(y) dy & \text{Contínuo}
+   \end{cases} $$
+\end{definicao}
+
+\begin{propriedade}[Lei do Estatístico Inconsciente (LOTUS)]
+Para calcular a esperança de uma função de $Y$, (ex: $g(Y) = Y^2$), não é preciso achar a f.d.p. de $Y^2$. Basta aplicar:
+$$ \E(g(Y)) = \begin{cases} 
+      \sum_{y} g(y) \cdot p(y) & \text{Discreto} \\
+      \int_{-\infty}^{\infty} g(y) \cdot f(y) dy & \text{Contínuo}
+   \end{cases} $$
+\end{propriedade}
+
+\begin{definicao}[Variância]
+É a esperança do desvio quadrático da média: $\V(Y) = \E[(Y - \E(Y))^2]$.
+Na prática, usamos a fórmula computacional:
+$$ \V(Y) = \E(Y^2) - [\E(Y)]^2 $$
+Onde $\E(Y^2)$ é calculado usando LOTUS (com $g(Y) = Y^2$).
+\end{definicao}
+
+% ---------------------------------
+\subsection{Passo a Passo para Resolução}
+
+\subsubsection{Verificando se $f(y)$ é f.d.p. válida}
+\begin{enumerate}
+    \item \textbf{Condição 1 (Não-negatividade):} Verifique se $f(y) \ge 0$ dentro do suporte. Se for $f(y)=3y$ em $[0, 1]$, é $\ge 0$. Se fosse $f(y) = y-3$ em $[0, 4]$, falharia.
+    \item \textbf{Condição 2 (Integral unitária):} Calcule $\int_{-\infty}^{\infty} f(y) dy$. Lembre-se que a integral só é não-nula dentro do suporte. Se o resultado for 1, ela é válida. Se for 0, $\infty$, ou qualquer outro número (ex: 3/2), ela não é.
+\end{enumerate}
+
+\subsubsection{Calculando E(Y) e V(Y)}
+\begin{enumerate}
+    \item \textbf{Identificar o tipo:} É discreta (tabela/soma) ou contínua (fórmula/integral)?
+    \item \textbf{Calcular $\E(Y)$:}
+    \begin{itemize}
+        \item \textbf{Discreta:} $\E(Y) = \sum y \cdot p(y)$.
+        \item \textbf{Contínua:} $\E(Y) = \int y \cdot f(y) dy$. (Ex: $f(y)=2y$ em $[0,1]$ $\rightarrow \E(Y) = \int_0^1 y \cdot (2y) dy = \int_0^1 2y^2 dy$).
+    \end{itemize}
+    \item \textbf{Calcular $\E(Y^2)$:}
+    \begin{itemize}
+        \item \textbf{Discreta:} $\E(Y^2) = \sum y^2 \cdot p(y)$.
+        \item \textbf{Contínua:} $\E(Y^2) = \int y^2 \cdot f(y) dy$. (Ex: $f(y)=2y$ em $[0,1]$ $\rightarrow \E(Y^2) = \int_0^1 y^2 \cdot (2y) dy = \int_0^1 2y^3 dy$).
+    \end{itemize}
+    \item \textbf{Calcular $\V(Y)$:}
+    \begin{itemize}
+        \item Use a fórmula $\V(Y) = \E(Y^2) - [\E(Y)]^2$ com os valores dos passos 2 e 3.
+    \end{itemize}
+\end{enumerate}
+\textit{Dica (Lista 2, Ex 4):} Calcular $\E(Y(Y-1)) = \E(Y^2 - Y) = \E(Y^2) - \E(Y)$ é um atalho. Você pode achar $\E(Y^2)$ fazendo $\E(Y(Y-1)) + \E(Y)$ e então usar a fórmula da variância.
+
+% -------------------------------------------------------------------
+% SEÇÃO 3: V.A. Multidimensionais (Listas 2 e 3)
+% -------------------------------------------------------------------
+\section{V.A. Multidimensionais (Listas 2 e 3)}
+\label{sec:va_multi}
+Esta seção cobre exercícios que envolvem duas ou mais V.A.s simultaneamente. Os objetivos são encontrar distribuições marginais, condicionais, covariância e correlação.
+
+% ---------------------------------
+\subsection{Como Identificar o Exercício}
+O enunciado fornece:
+\begin{itemize}
+    \item Uma \textbf{tabela de dupla entrada} $p(y_1, y_2)$.
+    \item Uma \textbf{f.d.p. conjunta} $f(y_1, y_2)$ definida sobre uma região (ex: $0 < y_1 < y_2 < 1$).
+    \item Uma \textbf{Normal Bivariada/Multivariada} (BN/MVN), definida por um vetor de médias $\boldsymbol{\mu}$ e uma matriz de covariâncias $\boldsymbol{\Sigma}$.
+\end{itemize}
+O enunciado pede:
+\begin{itemize}
+    \item "Obtenha as distribuições marginais".
+    \item "Calcule a correlação entre X e Y".
+    \item "Mostre que são independentes".
+    \item "Encontre a distribuição condicional $f(y_1 | y_2)$".
+    \item "Calcule $P(1/4 < Y_1 < 1/2 | Y_2 = 5/8)$".
+    \item "Encontre a distribuição de $X_0 - X_2$" (a partir de uma MVN).
+\end{itemize}
+
+% ---------------------------------
+\subsection{Teoria Necessária}
+\begin{definicao}[Distribuição Marginal]
+A distribuição de apenas uma V.A., ignorando as outras.
+$$ f_X(x) = \int_{-\infty}^{\infty} f(x,y) dy \quad \text{(ou} \quad p(x) = \sum_{y} p(x,y) \text{)} $$
+(Integre/some a variável que você quer "eliminar").
+\end{definicao}
+
+\begin{definicao}[Distribuição Condicional]
+A distribuição de $Y$ \textit{dado que} $X$ assumiu um valor $x$.
+$$ f(y|x) = \frac{f(x,y)}{f_X(x)} \quad \text{(Conjunta dividida pela Marginal)} $$
+\end{definicao}
+
+\begin{definicao}[Independência]
+$X$ e $Y$ são independentes se e somente se:
+$$ f(x,y) = f_X(x) \cdot f_Y(y) \quad \text{(ou} \quad p(x,y) = p(x) \cdot p(y) \text{)} $$
+\end{definicao}
+
+\begin{definicao}[Covariância e Correlação]
+Mede a associação linear entre $X$ e $Y$.
+$$ Cov(X,Y) = \E(XY) - \E(X)\E(Y) $$
+$$ \rho(X,Y) = \frac{Cov(X,Y)}{\sqrt{\V(X)\V(Y)}} = \frac{Cov(X,Y)}{\sigma_X \sigma_Y} $$
+Onde $\E(XY) = \iint xy \cdot f(x,y) dx dy$ (ou $\sum\sum xy \cdot p(x,y)$).
+\end{definicao}
+
+\begin{propriedade}[Normal Multivariada (MVN)]
+Se $\boldsymbol{Y} \sim N_k(\boldsymbol{\mu}, \boldsymbol{\Sigma})$, qualquer combinação linear de $\boldsymbol{Y}$ também é Normal.
+Ex (Lista 3, Ex 9): $Y = (X_0, X_2, X_4)^T \sim N_3(\boldsymbol{\mu}, \boldsymbol{\Sigma})$.
+A V.A. $W = X_0 - X_2$ é uma combinação linear: $W = (1, -1, 0) \cdot \boldsymbol{Y}$.
+Portanto, $W$ também é Normal.
+\begin{itemize}
+    \item $\E(W) = \E(X_0 - X_2) = \E(X_0) - \E(X_2) = \mu_0 - \mu_2$.
+    \item $\V(W) = \V(X_0 - X_2) = \V(X_0) + \V(X_2) - 2Cov(X_0, X_2)$.
+    \item Todos esses valores $(\mu_0, \mu_2, \V(X_0), \V(X_2), Cov(X_0, X_2))$ são lidos diretamente do vetor $\boldsymbol{\mu}$ e da matriz $\boldsymbol{\Sigma}$.
+\end{itemize}
+\end{propriedade}
+
+% ---------------------------------
+\subsection{Passo a Passo para Resolução}
+
+\subsubsection{Caso 1: Tabela de Dupla Entrada (Ex: Lista 2, Ex 6, 8)}
+\begin{enumerate}
+    \item \textbf{Marginais $p(x)$ e $p(y)$:} Some os valores das linhas (para $p(x)$) e das colunas (para $p(y)$).
+    \item \textbf{Esperanças $\E(X), \E(Y)$:} Use as distribuições marginais (que são unidimensionais) e o método da Seção \ref{sec:va_uni}.
+    \item \textbf{Variâncias $\V(X), \V(Y)$:} Calcule $\E(X^2)$ e $\E(Y^2)$ a partir das marginais e use $\V(X) = \E(X^2) - [\E(X)]^2$.
+    \item \textbf{Esperança Conjunta $\E(XY)$:} Crie uma nova "célula" na tabela $g(x,y) = x \cdot y$. Calcule $\E(XY) = \sum_{x} \sum_{y} (x \cdot y) \cdot p(x,y)$.
+    \item \textbf{Covariância:} $Cov(X,Y) = \E(XY) - \E(X)\E(Y)$.
+    \item \textbf{Correlação:} $\rho(X,Y) = Cov(X,Y) / (\sigma_X \sigma_Y)$.
+    \item \textbf{Independência:} Cheque se $p(x,y) = p(x) \cdot p(y)$ para \textbf{todas} as células. Se falhar em uma, não são independentes.
+\end{enumerate}
+
+\subsubsection{Caso 2: f.d.p. Conjunta $f(x,y)$ (Ex: Lista 2, Ex 7, 9, 10)}
+\begin{enumerate}
+    \item \textbf{Constantes (Ex: $c_1, c_2$):} Use o fato de que f.d.p.s integram 1.
+    \begin{itemize}
+        \item Se $f(y_2) = c_2 y_2^4$ em $0 < y_2 < 1$, então $\int_0^1 c_2 y_2^4 dy_2 = 1 \Rightarrow c_2 [\frac{y_2^5}{5}]_0^1 = 1 \Rightarrow c_2 = 5$.
+        \item O mesmo vale para $f(y_1|y_2)$.
+    \end{itemize}
+    \item \textbf{Marginal $f_X(x)$:} Integre a conjunta em $y$: $f_X(x) = \int_{y_{min}}^{y_{max}} f(x,y) dy$. \textbf{Cuidado com os limites de integração!} Se $f(x,y)=2$ para $0<x<y<1$, então $f_X(x) = \int_x^1 2 dy = 2(1-x)$ para $0<x<1$.
+    \item \textbf{Marginal $f_Y(y)$:} Integre a conjunta em $x$: $f_Y(y) = \int_{x_{min}}^{x_{max}} f(x,y) dx$. No exemplo $0<x<y<1$, $f_Y(y) = \int_0^y 2 dx = 2y$ para $0<y<1$.
+    \item \textbf{Independência:} Verifique se $f(x,y) = f_X(x) \cdot f_Y(y)$.
+    \begin{itemize}
+        \item No exemplo $f(x,y)=2$, temos $f_X(x)f_Y(y) = 2(1-x) \cdot 2y \neq 2$. Não são independentes.
+        \item Se o suporte $0<x<y<1$ depende um do outro, elas \textbf{não podem} ser independentes.
+    \end{itemize}
+    \item \textbf{Condicional $f(x|y)$:} Use a fórmula $f(x|y) = f(x,y) / f_Y(y)$.
+    \begin{itemize}
+        \item No exemplo $f(x,y)=2$, temos $f(x|y) = 2 / (2y) = 1/y$, para $0<x<y$.
+    \end{itemize}
+    \item \textbf{Probabilidade Condicional:} Para $P(a < X < b | Y=y_0)$, apenas integre a f.d.p. condicional: $\int_a^b f(x | y_0) dx$.
+\end{enumerate}

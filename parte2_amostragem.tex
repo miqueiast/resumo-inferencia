@@ -1,0 +1,223 @@
+% ARQUIVO: parte2_amostragem.tex
+% (Este arquivo será "puxado" pelo main.tex)
+
+% -------------------------------------------------------------------
+% SEÇÃO 4: Teoremas Limite (Lista 4)
+% -------------------------------------------------------------------
+\section{Ferramentas Avançadas e Teoremas Limite (Lista 4)}
+\label{sec:limite}
+
+Esta seção cobre os resultados teóricos que formam a base da inferência. Os exercícios pedem por "limites" (Desigualdades), "convergência" (LGN) ou "distribuição aproximada" (TCL).
+
+% ---------------------------------
+\subsection{Como Identificar o Exercício}
+O enunciado usa palavras-chave específicas:
+\begin{itemize}
+    \item "Dê um limite superior para a proporção..." $\rightarrow$ \textbf{Markov} ou \textbf{Chebyshev}.
+    \item "Encontre um limite para a probabilidade..." $\rightarrow$ \textbf{Chebyshev}.
+    \item "...converge em probabilidade para..." $\rightarrow$ \textbf{Lei dos Grandes Números (LGN)}.
+    \item "Encontre a distribuição aproximada..." $\rightarrow$ \textbf{Teorema Central do Limite (TCL)}.
+    \item "Argumente sobre a afirmação $t \rightarrow Z$" $\rightarrow$ \textbf{TCL + Teorema de Slutsky}.
+\end{itemize}
+
+% ---------------------------------
+\subsection{Teoria e Passo a Passo}
+
+\subsubsection{Desigualdades de Markov e Chebyshev}
+Usadas quando você sabe muito pouco sobre a distribuição (apenas média e/ou variância) e quer um limite "grosseiro" para uma probabilidade.
+
+\begin{itemize}
+    \item \textbf{Desigualdade de Markov:} Para uma V.A. não-negativa $X$ e $a > 0$:
+        $$ \Prob(X \ge a) \le \frac{\E(X)}{a} $$
+    \item \textbf{Desigualdade de Chebyshev:} Para qualquer V.A. $X$ com média $\mu$ e variância $\sigma^2$:
+        $$ \Prob(|X - \mu| \ge k) \le \frac{\sigma^2}{k^2} $$
+\end{itemize}
+\textbf{Exemplo (Lista 4, Q3):} $P(|X - 50| \ge 10) \le \frac{V(X)}{10^2} = \frac{25}{100} = \frac{1}{4}$.
+
+\subsubsection{Lei dos Grandes Números (LGN)}
+\begin{teorema}[LGN Fraca]
+Se $Y_1, ..., Y_n$ são iid com $\E(Y_i) = \mu$ e $\V(Y_i) = \sigma^2 < \infty$, então a média amostral $\overline{Y}_n$ converge em probabilidade para $\mu$.
+$$ \overline{Y}_n \xrightarrow{p} \mu $$
+\end{teorema}
+\textbf{Interpretação:} À medida que sua amostra $n$ cresce, a média da amostra ($\overline{Y}$) fica arbitrariamente próxima da verdadeira média da população ($\mu$). Isso é o que justifica usar a média amostral como um estimador "bom".
+
+\subsubsection{Teorema Central do Limite (TCL)}
+\begin{teorema}[TCL de Lindeberg-Lévy]
+Se $Y_1, ..., Y_n$ são iid com $\E(Y_i) = \mu$ e $\V(Y_i) = \sigma^2 < \infty$, então a média amostral padronizada converge em distribuição para uma Normal Padrão.
+$$ Z_n = \frac{\overline{Y}_n - \mu}{\sigma / \sqrt{n}} \xrightarrow{d} N(0, 1) \quad \text{quando} \quad n \to \infty $$
+\end{teorema}
+\textbf{Interpretação:} Esta é a ferramenta mais poderosa da estatística. Ela diz que, para $n$ grande, \textbf{não importa a distribuição original de $Y$}, a \textbf{distribuição da média amostral $\overline{Y}$} será aproximadamente Normal:
+$$ \overline{Y} \stackrel{aprox.}{\sim} N\left(\mu, \frac{\sigma^2}{n}\right) $$
+É por isso que podemos usar a tabela Normal para aproximar probabilidades Binomiais (Lista 4, Q4) ou calcular probabilidades sobre $\overline{Y}$ de uma Exponencial (Lista 4, Q6).
+
+\subsubsection{Teorema de Slutsky}
+Usado para justificar por que podemos trocar $\sigma$ por $S$ em amostras grandes.
+\begin{teorema}[Slutsky]
+Se $X_n \xrightarrow{d} X$ e $Y_n \xrightarrow{p} c$ (uma constante), então:
+$X_n + Y_n \xrightarrow{d} X + c$ e $X_n \cdot Y_n \xrightarrow{d} X \cdot c$.
+\end{teorema}
+\textbf{Aplicação (Lista 4, Q9):} Por que $t \rightarrow Z$?
+$$ t = \frac{\overline{Y} - \mu}{S / \sqrt{n}} = \underbrace{\left(\frac{\overline{Y} - \mu}{\sigma / \sqrt{n}}\right)}_{\xrightarrow{d} Z \text{ (pelo TCL)}} \cdot \underbrace{\left(\frac{\sigma}{S}\right)}_{\xrightarrow{p} 1 \text{ (pois } S \xrightarrow{p} \sigma \text{ pela LGN)}} $$
+Pelo Teorema de Slutsky, $t \xrightarrow{d} Z \cdot 1 = Z$.
+
+% -------------------------------------------------------------------
+% SEÇÃO 5: As Distribuições Amostrais (Listas 5 e 6)
+% -------------------------------------------------------------------
+\section{Distribuições Amostrais (Listas 5 e 6)}
+\label{sec:amostrais}
+Esta seção trata das \textit{distribuições de probabilidade de estatísticas} (como $\overline{Y}$, $S^2$, $\hat{p}$). Saber qual distribuição usar é a habilidade fundamental para construir ICs e testes de hipótese.
+
+% ---------------------------------
+\subsection{Como Identificar o Exercício}
+O enunciado pede uma probabilidade sobre uma estatística amostral:
+\begin{itemize}
+    \item "Calcule $P(90 < \overline{Y} < 110)$".
+    \item "Qual a probabilidade da média amostral não diferir da média populacional por mais do que 5\%?".
+    \item "Calcule a probabilidade da variância amostral ser maior que 700".
+    \item "Qual a probabilidade de a diferença entre as médias amostrais ser maior que 50 pontos?".
+    \item "Qual a probabilidade... de obter uma razão [de variâncias] pelo menos tão grande quanto 2.5?".
+\end{itemize}
+
+% ---------------------------------
+\subsection{O Fluxograma da Inferência: Z, t, $\chi^2$ ou F?}
+Para resolver \textit{qualquer} exercício das Listas 5 e 6, use este fluxograma mental:
+
+\begin{enumerate}
+    \item \textbf{Qual é o parâmetro de interesse?}
+    \begin{itemize}
+        \item \textbf{Média ($\mu$) ou Proporção ($p$)} $\rightarrow$ Siga para o passo 2.
+        \item \textbf{Variância ($\sigma^2$)} $\rightarrow$ Siga para o passo 3.
+    \end{itemize}
+
+    \item \textbf{Inferência sobre Média(s) ou Proporção(ões):}
+    \begin{itemize}
+        \item \textbf{Uma Média ($\mu$):}
+        \begin{itemize}
+            \item A população é Normal E $\sigma$ é \textbf{conhecido}? $\rightarrow$ Use \textbf{Z (Normal)}.
+            $$ Z = \frac{\overline{Y} - \mu}{\sigma / \sqrt{n}} \sim N(0, 1) $$
+            \item A população é Normal E $\sigma$ é \textbf{desconhecido}? $\rightarrow$ Use \textbf{t (Student)}.
+            $$ t = \frac{\overline{Y} - \mu}{S / \sqrt{n}} \sim t_{n-1} $$
+            \item A população \textbf{não é} Normal (ou desconhecida), mas $n$ é \textbf{grande} ($n > 30$)? $\rightarrow$ Use \textbf{Z (TCL)}.
+        \end{itemize}
+        \item \textbf{Uma Proporção ($p$):}
+        \begin{itemize}
+            \item $n$ é grande ($np > 5$, $n(1-p) > 5$)? $\rightarrow$ Use \textbf{Z (TCL)}.
+            $$ Z = \frac{\hat{p} - p}{\sqrt{p(1-p)/n}} \stackrel{aprox.}{\sim} N(0, 1) $$
+        \end{itemize}
+        \item \textbf{Duas Médias ($\mu_1 - \mu_2$):}
+        \begin{itemize}
+            \item $\sigma_1$ e $\sigma_2$ são \textbf{conhecidos}? $\rightarrow$ Use \textbf{Z (Normal)}.
+            $$ Z = \frac{(\overline{Y}_1 - \overline{Y}_2) - (\mu_1 - \mu_2)}{\sqrt{\frac{\sigma_1^2}{n_1} + \frac{\sigma_2^2}{n_2}}} \sim N(0, 1) $$
+            \item $\sigma_1, \sigma_2$ desconhecidos, mas $n_1, n_2$ grandes? $\rightarrow$ Use \textbf{Z}, trocando $\sigma$ por $S$.
+            \item $\sigma_1, \sigma_2$ desconhecidos ($n$ pequeno)? $\rightarrow$ Use \textbf{t (Student)} (com $\nu$ complexo ou agrupado).
+        \end{itemize}
+    \end{itemize}
+
+    \item \textbf{Inferência sobre Variância(s):}
+    \begin{itemize}
+        \item \textbf{Uma Variância ($\sigma^2$):} População é Normal? $\rightarrow$ Use \textbf{$\chi^2$ (Qui-Quadrado)}.
+        $$ W = \frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1} $$
+        \item \textbf{Duas Variâncias ($\sigma_1^2, \sigma_2^2$):} Populações Normais e independentes? $\rightarrow$ Use \textbf{F (Snedecor-Fisher)}.
+        $$ F = \frac{S_1^2 / \sigma_1^2}{S_2^2 / \sigma_2^2} \sim F_{n_1-1, n_2-1} $$
+        (Se $\sigma_1^2 = \sigma_2^2$, a estatística simplifica para $F = S_1^2 / S_2^2$).
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{Passo a Passo para Calcular Probabilidades}
+\begin{enumerate}
+    \item \textbf{Identifique o Problema:} Ex: Calcular $P(S^2 > 700)$.
+    \item \textbf{Escolha a Estatística-Teste:} Pelo fluxograma, é sobre $\sigma^2 \rightarrow$ Usar $\chi^2$.
+    \item \textbf{Extraia os Dados:} $n=16$, $\sigma^2 = 600^2 = 360000$ (do $\sigma=600$).
+    \item \textbf{Transforme a Pergunta:} Você não pode calcular $P(S^2 > 700)$ diretamente. Você deve transformar $S^2$ na estatística $\chi^2$.
+    $$ P(S^2 > 700) = P\left( \frac{(n-1)S^2}{\sigma^2} > \frac{(16-1) \cdot 700}{360000} \right) $$
+    $$ = P\left( \chi^2_{15} > \frac{10500}{360000} \right) = P(\chi^2_{15} > 0.02916) $$
+    \item \textbf{Calcule:} Use a tabela ou software para encontrar a probabilidade (neste caso, será $\approx 1$).
+\end{enumerate}
+
+% -------------------------------------------------------------------
+% SEÇÃO 6: Intervalos de Confiança (IC) (Lista 6)
+% -------------------------------------------------------------------
+\section{Intervalos de Confiança (IC) (Lista 6)}
+\label{sec:ic}
+O IC é a primeira aplicação prática das distribuições amostrais. É um intervalo de valores plausíveis para um parâmetro populacional, baseado nos dados da amostra.
+
+% ---------------------------------
+\subsection{Como Identificar o Exercício}
+O enunciado é explícito:
+\begin{itemize}
+    \item "Encontre o intervalo de confiança para...".
+    \item "Construa um intervalo de confiança...".
+    \item "Calcule o intervalo de confiança de 95\% para a variância...".
+    \item "Explique a interpretação...".
+\end{itemize}
+
+% ---------------------------------
+\subsection{A Estrutura Geral (Para Médias e Proporções)}
+A maioria dos ICs segue a forma:
+$$ \text{Estimador} \pm \text{Margem de Erro} $$
+$$ \text{Estimador} \pm (\text{Valor Crítico}) \times (\text{Erro Padrão do Estimador}) $$
+\begin{itemize}
+    \item \textbf{Estimador:} O seu "melhor chute" (Ex: $\overline{Y}$, $\hat{p}$, $\overline{Y}_1 - \overline{Y}_2$).
+    \item \textbf{Valor Crítico:} O quantil da distribuição amostral (Z, t) que define o seu nível de confiança (Ex: $z_{\alpha/2}$, $t_{\alpha/2, n-1}$).
+    \item \textbf{Erro Padrão:} O desvio padrão da distribuição amostral do estimador (Ex: $\sigma/\sqrt{n}$, $S/\sqrt{n}$, $\sqrt{\hat{p}(1-\hat{p})/n}$).
+\end{itemize}
+
+% ---------------------------------
+\subsection{Passo a Passo (Receitas de Bolo para ICs)}
+
+\subsubsection{IC para Média $\mu$, com $\sigma$ Conhecido}
+\textbf{Contexto:} Lista 6, Q5.
+\textbf{Fórmula:} $\overline{Y} \pm z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}}$
+\textbf{Passos:}
+\begin{enumerate}
+    \item Encontre $\overline{Y}$, $\sigma$, $n$.
+    \item Determine o nível de confiança (ex: 95\%) e ache $\alpha$ (ex: 5\% = 0.05).
+    \item Encontre $z_{\alpha/2}$ (ex: $z_{0.025} = 1.96$).
+    \item Calcule $\overline{Y} - 1.96 \cdot (\sigma/\sqrt{n})$ e $\overline{Y} + 1.96 \cdot (\sigma/\sqrt{n})$.
+\end{enumerate}
+\textit{Nota:} Q5 mostra que $\uparrow n$ ou $\downarrow$Confiança $\Rightarrow$ $\downarrow$Amplitude do IC.
+
+\subsubsection{IC para Média $\mu$, com $\sigma$ Desconhecido}
+\textbf{Contexto:} Lista 6, Q8.
+\textbf{Fórmula:} $\overline{Y} \pm t_{\alpha/2, n-1} \cdot \frac{S}{\sqrt{n}}$
+\textbf{Passos:}
+\begin{enumerate}
+    \item Encontre $\overline{Y}$, $S$, $n$.
+    \item Ache $t_{\alpha/2, n-1}$ na tabela $t$ com $n-1$ graus de liberdade.
+    \item Calcule $\overline{Y} \pm t \cdot (S/\sqrt{n})$.
+\end{enumerate}
+\textit{Nota:} Na Q8, $n=400$ é tão grande que $t_{399} \approx z$. O exercício usa $z_{0.005} = 2.576$.
+
+\subsubsection{IC para Proporção $p$ (Amostra Grande)}
+\textbf{Contexto:} Lista 6, Q6.
+\textbf{Fórmula:} $\hat{p} \pm z_{\alpha/2} \cdot \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}$
+\textbf{Passos:}
+\begin{enumerate}
+    \item Encontre $\hat{p}$ (ex: 70\% = 0.70) e $n=625$.
+    \item Ache $z_{\alpha/2}$ (ex: 90\% $\rightarrow z_{0.05} = 1.645$).
+    \item Calcule $\hat{p} \pm z \cdot \text{Erro Padrão}$.
+\end{enumerate}
+
+\subsubsection{IC para Variância $\sigma^2$}
+\textbf{Contexto:} Lista 6, Q9.
+\textbf{Fórmula (Assimétrica):} $\left[ \frac{(n-1)S^2}{\chi^2_{\alpha/2, n-1}} , \frac{(n-1)S^2}{\chi^2_{1-\alpha/2, n-1}} \right]$
+\textbf{Passos:}
+\begin{enumerate}
+    \item Encontre $S^2 = 16000$ e $n=25$.
+    \item Encontre os \textbf{dois} valores críticos da $\chi^2$ com $n-1=24$ g.l.
+    \begin{itemize}
+        \item Limite superior (corta 2.5% à direita): $\chi^2_{0.025, 24} = 39.364$
+        \item Limite inferior (corta 2.5% à esquerda): $\chi^2_{0.975, 24} = 12.401$
+    \end{itemize}
+    \item Calcule o IC. \textbf{Cuidado:} O valor crítico maior (39.364) vai no \textbf{denominador da esquerda} (para dar o limite inferior do IC).
+    $$ \left[ \frac{(24) \cdot 16000}{39.364} , \frac{(24) \cdot 16000}{12.401} \right] $$
+\end{enumerate}
+
+% ---------------------------------
+\subsection{Interpretação Correta do IC (Lista 6, Q7)}
+\textbf{Enunciado:} $IC[\mu; 0,95] = [21,5; 32,5]$.
+\begin{itemize}
+    \item \textbf{Interpretação ERRADA:} "A probabilidade de $\mu$ estar entre 21,5 e 32,5 é de 95\%." (Errado, pois $\mu$ é um valor fixo, não aleatório. Ele está ou não está no intervalo).
+    \item \textbf{Interpretação CORRETA:} "Nós temos 95\% de confiança de que o verdadeiro valor do parâmetro $\mu$ está contido no intervalo [21,5; 32,5]."
+    \item \textbf{Interpretação CORRETA (Frequencista):} "Se nós repetíssemos este processo de amostragem e construção de intervalo 100 vezes, esperaríamos que 95 dos intervalos resultantes contivessem o verdadeiro valor de $\mu$."
+\end{itemize}

@@ -1,0 +1,650 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREÂMBULO EXTENSO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper]{article}
+
+% --- Pacotes de Codificação, Fonte e Língua ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[portuguese]{babel}
+
+% --- Pacotes de Layout e Geometria ---
+\usepackage[margin=1in]{geometry} % Margens de 1 polegada (aprox 2.54cm)
+\usepackage[parskip=half]{parskip} % Espaço entre parágrafos, em vez de indentação
+\usepackage{setspace} % Para controlar o espaçamento entre linhas
+% \onehalfspacing % Descomente para espaçamento 1.5
+
+% --- Pacotes de Matemática Avançada ---
+\usepackage{amsmath} % Essencial para equações (align, gather, pmatrix)
+\usepackage{amssymb} % Símbolos matemáticos (como \mathbb{R}, \approx)
+\usepackage{amsthm}  % Para ambientes de Teorema/Definição
+
+% --- Pacotes de Estilo e Utilidades ---
+\usepackage{xcolor} % Para definir cores personalizadas
+\usepackage{mdframed} % Para criar caixas de destaque
+\usepackage{booktabs} % Para tabelas de qualidade profissional (ex: \toprule)
+\usepackage{graphicx} % Para incluir imagens (se necessário)
+\usepackage{float}    % Para melhor controle de flutuantes (figuras, tabelas)
+\usepackage{hyperref} % Para links clicáveis (Sumário, referências)
+
+% --- Configuração do Hyperref ---
+\definecolor{linkblue}{RGB}{0,0,180}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkblue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Resumo Detalhado - Estimação por Intervalo},
+    pdfauthor={Miqueias Teixeira},
+    bookmarks=true,
+    pdfpagemode=UseOutlines
+}
+
+% --- Definição de Novos Ambientes (Teoremas, Definições, etc.) ---
+% \newtheorem{nome_ambiente}{Título que aparecerá}[contador_seção]
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{definicao}{Definição}[section]
+\newtheorem{propriedade}{Propriedade}[section]
+\newtheorem{corolario}{Corolário}[section]
+
+% --- Ambientes de Estilo Próprio (para Exemplos, Interpretações) ---
+\theoremstyle{definition} % Muda o estilo para ter fonte normal, não itálico
+\newtheorem{exemplo}{Exemplo Numérico}[section]
+\newtheorem{aviso}{Cuidado!}[section]
+
+\theoremstyle{remark} % Estilo de "nota"
+\newtheorem{interpretacao}{Interpretação}[section]
+\newtheorem{analogia}{Analogia}[section]
+
+% --- Estilo da Caixa de "Receita" ---
+\mdfdefinestyle{caixa_receita}{
+    frametitle={A Receita de Bolo:},
+    frametitlebackgroundcolor=gray!20,
+    frametitlerule=true,
+    backgroundcolor=gray!5,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    linewidth=1pt,
+    linecolor=black!70,
+    skipabove=10pt,
+    skipbelow=10pt,
+    nobreak=true % Tenta não quebrar a caixa entre páginas
+}
+
+\mdfdefinestyle{caixa_bayes}{
+    frametitle={A Receita Bayesiana:},
+    frametitlebackgroundcolor=blue!10,
+    frametitlerule=true,
+    backgroundcolor=blue!5,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    linewidth=1pt,
+    linecolor=blue!70,
+    skipabove=10pt,
+    skipbelow=10pt,
+    nobreak=true
+}
+
+% --- Título e Autor ---
+\title{Guia de Estudo Detalhado \\ \Large Capítulo 5: Estimação por Intervalo}
+\author{Compilado para Miqueias Teixeira \\ \small (Baseado no Capítulo 5 de seu material)}
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DOCUMENTO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% -------------------------------------------------------------------
+% SEÇÃO 1: A GRANDE IDEIA
+% -------------------------------------------------------------------
+\section{A Grande Ideia: A Incerteza da Estimativa}
+
+\subsection{O Problema da Estimativa Pontual}
+Quando queremos saber um parâmetro $\theta$ da população (como a média $\mu$ ou a variância $\sigma^2$), não podemos medir todos. Então, pegamos uma amostra $X_1, \dots, X_n$.
+
+A partir da amostra, calculamos uma \textbf{estimativa pontual}, $\hat{\theta}$. Por exemplo, usamos $\bar{X}$ para estimar $\mu$.
+
+\begin{aviso}
+    Qual a chance de $\bar{X}$ ser \textit{exatamente} igual a $\mu$?
+    $$ P(\bar{X} = \mu) = 0 $$
+    (Para variáveis contínuas). Nossa estimativa pontual está \textit{quase certamente errada}. Ela pode estar perto, mas não é exata. O trabalho de um estatístico é \textbf{quantificar a incerteza} desse "perto".
+\end{aviso}
+
+\subsection{A Solução: O Intervalo de Confiança}
+Em vez de dar um único número (um "chute"), damos uma faixa de valores plausíveis.
+
+\begin{analogia}{A Rede de Pesca}
+    \begin{itemize}
+        \item \textbf{Estimativa Pontual:} É como tentar pegar um peixe ($\mu$) com um arpão ($\hat{\theta}$). Você tem que acertar \textit{exatamente}. É muito provável que você erre.
+        \item \textbf{Estimativa por Intervalo:} É como usar uma \textbf{rede de pesca} ($[L(X), U(X)]$). Você joga a rede na água (calcula o intervalo). Você não sabe onde o peixe está, mas você tem uma certa "confiança" de que sua rede o capturou.
+    \end{itemize}
+\end{analogia}
+
+\begin{definicao}{Intervalo de Confiança (IC)}
+    Um IC para $\theta$ com \textbf{nível de confiança} $\gamma = 1-\alpha$ (ex: 95\%, onde $\alpha=0.05$) é um intervalo \textbf{aleatório} $[L(X), U(X)]$, onde $L(X)$ e $U(X)$ são estatísticas (calculadas da amostra), tal que:
+    $$ P(L(X) \le \theta \le U(X)) = \gamma $$
+\end{definicao}
+
+\begin{interpretacao}{A Verdade sobre os 95\%}
+    Essa é a parte mais mal compreendida da estatística.
+    \begin{itemize}
+        \item \textbf{Errado:} "Há 95\% de chance do verdadeiro $\mu$ estar dentro do intervalo [10, 20]."
+        \item \textbf{Correto:} "Eu tenho 95\% de confiança neste \textit{método}. Se eu repetisse meu experimento (coletar a amostra e construir o intervalo) 100 vezes, eu esperaria que cerca de 95 dos meus intervalos \textit{capturassem} o verdadeiro valor de $\mu$."
+    \end{itemize}
+    Uma vez que você calcula o intervalo, $[10, 20]$, ele não é mais aleatório. O parâmetro $\mu$ (que é fixo) ou \textbf{está} lá dentro ou \textbf{não está}. O 95\% é a nossa confiança no \textit{processo} que gerou o intervalo, não em um intervalo específico.
+\end{interpretacao}
+
+\newpage
+% -------------------------------------------------------------------
+% SEÇÃO 2: A FERRAMENTA MÁGICA (PIVOTAL)
+% -------------------------------------------------------------------
+\section{A Receita de Bolo: O Método da Quantidade Pivotal (Seção 5.2)}
+
+Como encontramos $L(X)$ e $U(X)$? Precisamos de uma "fórmula mágica" que conecte nossa amostra ao parâmetro.
+
+\begin{definicao}{Quantidade Pivotal (Pivô)}
+    Uma \textbf{Quantidade Pivotal}, $Q(X, \theta)$, é uma função da amostra $X = (X_1, \dots, X_n)$ e do parâmetro $\theta$ que satisfaz duas condições \textit{cruciais}:
+    \begin{enumerate}
+        \item A fórmula \textbf{contém} o parâmetro $\theta$ que queremos estimar.
+        \item A \textbf{distribuição de probabilidade} de $Q(X, \theta)$ é \textbf{completamente conhecida} e \textbf{NÃO depende} de $\theta$ (ou de qualquer outro parâmetro desconhecido).
+    \end{enumerate}
+    A distribuição do pivô é "universal" (ex: $N(0,1)$, $\chi^2_{df}$, $t_{df}$). Ela só pode depender de constantes conhecidas, como o tamanho da amostra $n$.
+\end{definicao}
+
+\begin{mdframed}[frametitle={Receita de 3 Passos: Construindo um IC com um Pivô}, style=caixa_receita]
+    Para construir um IC de $\gamma = 1-\alpha$ para $\theta$:
+
+    \textbf{Passo 1: Encontrar o Pivô} \\
+    Encontre uma quantidade pivotal $Q(X, \theta)$ e sua distribuição (ex: $N(0,1)$, $t_{n-1}$, etc.).
+
+    \textbf{Passo 2: Encontrar os Quantis (Cortes)} \\
+    Vá na tabela da distribuição do Pivô e encontre dois valores (quantis), $q_1$ e $q_2$, tais que a área entre eles seja $\gamma$:
+    $$ P(q_1 \le Q(X, \theta) \le q_2) = \gamma $$
+    \begin{itemize}
+        \item \textbf{Simétrico:} $P(Q < q_1) = \alpha/2$ e $P(Q > q_2) = \alpha/2$.
+        \item \textbf{Assimétrico (ex: $\chi^2$):} Os valores $q_1$ e $q_2$ não serão simétricos (ex: $q_1 \neq -q_2$).
+    \end{itemize}
+    
+    \textbf{Passo 3: Isolar $\theta$ (A Mágica da Álgebra)} \\
+    Pegue a inequação do Passo 2 e resolva-a algebricamente para isolar $\theta$ no meio.
+    $$ q_1 \le Q(X, \theta) \le q_2 \quad \xrightarrow{\text{álgebra}} \quad L(X) \le \theta \le U(X) $$
+    O resultado $[L(X), U(X)]$ é o seu intervalo de confiança.
+\end{mdframed}
+
+% -------------------------------------------------------------------
+% SEÇÃO 3: A CAIXA DE FERRAMENTAS (DISTRIBUIÇÕES)
+% -------------------------------------------------------------------
+\section{A Caixa de Ferramentas Amostral (\texorpdfstring{$Z$, $T$, $\chi^2$, $F$}{Z, T, chi^2, F})}
+Antes de aplicar a receita, vamos conhecer nossas ferramentas (os pivôs). Todas elas nascem de amostras da $N(0,1)$.
+
+\begin{propriedade}{As 4 Distribuições da Inferência}
+    Seja $Z \sim N(0,1)$ e $Z_1, \dots, Z_k \sim N(0,1)$ independentes.
+    \begin{enumerate}
+        \item \textbf{Normal (Z):} O "Pai" de todos. Usado quando $\sigma^2$ é conhecida.
+            $$ Z = \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \sim N(0,1) $$
+        \item \textbf{Qui-Quadrado ($\chi^2$):} A "Mãe da Variância". É a soma de normais padrão ao quadrado.
+            $$ U = \sum_{i=1}^k Z_i^2 \sim \chi^2_k \quad (\text{k graus de liberdade}) $$
+        \item \textbf{t-Student (T):} O "Z humilde". É uma Normal (Z) dividida pela raiz de uma $\chi^2$. Usado quando \textit{não} sabemos $\sigma^2$.
+            $$ T = \frac{Z}{\sqrt{U/k}} \sim t_k \quad (\text{k graus de liberdade}) $$
+        \item \textbf{F-Snedecor (F):} A "Juíza". É a razão de duas $\chi^2$. Usada para \textit{comparar} duas variâncias.
+            $$ F = \frac{U_1 / k_1}{U_2 / k_2} \sim F_{k_1, k_2} \quad (\text{$k_1, k_2$ graus de liberdade}) $$
+    \end{enumerate}
+\end{propriedade}
+
+O \textbf{Teorema 5.1} do seu livro é a ponte que nos permite usar essas ferramentas.
+
+\begin{teorema}[Teorema 5.1 - A Ponte da População Normal]
+    Seja $X_1, \dots, X_n$ uma amostra i.i.d. de uma população $N(\mu, \sigma^2)$. Então:
+    \begin{enumerate}
+        \item[(i)] $\bar{X}$ e $S^2$ são variáveis aleatórias \textbf{independentes}.
+        \item[(ii)] $Q = \frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1}$.
+    \end{enumerate}
+\end{teorema}
+\textbf{Por que isso é genial?}
+\begin{itemize}
+    \item A Parte (ii) nos dá \textit{exatamente} um Pivô para $\sigma^2$. É uma $\chi^2$ (Ferramenta 2).
+    \item A Parte (i) e (ii) juntas nos permitem \textit{provar} que $\frac{\bar{X} - \mu}{S / \sqrt{n}}$ é uma $t_{n-1}$ (Ferramenta 3).
+\end{itemize}
+
+\newpage
+% -------------------------------------------------------------------
+% SEÇÃO 4: ICs PARA UMA AMOSTRA
+% -------------------------------------------------------------------
+\section{Aplicando a Receita: ICs para Uma Amostra (Seção 5.3)}
+
+\subsection{\texorpdfstring{IC para $\mu$ (com $\sigma^2$ conhecida) - O ``Caso Z''}{IC para mu (com sigma^2 conhecida) - O ``Caso Z''}}
+\begin{itemize}
+    \item \textbf{Contexto:} Raro, mas fundamental. Ex: Você está em uma fábrica, a máquina \textit{por design} tem um desvio padrão $\sigma=2$mm, mas você acha que a média $\mu$ descalibrou.
+    \item \textbf{Passo 1 (Pivô):} $Q(X, \mu) = Z = \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \sim N(0,1)$.
+    \item \textbf{Passo 2 (Quantis):} Para $\gamma = 1-\alpha$, queremos $q_1 = -z_{\alpha/2}$ e $q_2 = +z_{\alpha/2}$.
+        $$ P(-z_{\alpha/2} \le Z \le z_{\alpha/2}) = 1-\alpha $$
+    \item \textbf{Passo 3 (Álgebra):}
+    \begin{align*}
+        -z_{\alpha/2} &\le \frac{\bar{X} - \mu}{\sigma / \sqrt{n}} \le z_{\alpha/2} \\
+        -z_{\alpha/2} \left(\frac{\sigma}{\sqrt{n}}\right) &\le \bar{X} - \mu \le z_{\alpha/2} \left(\frac{\sigma}{\sqrt{n}}\right) \\
+        -\bar{X} - z_{\alpha/2} \left(\frac{\sigma}{\sqrt{n}}\right) &\le - \mu \le -\bar{X} + z_{\alpha/2} \left(\frac{\sigma}{\sqrt{n}}\right) \\
+        \bar{X} + z_{\alpha/2} \left(\frac{\sigma}{\sqrt{n}}\right) &\ge \mu \ge \bar{X} - z_{\alpha/2} \left(\frac{\sigma}{\sqrt{n}}\right)
+    \end{align*}
+    \item \textbf{Resultado (IC para $\mu$, $\sigma^2$ conhecida):}
+        $$ IC(\mu, 1-\alpha) = \left[ \bar{X} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \quad \bar{X} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right] $$
+\end{itemize}
+
+\begin{exemplo}{Caso Z}
+    Uma máquina de encher pacotes de café tem $\sigma=10$g (conhecido). Uma amostra de $n=25$ pacotes tem uma média amostral $\bar{X}=505$g. Construa um IC de 95\% para a média $\mu$.
+
+    \textbf{1. Coletar Dados:}
+    \begin{itemize}
+        \item $\bar{X} = 505$g
+        \item $\sigma = 10$g (conhecido)
+        \item $n = 25$
+        \item $\gamma = 0.95 \implies \alpha = 0.05 \implies \alpha/2 = 0.025$
+    \end{itemize}
+    \textbf{2. Achar Quantil:}
+    \begin{itemize}
+        \item Da tabela Normal, $z_{\alpha/2} = z_{0.025} = 1.96$.
+    \end{itemize}
+    \textbf{3. Calcular Margem de Erro (ME):}
+    \begin{itemize}
+        \item $ME = z_{\alpha/2} \frac{\sigma}{\sqrt{n}} = 1.96 \cdot \frac{10}{\sqrt{25}} = 1.96 \cdot \frac{10}{5} = 1.96 \cdot 2 = 3.92$
+    \end{itemize}
+    \textbf{4. Construir IC:}
+    \begin{itemize}
+        \item $IC(\mu, 95\%) = [\bar{X} - ME, \bar{X} + ME]$
+        \item $IC(\mu, 95\%) = [505 - 3.92, \quad 505 + 3.92] = [501.08, \quad 508.92]$
+    \end{itemize}
+    \begin{interpretacao}
+        Temos 95\% de confiança de que o \textit{método} que usamos gerou um intervalo que captura a verdadeira média $\mu$ de enchimento da máquina. Baseado nesta amostra, valores plausíveis para $\mu$ estão entre 501.08g e 508.92g. (Note que se a máquina devesse encher com 500g, o valor 500 está \textit{fora} do intervalo, sugerindo que a máquina está descalibrada).
+    \end{interpretacao}
+\end{exemplo}
+
+\subsection{\texorpdfstring{IC para $\mu$ (com $\sigma^2$ desconhecida) - O ``Caso T''}{IC para mu (com sigma^2 desconhecida) - O ``Caso T''}}
+\begin{itemize}
+    \item \textbf{Contexto:} O caso mais comum. Você não sabe $\mu$ e também não sabe $\sigma^2$.
+    \item \textbf{Passo 1 (Pivô):} Substituímos $\sigma$ por sua estimativa $S$. A distribuição muda de Z para T.
+        $$ Q(X, \mu) = T = \frac{\bar{X} - \mu}{S / \sqrt{n}} \sim t_{n-1} $$
+    \item \textbf{Passo 2 (Quantis):} Da tabela t-Student com $gl = n-1$.
+        $$ P(-t_{n-1, \alpha/2} \le T \le t_{n-1, \alpha/2}) = 1-\alpha $$
+    \item \textbf{Passo 3 (Álgebra):} Idêntica à do Caso Z.
+    \item \textbf{Resultado (IC para $\mu$, $\sigma^2$ desconhecida):}
+        $$ IC(\mu, 1-\alpha) = \left[ \bar{X} - t_{n-1, \alpha/2} \frac{S}{\sqrt{n}}, \quad \bar{X} + t_{n-1, \alpha/2} \frac{S}{\sqrt{n}} \right] $$
+\end{itemize}
+
+\begin{exemplo}{Caso T}
+    Queremos saber o tempo médio $\mu$ de reação a um fármaco. Coletamos $n=16$ pacientes. A amostra deu $\bar{X}=2.5$s e $S=0.8$s. Construa um IC de 95\% para $\mu$.
+
+    \textbf{1. Coletar Dados:}
+    \begin{itemize}
+        \item $\bar{X} = 2.5$s
+        \item $S = 0.8$s (desconhecido, estimado)
+        \item $n = 16$
+        \item $\gamma = 0.95 \implies \alpha/2 = 0.025$
+        \item Graus de Liberdade: $gl = n-1 = 15$
+    \end{itemize}
+    \textbf{2. Achar Quantil:}
+    \begin{itemize}
+        \item Da tabela t-Student, $t_{gl, \alpha/2} = t_{15, 0.025} = 2.131$.
+        \item (Note que $t=2.131$ é $>$ $z=1.96$. A t-Student é mais "conservadora" e dá intervalos mais largos para compensar a incerteza de $S$).
+    \end{itemize}
+    \textbf{3. Calcular Margem de Erro (ME):}
+    \begin{itemize}
+        \item $ME = t_{gl, \alpha/2} \frac{S}{\sqrt{n}} = 2.131 \cdot \frac{0.8}{\sqrt{16}} = 2.131 \cdot \frac{0.8}{4} = 2.131 \cdot 0.2 = 0.4262$
+    \end{itemize}
+    \textbf{4. Construir IC:}
+    \begin{itemize}
+        \item $IC(\mu, 95\%) = [\bar{X} - ME, \bar{X} + ME]$
+        \item $IC(\mu, 95\%) = [2.5 - 0.4262, \quad 2.5 + 0.4262] = [2.0738, \quad 2.9262]$
+    \end{itemize}
+    \begin{interpretacao}
+        Temos 95\% de confiança que o verdadeiro tempo médio de reação $\mu$ está entre 2.07s e 2.93s.
+    \end{interpretacao}
+\end{exemplo}
+
+\subsection{\texorpdfstring{IC para $\sigma^2$ - O ``Caso Qui-Quadrado''}{IC para sigma^2 - O ``Caso Qui-Quadrado''}}
+\begin{itemize}
+    \item \textbf{Contexto:} Queremos estimar a \textit{variabilidade} do processo, não a média.
+    \item \textbf{Passo 1 (Pivô):} Do Teorema 5.1(ii):
+        $$ Q(X, \sigma^2) = \frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1} $$
+    \item \textbf{Passo 2 (Quantis):} \textbf{CUIDADO!} A $\chi^2$ não é simétrica.
+        $$ P(q_1 \le Q \le q_2) = 1-\alpha $$
+        \begin{itemize}
+            \item $q_1 = \chi^2_{n-1, 1-\alpha/2}$ (Quantil da cauda \textit{esquerda})
+            \item $q_2 = \chi^2_{n-1, \alpha/2}$ (Quantil da cauda \textit{direita})
+        \end{itemize}
+    \item \textbf{Passo 3 (Álgebra):}
+    \begin{align*}
+        q_1 &\le \frac{(n-1)S^2}{\sigma^2} \le q_2 \\
+        \frac{1}{q_2} &\le \frac{\sigma^2}{(n-1)S^2} \le \frac{1}{q_1} \quad \text{(Invertemos tudo! Sinais trocam)} \\
+        \frac{(n-1)S^2}{q_2} &\le \sigma^2 \le \frac{(n-1)S^2}{q_1}
+    \end{align*}
+    \item \textbf{Resultado (IC para $\sigma^2$):}
+        $$ IC(\sigma^2, 1-\alpha) = \left[ \frac{(n-1)S^2}{\chi^2_{n-1, \alpha/2}}, \quad \frac{(n-1)S^2}{\chi^2_{n-1, 1-\alpha/2}} \right] $$
+    \begin{aviso}
+        Note a inversão! O quantil $q_2$ (direito, maior) vai para o limite \textbf{inferior}. O quantil $q_1$ (esquerdo, menor) vai para o limite \textbf{superior}.
+    \end{aviso}
+\end{itemize}
+
+\begin{exemplo}{Caso Qui-Quadrado}
+    Usando os dados do fármaco ($n=16$, $S=0.8$s), construa um IC de 95\% para a \textit{variância} $\sigma^2$ do tempo de reação.
+
+    \textbf{1. Coletar Dados:}
+    \begin{itemize}
+        \item $S = 0.8 \implies S^2 = 0.64$
+        \item $n = 16$
+        \item $\gamma = 0.95 \implies \alpha = 0.05 \implies \alpha/2 = 0.025$ e $1-\alpha/2 = 0.975$
+        \item Graus de Liberdade: $gl = n-1 = 15$
+    \end{itemize}
+    \textbf{2. Achar Quantis (da tabela $\chi^2$):}
+    \begin{itemize}
+        \item Cauda Esquerda: $q_1 = \chi^2_{15, 0.975} = 6.262$
+        \item Cauda Direita: $q_2 = \chi^2_{15, 0.025} = 27.488$
+    \end{itemize}
+    \textbf{3. Calcular Limites (usando a fórmula invertida):}
+    \begin{itemize}
+        \item Numerador: $(n-1)S^2 = 15 \cdot (0.8)^2 = 15 \cdot 0.64 = 9.6$
+        \item Limite Inferior: $L(X) = \frac{(n-1)S^2}{q_2} = \frac{9.6}{27.488} = 0.349$
+        \item Limite Superior: $U(X) = \frac{(n-1)S^2}{q_1} = \frac{9.6}{6.262} = 1.533$
+    \end{itemize}
+    \textbf{4. Construir IC:}
+    \begin{itemize}
+        \item $IC(\sigma^2, 95\%) = [0.349, \quad 1.533]$
+    \end{itemize}
+    \begin{interpretacao}
+        Temos 95\% de confiança que a verdadeira variância $\sigma^2$ do tempo de reação está entre 0.349 e 1.533.
+        \textit{(Se quiséssemos um IC para o desvio padrão $\sigma$, bastaria tirar a raiz quadrada dos limites: $[\sqrt{0.349}, \sqrt{1.533}] \approx [0.591, 1.238]$).}
+    \end{interpretacao}
+\end{exemplo}
+
+\newpage
+% -------------------------------------------------------------------
+% SEÇÃO 5: ICs PARA DUAS AMOSTRAS
+% -------------------------------------------------------------------
+\section{Aplicando a Receita: ICs para Duas Amostras (Seção 5.3.2)}
+
+\subsection{\texorpdfstring{IC para $\mu_X - \mu_Y$ (Assumindo $\sigma_X^2 = \sigma_Y^2 = \sigma^2$)}{IC para mu_X - mu_Y (Assumindo sigma_X^2 = sigma_Y^2 = sigma^2)}}
+\begin{itemize}
+    \item \textbf{Contexto:} Queremos comparar a média de dois grupos (ex: Droga A vs. Placebo B). Assumimos que as variâncias dos grupos são \textit{iguais}.
+    \item \textbf{Estratégia:} Como $\sigma^2$ é a mesma, usamos as duas amostras para estimá-la. Criamos a \textbf{variância agrupada (pooled)}:
+        $$ S_p^2 = \frac{(n_X-1)S_X^2 + (n_Y-1)S_Y^2}{n_X + n_Y - 2} $$
+    É uma média ponderada das variâncias amostrais.
+    \item \textbf{Passo 1 (Pivô):} Generalização do Caso T.
+        $$ Q = T = \frac{(\bar{X} - \bar{Y}) - (\mu_X - \mu_Y)}{S_p \sqrt{\frac{1}{n_X} + \frac{1}{n_Y}}} \sim t_{n_X+n_Y-2} $$
+    \item \textbf{Passo 2 (Quantis):} Da tabela t com $gl = n_X + n_Y - 2$.
+    \item \textbf{Passo 3 (Álgebra):} Isolar $(\mu_X - \mu_Y)$.
+    \item \textbf{Resultado (IC para $\mu_X - \mu_Y$):}
+        $$ IC(\mu_X - \mu_Y, 1-\alpha) = \left[ (\bar{X} - \bar{Y}) \pm t_{gl, \alpha/2} \cdot S_p \sqrt{\frac{1}{n_X} + \frac{1}{n_Y}} \right] $$
+\end{itemize}
+
+\begin{exemplo}{Caso T (Duas Amostras)}
+    Grupo X (Droga): $n_X=10, \bar{X}=5.5, S_X=1.2$ \\
+    Grupo Y (Placebo): $n_Y=12, \bar{Y}=4.8, S_Y=1.0$ \\
+    Construa um IC de 90\% para $\mu_X - \mu_Y$ (assumindo $\sigma_X^2 = \sigma_Y^2$).
+
+    \textbf{1. Coletar Dados:}
+    \begin{itemize}
+        \item $\bar{X} - \bar{Y} = 5.5 - 4.8 = 0.7$
+        \item $\gamma = 0.90 \implies \alpha = 0.10 \implies \alpha/2 = 0.05$
+        \item $gl = n_X + n_Y - 2 = 10 + 12 - 2 = 20$
+    \end{itemize}
+    \textbf{2. Calcular $S_p^2$ e $S_p$:}
+    \begin{itemize}
+        \item $S_p^2 = \frac{(10-1)(1.2)^2 + (12-1)(1.0)^2}{20} = \frac{9 \cdot 1.44 + 11 \cdot 1}{20}$
+        \item $S_p^2 = \frac{12.96 + 11}{20} = \frac{23.96}{20} = 1.198$
+        \item $S_p = \sqrt{1.198} \approx 1.0945$
+    \end{itemize}
+    \textbf{3. Achar Quantil:}
+    \begin{itemize}
+        \item $t_{gl, \alpha/2} = t_{20, 0.05} = 1.725$
+    \end{itemize}
+    \textbf{4. Calcular Margem de Erro (ME):}
+    \begin{itemize}
+        \item $ME = t_{gl, \alpha/2} \cdot S_p \sqrt{\frac{1}{n_X} + \frac{1}{n_Y}} = 1.725 \cdot 1.0945 \cdot \sqrt{\frac{1}{10} + \frac{1}{12}}$
+        \item $ME = 1.888 \cdot \sqrt{0.1 + 0.0833} = 1.888 \cdot \sqrt{0.1833} = 1.888 \cdot 0.428 = 0.808$
+    \end{itemize}
+    \textbf{5. Construir IC:}
+    \begin{itemize}
+        \item $IC(\mu_X - \mu_Y, 90\%) = [ (\bar{X} - \bar{Y}) \pm ME ]$
+        \item $IC = [0.7 - 0.808, \quad 0.7 + 0.808] = [-0.108, \quad 1.508]$
+    \end{itemize}
+    \begin{interpretacao}
+        Temos 90\% de confiança de que a verdadeira diferença $\mu_X - \mu_Y$ está entre -0.108 e 1.508. Como o valor \textbf{zero está} dentro do intervalo, \textbf{não podemos concluir} (com 90\% de confiança) que há uma diferença entre a droga e o placebo.
+    \end{interpretacao}
+\end{exemplo}
+
+\subsection{\texorpdfstring{IC para $\sigma_X^2 / \sigma_Y^2$ - O ``Caso F''}{IC para sigma_X^2 / sigma_Y^2 - O ``Caso F''}}
+\begin{itemize}
+    \item \textbf{Contexto:} Queremos comparar a \textit{variabilidade} de dois grupos.
+    \item \textbf{Passo 1 (Pivô):} A "Juíza" F, que é a razão de duas $\chi^2$ (divididas por seus $gl$).
+        $$ Q = F = \frac{S_X^2 / \sigma_X^2}{S_Y^2 / \sigma_Y^2} = \left(\frac{S_X^2}{S_Y^2}\right) \left(\frac{\sigma_Y^2}{\sigma_X^2}\right) \sim F_{n_X-1, n_Y-1} $$
+    \item \textbf{Passo 2 (Quantis):} Assimétrico. $gl_1 = n_X-1, gl_2 = n_Y-1$.
+        \begin{itemize}
+            \item $q_1 = F_{gl_1, gl_2, 1-\alpha/2}$ (Quantil esquerdo)
+            \item $q_2 = F_{gl_1, gl_2, \alpha/2}$ (Quantil direito)
+        \end{itemize}
+    \item \textbf{Passo 3 (Álgebra):} Isolar $\sigma_X^2 / \sigma_Y^2$.
+    \begin{align*}
+        q_1 &\le \left(\frac{S_X^2}{S_Y^2}\right) \left(\frac{\sigma_Y^2}{\sigma_X^2}\right) \le q_2 \\
+        q_1 \cdot \left(\frac{S_Y^2}{S_X^2}\right) &\le \frac{\sigma_Y^2}{\sigma_X^2} \le q_2 \cdot \left(\frac{S_Y^2}{S_X^2}\right) \\
+        \frac{1}{q_2 \cdot (S_Y^2/S_X^2)} &\ge \frac{\sigma_X^2}{\sigma_Y^2} \ge \frac{1}{q_1 \cdot (S_Y^2/S_X^2)}
+    \end{align*}
+    \item \textbf{Resultado (IC para $\sigma_X^2 / \sigma_Y^2$):}
+        $$ IC\left(\frac{\sigma_X^2}{\sigma_Y^2}, 1-\alpha\right) = \left[ \frac{1}{q_2} \left(\frac{S_X^2}{S_Y^2}\right), \quad \frac{1}{q_1} \left(\frac{S_X^2}{S_Y^2}\right) \right] $$
+\end{itemize}
+
+\begin{exemplo}{Caso F}
+    Usando os dados do Exemplo 4.2 ($n_X=10, S_X=1.2$; $n_Y=12, S_Y=1.0$), construa um IC de 95\% para $\sigma_X^2 / \sigma_Y^2$.
+
+    \textbf{1. Coletar Dados:}
+    \begin{itemize}
+        \item $S_X^2 = 1.44$, $S_Y^2 = 1.0 \implies S_X^2 / S_Y^2 = 1.44$
+        \item $gl_1 = n_X - 1 = 9$
+        \item $gl_2 = n_Y - 1 = 11$
+        \item $\gamma = 0.95 \implies \alpha/2 = 0.025$ e $1-\alpha/2 = 0.975$
+    \end{itemize}
+    \textbf{2. Achar Quantis (da tabela F):}
+    \begin{itemize}
+        \item Cauda Direita: $q_2 = F_{9, 11, 0.025} = 3.59$ (aprox.)
+        \item Cauda Esquerda: $q_1 = F_{9, 11, 0.975}$. (Truque: $F_{a,b, 1-p} = 1 / F_{b,a, p}$)
+        \item $q_1 = 1 / F_{11, 9, 0.025} = 1 / 3.96 \approx 0.252$
+    \end{itemize}
+    \textbf{3. Calcular Limites:}
+    \begin{itemize}
+        \item Limite Inferior: $L = \frac{1}{q_2} \left(\frac{S_X^2}{S_Y^2}\right) = \frac{1}{3.59} \cdot 1.44 = 0.401$
+        \item Limite Superior: $U = \frac{1}{q_1} \left(\frac{S_X^2}{S_Y^2}\right) = \frac{1}{0.252} \cdot 1.44 = 5.714$
+    \end{itemize}
+    \textbf{4. Construir IC:}
+    \begin{itemize}
+        \item $IC(\sigma_X^2 / \sigma_Y^2, 95\%) = [0.401, \quad 5.714]$
+    \end{itemize}
+    \begin{interpretacao}
+        Temos 95\% de confiança de que a verdadeira razão das variâncias está entre 0.401 e 5.714. Como o valor \textbf{um está} dentro do intervalo, \textbf{não podemos rejeitar} a hipótese de que as variâncias são iguais ($\sigma_X^2 = \sigma_Y^2$). Isso valida a premissa que usamos no Exemplo 4.2.
+    \end{interpretacao}
+\end{exemplo}
+
+\newpage
+% -------------------------------------------------------------------
+% SEÇÃO 6: ICs APROXIMADOS (EMV)
+% -------------------------------------------------------------------
+\section{Intervalos de Confiança Aproximados (Seção 5.4)}
+
+\subsection{Quando a População Não é Normal?}
+Se $n$ é pequeno e a população \textit{não} é normal, estamos em apuros (precisamos de métodos não-paramétricos ou bootstrap).
+Mas se $n$ é \textbf{grande} (ex: $n > 30$), podemos invocar o \textbf{Teorema Central do Limite (TCL)} e a teoria assintótica do \textbf{Estimador de Máxima Verossimilhança (EMV)}.
+
+\begin{teorema}{Normalidade Assintótica do EMV}
+    Seja $\hat{\theta}$ o EMV de $\theta$. Para $n$ grande:
+    $$ \hat{\theta} \approx N\left(\theta, \frac{1}{I(\theta)}\right) $$
+    Onde $I(\theta)$ é a \textbf{Informação de Fisher}. Na prática, usamos a \textbf{Informação de Fisher Observada}, $I(\hat{\theta})$, que é a Informação de Fisher avaliada no EMV.
+\end{teorema}
+
+\begin{itemize}
+    \item \textbf{Passo 1 (Pivô Aproximado):} Padronizando o teorema acima.
+        $$ Q = Z = \frac{\hat{\theta} - \theta}{\sqrt{1 / I(\hat{\theta})}} \approx N(0,1) $$
+    \item \textbf{Passo 2 e 3:} Idênticos ao "Caso Z".
+    \item \textbf{Resultado (IC Aproximado para $\theta$):}
+        $$ IC(\theta, 1-\alpha) = \left[ \hat{\theta} \pm z_{\alpha/2} \frac{1}{\sqrt{I(\hat{\theta})}} \right] $$
+\end{itemize}
+
+\begin{exemplo}{IC Aproximado para Exponencial}
+    Seja $X_i \sim \text{Exp}(\theta)$, onde $f(x) = \frac{1}{\theta}e^{-x/\theta}$. (Aqui, $\theta = E(X)$).
+    Encontramos $\hat{\theta}_{EMV} = \bar{X}$.
+    A Informação de Fisher é $I(\theta) = \frac{n}{\theta^2}$.
+    A Informação Observada é $I(\hat{\theta}) = \frac{n}{\hat{\theta}^2} = \frac{n}{\bar{X}^2}$.
+    O Pivô é: $Z = \frac{\bar{X} - \theta}{\sqrt{1 / (n/\bar{X}^2)}} = \frac{\bar{X} - \theta}{\bar{X} / \sqrt{n}} \approx N(0,1)$.
+
+    \textbf{Dados:} Coletamos $n=50$ amostras e $\bar{X}=10.5$. IC de 95\%.
+    
+    \textbf{1. Coletar Dados:}
+    \begin{itemize}
+        \item $\hat{\theta} = \bar{X} = 10.5$
+        \item $n = 50$
+        \item $z_{\alpha/2} = 1.96$
+    \end{itemize}
+    \textbf{2. Calcular Erro Padrão (denominador):}
+    \begin{itemize}
+        \item $\text{ep}(\hat{\theta}) = \frac{1}{\sqrt{I(\hat{\theta})}} = \frac{1}{\sqrt{n/\bar{X}^2}} = \frac{\bar{X}}{\sqrt{n}}$
+        \item $\text{ep}(\hat{\theta}) = \frac{10.5}{\sqrt{50}} = \frac{10.5}{7.071} = 1.485$
+    \end{itemize}
+    \textbf{3. Calcular IC:}
+    \begin{itemize}
+        \item $IC = [ \hat{\theta} \pm z_{\alpha/2} \cdot \text{ep}(\hat{\theta}) ]$
+        \item $IC = [ 10.5 \pm 1.96 \cdot 1.485 ] = [ 10.5 \pm 2.91 ] = [7.59, \quad 13.41]$
+    \end{itemize}
+    \begin{interpretacao}
+        Temos 95\% de confiança que a verdadeira média $\theta$ da distribuição Exponencial está entre 7.59 e 13.41. (Note que este intervalo \textit{não} é o mesmo que o intervalo $\chi^2$ exato do Exercício 5.6, mas é uma boa aproximação por $n$ ser grande).
+    \end{interpretacao}
+\end{exemplo}
+
+\newpage
+% -------------------------------------------------------------------
+% SEÇÃO 7: INTERVALOS BAYESIANOS
+% -------------------------------------------------------------------
+\section{Uma Filosofia Diferente: Intervalos Bayesianos (Seção 5.5)}
+
+\subsection{A Mudança de Paradigma: $\theta$ é Aleatório}
+Na estatística Frequencista (Clássica), o parâmetro $\theta$ é um valor \textbf{fixo} e desconhecido. O intervalo $[L(X), U(X)]$ é \textbf{aleatório}.
+
+Na estatística \textbf{Bayesiana}, o parâmetro $\theta$ \textbf{é uma variável aleatória}. Nós temos "crenças" sobre $\theta$. Os dados $X$ (que agora são fixos, pois foram observados) são usados para \textit{atualizar} nossa crença.
+
+\begin{itemize}
+    \item \textbf{Crença a Priori:} O que eu acho de $\theta$ \textit{antes} de ver os dados? $\pi(\theta)$.
+    \item \textbf{Crença a Posteriori:} O que eu acho de $\theta$ \textit{depois} de ver os dados? $\pi(\theta | X)$.
+    \item \textbf{Intervalo de Credibilidade:} Um intervalo que contém $\gamma$ (ex: 95\%) da massa de probabilidade da distribuição \textit{a posteriori}.
+\end{itemize}
+
+\begin{interpretacao}{Bayesiana vs. Frequencista}
+    \begin{itemize}
+        \item \textbf{Frequencista (IC de 95\%):} "Eu tenho 95\% de confiança no \textit{método} que gerou este intervalo."
+        \item \textbf{Bayesiana (ICred de 95\%):} "Dados os dados que observei e minha crença inicial, há 95\% de \textit{probabilidade} do parâmetro $\theta$ estar dentro deste intervalo."
+    \end{itemize}
+    A interpretação Bayesiana é muito mais intuitiva, mas requer uma premissa inicial (a priori).
+\end{interpretacao}
+
+\begin{mdframed}[frametitle={A Receita Bayesiana: Construindo um Intervalo de Credibilidade}, style=caixa_bayes]
+    \textbf{Passo 1: Definir a Priori, $\pi(\theta)$} \\
+    Qual é a nossa crença sobre $\theta$ \textit{antes} de ver qualquer dado? (Ex: $\theta \sim \text{Gama}(a, b)$).
+
+    \textbf{Passo 2: Definir a Verossimilhança (Likelihood), $L(\theta | X)$} \\
+    Esta é a $f(X | \theta)$, a função de densidade dos dados, vista como uma função de $\theta$. (Ex: $L(\theta|X) \propto e^{-n\theta} \theta^{\sum x_i}$ para a Poisson).
+
+    \textbf{Passo 3: Calcular a Posteriori, $\pi(\theta | X)$} \\
+    Usamos o Teorema de Bayes para atualizar nossa crença:
+    $$ \pi(\theta | X) \propto L(\theta | X) \cdot \pi(\theta) $$
+    (Multiplicamos a Verossimilhança pela Priori).
+
+    \textbf{Passo 4: Encontrar o Intervalo} \\
+    Encontramos $q_1$ e $q_2$ que "cortam" a distribuição a posteriori:
+    $$ \int_{q_1}^{q_2} \pi(\theta | X) d\theta = \gamma $$
+    Para um intervalo simétrico (caudas iguais), $q_1$ é o quantil $\alpha/2$ e $q_2$ é o quantil $1-\alpha/2$ da \textit{distribuição a posteriori}.
+\end{mdframed}
+
+\begin{exemplo}{Bayesiano (do Exercício 5.11)}
+    Dados $X_i \sim \text{Poisson}(\theta)$, $n=10$, $S = \sum X_i = 18$.
+    Priori: $\pi(\theta) = e^{-\theta}, \theta > 0$. (Que é $\text{Gama}(\alpha=1, \beta=1)$).
+    ICred de 95\%.
+
+    \textbf{Passo 1 (Priori):}
+    \begin{itemize}
+        \item $\pi(\theta) \sim \text{Gama}(\alpha_{priori}=1, \beta_{priori}=1)$.
+        \item Kernel: $\pi(\theta) \propto \theta^{1-1} e^{-\theta/1} = e^{-\theta}$.
+    \end{itemize}
+    \textbf{Passo 2 (Verossimilhança):}
+    \begin{itemize}
+        \item $L(\theta|X) = \prod \frac{e^{-\theta}\theta^{X_i}}{X_i!} \propto e^{-n\theta} \theta^{\sum X_i}$
+        \item $L(\theta|X) \propto e^{-10\theta} \theta^{18}$.
+    \end{itemize}
+    \textbf{Passo 3 (Posteriori):}
+    \begin{itemize}
+        \item $\pi(\theta | X) \propto L(\theta | X) \cdot \pi(\theta)$
+        \item $\pi(\theta | X) \propto (e^{-10\theta} \theta^{18}) \cdot (e^{-\theta})$
+        \item $\pi(\theta | X) \propto e^{-11\theta} \theta^{18}$
+    \end{itemize}
+    \textbf{4. Reconhecer a Posteriori:}
+    \begin{itemize}
+        \item O kernel $e^{-11\theta} \theta^{18}$ é de uma $\text{Gama}(\alpha, \beta)$
+        \item $\theta^{\alpha-1} e^{-\theta/\beta} \implies \alpha-1 = 18 \implies \alpha = 19$
+        \item $1/\beta = 11 \implies \beta = 1/11$
+        \item \textbf{A Posteriori é $\theta|X \sim \text{Gama}(19, 1/11)$}.
+    \end{itemize}
+    \textbf{5. Construir Intervalo:}
+    \begin{itemize}
+        \item Queremos $q_1$ e $q_2$ da $\text{Gama}(19, 1/11)$ que deixam $\alpha/2=0.025$ em cada cauda.
+        \item $q_1 = Q_{\text{Gama}}(0.025 \mid \alpha=19, \beta=1/11) \approx 0.945$
+        \item $q_2 = Q_{\text{Gama}}(0.975 \mid \alpha=19, \beta=1/11) \approx 2.701$
+        \item (Estes valores vêm de software, ex: R `qgamma(c(0.025, 0.975), shape=19, scale=1/11)`)
+        \item $ICred(\theta, 95\%) = [0.945, \quad 2.701]$
+    \end{itemize}
+    \begin{interpretacao}
+        Dados os 18 eventos observados em 10 amostras, e nossa crença inicial de $\pi(\theta)=e^{-\theta}$, temos 95\% de probabilidade de que a verdadeira taxa $\theta$ esteja entre 0.945 e 2.701.
+    \end{interpretacao}
+\end{exemplo}
+
+% -------------------------------------------------------------------
+% SEÇÃO 8: COMPARAÇÃO E ARMADILHAS
+% -------------------------------------------------------------------
+\section{Resumo: Frequencista vs. Bayesiano e Armadilhas Comuns}
+
+\subsection{Tabela de Comparação}
+
+\begin{table}[H]
+    \centering
+    \caption{Comparação das Filosofias de Intervalo}
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        Característica & Frequencista (Clássico) & Bayesiano \\ \midrule
+        \textbf{O que é $\theta$?} & Fixo, desconhecido & Aleatório, com distribuição \\
+        \textbf{O que é o IC?} & \textbf{Aleatório} & \textbf{Fixo} (após os dados) \\
+        \textbf{Intervalo} & Intervalo de \textbf{Confiança} & Intervalo de \textbf{Credibilidade} \\
+        \textbf{Interpretação} & "Confiança no \textit{método}" & "Probabilidade de $\theta$ \textit{estar no} intervalo" \\
+        \textbf{Requer} & Um Pivô & Uma Priori $\pi(\theta)$ \\
+        \textbf{Resultado} & $P(L(X) \le \theta \le U(X)) = \gamma$ & $P(q_1 \le \theta \le q_2 | X) = \gamma$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Armadilhas Comuns (O que NÃO fazer)}
+\begin{aviso}{Armadilha 1: A Interpretação}
+    \textbf{NÃO DIGA:} "Há 95\% de chance do $\mu$ estar no IC de [10, 20]."
+    O $\mu$ é fixo. Ele ou está (100\% de chance) ou não está (0\% de chance). O 95\% é sobre a \textit{taxa de sucesso do seu método} a longo prazo.
+\end{aviso}
+
+\begin{aviso}{Armadilha 2: O Nível de Confiança}
+    Um IC de 99\% é \textbf{mais largo} (menos preciso) que um IC de 90\%.
+    \begin{itemize}
+        \item Para ter \textbf{mais confiança} (99\%), sua "rede de pesca" precisa ser \textbf{maior} para garantir que você pegue o peixe.
+        \item Para ter \textbf{menos confiança} (90\%), você pode usar uma rede menor.
+    \end{itemize}
+\end{aviso}
+
+\begin{aviso}{Armadilha 3: O Tamanho da Amostra $n$}
+    A largura do intervalo é (geralmente) proporcional a $1/\sqrt{n}$.
+    Para \textbf{diminuir} a largura do intervalo (ter mais precisão) pela \textbf{metade}, você precisa \textbf{quadruplicar} o tamanho da sua amostra ($n \to 4n$). A precisão custa caro!
+\end{aviso}
+
+
+\end{document}

@@ -1,0 +1,87 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ARQUIVO MESTRE: main.tex
+% (Este é o arquivo que você compila)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREÂMBULO E CONFIGURAÇÕES DO DOCUMENTO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper, 11pt]{article}
+
+% Pacotes de formatação e linguagem
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage{geometry}
+\geometry{a4paper, top=0.5cm, bottom=0.5cm, left=0.5cm, right=0.5cm}
+\usepackage{parskip} % Espaço entre parágrafos
+
+% Pacotes de matemática
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm} % Para teoremas e definições
+
+% Outros pacotes úteis
+\usepackage{graphicx}
+\usepackage{booktabs} % Para tabelas melhores
+\usepackage{fancyhdr} % Para cabeçalhos e rodapés
+\usepackage{hyperref} % Links clicáveis
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Guia de Inferência Avançada},
+}
+
+% Comandos personalizados
+\newcommand{\E}{\mathbb{E}} % Esperança
+\newcommand{\V}{\mathbb{V}} % Variância
+\newcommand{\Prob}{\mathbb{P}} % Probabilidade
+
+% Configuração de Teoremas/Definições
+\newtheorem{definicao}{Definição}[section]
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{propriedade}{Propriedade}[section]
+
+% Configuração do Título
+\title{Guia de Resolução para Inferência Estatística Avançada \\
+       \large Análise e Estratégias para as Listas de Exercícios 1-9}
+\author{Miqueias Teixeira (compilado por Gemini)}
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INÍCIO DO DOCUMENTO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PARTE I: FUNDAMENTOS E PROBABILIDADE
+% (Listas 1, 2, 3)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{Fundamentos e Ferramentas de Probabilidade}
+\input{parte1_fundamentos.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PARTE II: TEORIA DE AMOSTRAGEM E TEOREMAS LIMITE
+% (Listas 4, 5, 6)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{Teoria de Amostragem e Teoremas Limite}
+\input{parte2_amostragem.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PARTE III: MÉTODOS DE ESTIMAÇÃO E PROPRIEDADES
+% (Listas 7, 8, 9)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part{Estimação de Parâmetros}
+\input{parte3_estimacao.tex}
+
+% Fechar ambiente 'propriedade' aberto em algum arquivo de entrada
+\end{propriedade}
+
+\end{document}

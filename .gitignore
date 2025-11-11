@@ -1,0 +1,37 @@
+# =================================================
+# Arquivos Auxiliares e de Log do LaTeX
+# =================================================
+# Arquivos da sua imagem
+*.aux
+*.log
+*.fls
+*.out
+*.fdb_latexmk
+*.synctex.gz
+
+# Outros arquivos auxiliares comuns
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+
+# =================================================
+# Arquivos de Bibliografia (Gerados pelo BibTeX/Biber)
+# =================================================
+*.bbl
+*.blg
+
+# =================================================
+# Saída da Compilação (PDF)
+# =================================================
+# É uma boa prática ignorar o PDF, pois ele é gerado
+# a partir dos arquivos .tex.
+# Se você QUISER salvar o PDF no Git, remova a linha abaixo.
+*.pdf
+
+# =================================================
+# Pastas de Pacotes (ex: minted)
+# =================================================
+_minted/

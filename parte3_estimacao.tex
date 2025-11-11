@@ -1,0 +1,283 @@
+% ARQUIVO: parte3_estimacao.tex
+% (Este arquivo será "puxado" pelo main.tex)
+% -------------------------------------------------------------------
+% SEÇÃO 7: Propriedades de Estimadores (Lista 7)
+% -------------------------------------------------------------------
+\section{Estimação de Parâmetros e Propriedades (Lista 7)}
+\label{sec:propriedades}
+
+Esta seção foca em como avaliar a "qualidade" de um estimador $\hat{\theta}$. Os exercícios fornecem um $\hat{\theta}$ (ou pedem para você encontrar um) e analisam suas propriedades.
+
+% ---------------------------------
+\subsection{Vício de um Estimador}
+\begin{definicao}[Vício (Bias)]
+Um estimador $\hat{\theta}$ é dito \textbf{não-viciado} (ou não-tendencioso) para $\theta$ se o seu valor esperado for igual ao parâmetro, ou seja:
+$$ \E(\hat{\theta}) = \theta $$
+Isso significa que, em média, o estimador acerta o alvo. Se $\E(\hat{\theta}) \neq \theta$, o estimador é \textbf{viciado}.
+O vício é a diferença:
+$$ B(\hat{\theta}) = \E(\hat{\theta}) - \theta $$
+\end{definicao}
+
+\begin{propriedade}[Vício Assintótico]
+Um estimador é \textbf{assintoticamente não-viciado} se o vício desaparece quando $n \to \infty$.
+$$ \lim_{n \to \infty} \E(\hat{\theta}_n) = \theta $$
+\end{propriedade}
+
+\subsubsection{Exemplo-Chave: Vício do $S^2$ vs $\hat{\sigma}^2$}
+Seja $Y_i \stackrel{iid}{\sim} (\mu, \sigma^2)$.
+\begin{itemize}
+    \item \textbf{Estimador $S^2$ (Variância Amostral):} $S^2 = \frac{1}{n-1} \sum(Y_i - \overline{Y})^2$
+    \begin{itemize}
+        \item É possível provar que $\E[\sum(Y_i - \overline{Y})^2] = (n-1)\sigma^2$.
+        \item $\E(S^2) = \E\left[ \frac{1}{n-1} \sum(Y_i - \overline{Y})^2 \right] = \frac{1}{n-1} \E[\sum(Y_i - \overline{Y})^2] = \frac{1}{n-1} (n-1)\sigma^2 = \sigma^2$.
+        \item \textbf{Conclusão:} $S^2$ é \textbf{não-viciado} para $\sigma^2$.
+    \end{itemize}
+    \item \textbf{Estimador $\hat{\sigma}^2$ (EMV da Normal):} $\hat{\sigma}^2 = \frac{1}{n} \sum(Y_i - \overline{Y})^2$
+    \begin{itemize}
+        \item $\E(\hat{\sigma}^2) = \E\left[ \frac{1}{n} \sum(Y_i - \overline{Y})^2 \right] = \frac{1}{n} (n-1)\sigma^2 = \left(\frac{n-1}{n}\right)\sigma^2$.
+        \item \textbf{Conclusão:} $\hat{\sigma}^2$ é \textbf{viciado} para $\sigma^2$.
+        \item O vício é $B(\hat{\sigma}^2) = (\frac{n-1}{n})\sigma^2 - \sigma^2 = -\frac{\sigma^2}{n}$.
+        \item No entanto, $\lim_{n \to \infty} \E(\hat{\sigma}^2) = \lim_{n \to \infty} (\frac{n-1}{n})\sigma^2 = \sigma^2$.
+        \item \textbf{Conclusão 2:} $\hat{\sigma}^2$ é \textbf{assintoticamente não-viciado}.
+    \end{itemize}
+\end{itemize}
+
+% ---------------------------------
+\subsection{Erro Quadrático Médio (EQM)}
+O EQM é a métrica principal para avaliar o "erro" total de um estimador.
+\begin{definicao}[Erro Quadrático Médio (EQM)]
+É a esperança do erro ao quadrado:
+$$ EQM(\hat{\theta}) = \E\left[ (\hat{\theta} - \theta)^2 \right] $$
+\end{definicao}
+
+\begin{propriedade}[Decomposição do EQM]
+A fórmula mais útil para calcular o EQM é sua decomposição em Vício e Variância:
+$$ EQM(\hat{\theta}) = \V(\hat{\theta}) + [B(\hat{\theta})]^2 $$
+\textit{Prova:}
+\begin{align*}
+    EQM(\hat{\theta}) &= \E[(\hat{\theta} - \theta)^2] = \E[(\hat{\theta} - \E(\hat{\theta}) + \E(\hat{\theta}) - \theta)^2] \\
+    &= \E[(\underbrace{\hat{\theta} - \E(\hat{\theta})}_{\text{Variância}}) + (\underbrace{\E(\hat{\theta}) - \theta}_{\text{Vício}})]^2 \\
+    &= \E[(\hat{\theta} - \E(\hat{\theta}))^2] + 2 \E[(\hat{\theta} - \E(\hat{\theta}))(\E(\hat{\theta}) - \theta)] + (\E(\hat{\theta}) - \theta)^2 \\
+    &= \V(\hat{\theta}) + 2(\E(\hat{\theta}) - \theta) \E[(\hat{\theta} - \E(\hat{\theta}))] + [B(\hat{\theta})]^2 \\
+    &= \V(\hat{\theta}) + 2(\text{Vício}) \cdot 0 + [B(\hat{\theta})]^2 \\
+    &= \V(\hat{\theta}) + [B(\hat{\theta})]^2
+\end{align*}
+\end{propriedade}
+\textbf{Conclusão:} Se um estimador é não-viciado ($B(\hat{\theta})=0$), então $EQM(\hat{\theta}) = \V(\hat{\theta})$. Para comparar um estimador viciado e um não-viciado, sempre compare seus EQMs. O \textbf{menor EQM} é o melhor.
+
+% ---------------------------------
+\subsection{Consistência}
+\begin{definicao}[Consistência (em Probabilidade)]
+Um estimador $\hat{\theta}_n$ é consistente para $\theta$ se, para qualquer $\epsilon > 0$,
+$$ \lim_{n \to \infty} \Prob(|\hat{\theta}_n - \theta| \ge \epsilon) = 0 $$
+Isso é, $\hat{\theta}_n \xrightarrow{p} \theta$. A massa de probabilidade do estimador se concentra em torno do parâmetro verdadeiro à medida que $n$ cresce.
+\end{definicao}
+
+\begin{propriedade}[Consistência Médio Quadrática]
+Uma forma fácil de provar consistência é usar o EQM. Se o EQM vai a zero, o estimador é consistente.
+Se $\lim_{n \to \infty} EQM(\hat{\theta}_n) = 0$, então $\hat{\theta}_n$ é \textbf{médio quadrático consistente} (o que implica consistência em probabilidade).
+\end{propriedade}
+
+% ---------------------------------
+\subsection{Método dos Momentos (MM) (Lista 7)}
+Um método para encontrar estimadores baseado na Lei dos Grandes Números (que diz $m'_k \xrightarrow{p} \mu'_k$).
+
+\subsubsection{Passo a Passo}
+\begin{enumerate}
+    \item \textbf{Identifique K}, o número de parâmetros.
+    \item \textbf{Calcule os K primeiros Momentos Populacionais:} $\mu'_k = \E(Y^k)$.
+    \item \textbf{Defina os K primeiros Momentos Amostrais:} $m'_k = \frac{1}{n} \sum Y_i^k$.
+    \item \textbf{Equacione e Resolva:} Crie um sistema de K equações igualando $\mu'_k = m'_k$ e isole os parâmetros $\theta_1, ..., \theta_k$.
+\end{enumerate}
+
+\subsubsection{Exemplo (Lista 7, Q7): Gama($\alpha=2, \beta=1/\theta$)}
+A fdp é $f(y;\theta) = \theta^2 y e^{-\theta y}$.
+\begin{enumerate}
+    \item K = 1 parâmetro ($\theta$).
+    \item $\mu'_1 = \E(Y) = \int_0^\infty y \cdot (\theta^2 y e^{-\theta y}) dy = ... = 2/\theta$.
+    \item $m'_1 = \overline{Y}$.
+    \item $\mu'_1 = m'_1 \implies \frac{2}{\theta} = \overline{Y} \implies \hat{\theta}_{MM} = \frac{2}{\overline{Y}}$.
+\end{enumerate}
+
+\subsubsection{Exemplo (Gama($\alpha, \beta$) com 2 parâmetros)}
+f.d.p. $f(y; \alpha, \beta) = \frac{1}{\Gamma(\alpha)\beta^\alpha} y^{\alpha-1} e^{-y/\beta}$.
+\begin{enumerate}
+    \item K = 2 parâmetros ($\alpha, \beta$).
+    \item $\mu'_1 = \E(Y) = \alpha\beta$. \\
+          $\mu'_2 = \E(Y^2) = \V(Y) + [\E(Y)]^2 = \alpha\beta^2 + (\alpha\beta)^2 = \alpha\beta^2(1+\alpha)$.
+    \item $m'_1 = \overline{Y}$. \\
+          $m'_2 = \frac{1}{n} \sum Y_i^2$.
+    \item $\begin{cases} \alpha\beta = \overline{Y} \\ \alpha\beta^2(1+\alpha) = m'_2 \end{cases} \implies ... \implies$ Resolver o sistema para $\hat{\alpha}$ e $\hat{\beta}$.
+\end{enumerate}
+
+% -------------------------------------------------------------------
+% SEÇÃO 8: Método da Máxima Verossimilhança (EMV) (Lista 8)
+% -------------------------------------------------------------------
+\section{Método da Máxima Verossimilhança (EMV) (Lista 8)}
+\label{sec:emv}
+O EMV (ou MLE) é o método mais importante de estimação. A ideia é encontrar o valor do parâmetro ($\hat{\theta}$) que torna a amostra observada ($\boldsymbol{y}$) o mais provável possível.
+
+% ---------------------------------
+\subsection{Definições}
+\begin{definicao}[Função de Verossimilhança $L(\theta)$]
+Dada uma amostra iid $\boldsymbol{y} = (y_1, ..., y_n)$ de uma f.d.p. $f(y; \theta)$, a verossimilhança é o produtório das f.d.p.s, mas vista como uma função de $\theta$:
+$$ L(\theta | \boldsymbol{y}) = \prod_{i=1}^n f(y_i; \theta) $$
+\end{definicao}
+
+\begin{definicao}[Estimador de Máxima Verossimilhança (EMV)]
+O EMV, $\hat{\theta}$, é o valor de $\theta \in \Omega$ (espaço paramétrico) que maximiza $L(\theta)$.
+$$ \hat{\theta} = \arg \max_{\theta} L(\theta) $$
+\end{definicao}
+
+\begin{definicao}[Função de Log-Verossimilhança $l(\theta)$]
+Como log é uma função monotônica crescente, maximizar $L(\theta)$ é o mesmo que maximizar $l(\theta) = \ln(L(\theta))$. Isso transforma produtos em somas, o que facilita a derivação.
+$$ l(\theta) = \ln(L(\theta)) = \sum_{i=1}^n \ln(f(y_i; \theta)) $$
+\end{definicao}
+
+% ---------------------------------
+\subsection{Passo a Passo (Casos Regulares, via Derivada)}
+Usado quando o parâmetro $\theta$ está no interior do espaço paramétrico e a função é diferenciável (ex: Poisson, Normal, Binomial).
+
+\begin{enumerate}
+    \item \textbf{Escrever $L(\theta)$:} $L(\theta) = \prod f(y_i; \theta)$.
+    \item \textbf{Calcular $l(\theta)$:} $l(\theta) = \sum \ln(f(y_i; \theta))$.
+    \item \textbf{Calcular a Função Score $U(\theta)$:}
+    $$ U(\theta) = \frac{\partial l(\theta)}{\partial \theta} $$
+    \item \textbf{Resolver a Equação de Score:}
+    Encontre $\hat{\theta}$ que resolve $U(\hat{\theta}) = 0$.
+    \item \textbf{Verificar (Opcional):} Checar se é ponto de máximo (e não mínimo) vendo se a segunda derivada (Hessiana) é negativa:
+    $$ \frac{\partial^2 l(\theta)}{\partial \theta^2} \bigg|_{\theta=\hat{\theta}} < 0 $$
+\end{enumerate}
+
+\subsubsection{Exemplo (Poisson($\lambda$))}
+\begin{enumerate}
+    \item $L(\lambda) = \prod \frac{e^{-\lambda} \lambda^{y_i}}{y_i!} = \frac{e^{-n\lambda} \lambda^{\sum y_i}}{\prod y_i!}$
+    \item $l(\lambda) = -n\lambda + (\sum y_i) \ln(\lambda) - \sum \ln(y_i!)$
+    \item $U(\lambda) = \frac{\partial l}{\partial \lambda} = -n + \frac{\sum y_i}{\lambda}$
+    \item $U(\hat{\lambda}) = 0 \implies -n + \frac{\sum y_i}{\hat{\lambda}} = 0 \implies \hat{\lambda} = \frac{\sum y_i}{n} = \overline{Y}$.
+    \item $\frac{\partial^2 l}{\partial \lambda^2} = -\frac{\sum y_i}{\lambda^2}$. Como $\sum y_i > 0$ e $\lambda^2 > 0$, a segunda derivada é negativa. É um máximo.
+\end{enumerate}
+
+% ---------------------------------
+\subsection{Passo a Passo (Casos Não-Regulares, via Inspeção)}
+Usado quando o suporte da f.d.p. depende do parâmetro (ex: $U(0, \theta)$). A derivada geralmente não funciona aqui.
+
+\subsubsection{Exemplo (Uniforme $U(0, \theta)$)}
+$f(y; \theta) = \frac{1}{\theta}$ para $0 \le y \le \theta$.
+\begin{enumerate}
+    \item \textbf{Escrever $L(\theta)$:}
+    $$ L(\theta) = \prod_{i=1}^n \frac{1}{\theta} \cdot \mathbb{I}(0 \le y_i \le \theta) $$
+    $$ L(\theta) = \left(\frac{1}{\theta}\right)^n \cdot \mathbb{I}(\min(y_i) \ge 0) \cdot \mathbb{I}(\max(y_i) \le \theta) $$
+    Seja $Y_{(n)} = \max(y_i)$. A função de verossimilhança é:
+    $$ L(\theta) = \begin{cases} (1/\theta)^n & \text{se } \theta \ge Y_{(n)} \\ 0 & \text{se } \theta < Y_{(n)} \end{cases} $$
+    \item \textbf{Maximizar $L(\theta)$:}
+    A função $L(\theta) = (1/\theta)^n$ é uma \textbf{função decrescente} em $\theta$. Para maximizá-la, queremos o \textbf{menor valor possível de $\theta$}.
+    \item \textbf{Encontrar o EMV:} Qual o menor valor que $\theta$ pode assumir? Pela restrição $L(\theta)$, $\theta$ \textit{deve} ser maior ou igual a $Y_{(n)}$. O menor valor que $\theta$ pode assumir é, portanto, $Y_{(n)}$.
+    \item \textbf{Conclusão:} $\hat{\theta}_{EMV} = Y_{(n)}$.
+\end{enumerate}
+
+% ---------------------------------
+\subsection{Estatística Suficiente (Lista 9)}
+\begin{definicao}[Estatística Suficiente]
+Uma estatística $T(\boldsymbol{Y})$ é suficiente para $\theta$ se ela captura toda a informação sobre $\theta$ contida na amostra $\boldsymbol{Y}$.
+\end{definicao}
+\begin{teorema}[Fatoração de Neyman]
+$T(\boldsymbol{Y})$ é suficiente para $\theta$ se, e somente se, a f.d.p. conjunta pode ser fatorada como:
+$$ f(\boldsymbol{y}; \theta) = g(T(\boldsymbol{y}), \theta) \cdot h(\boldsymbol{y}) $$
+onde $h(\boldsymbol{y})$ não depende de $\theta$.
+\end{teorema}
+\begin{propriedade}[EMV e Suficiência]
+O EMV é uma função da estatística suficiente. Se $T$ é suficiente, então $\hat{\theta} = g(T)$.
+Isto é poderoso: se você encontrar o EMV (ex: $\overline{Y}$ para $\lambda$ da Poisson), você também encontrou uma função da estatística suficiente (a própria $T=\sum Y_i$ ou $\overline{Y}$).
+
+% -------------------------------------------------------------------
+% SEÇÃO 9: Propriedades do EMV e Cramer-Rao (Lista 9)
+% -------------------------------------------------------------------
+\section{Propriedades Avançadas do EMV (Lista 9)}
+\label{sec:assintotica}
+Aqui vemos por que o EMV é o "melhor" estimador.
+
+% ---------------------------------
+\subsection{Propriedade de Invariância}
+\begin{teorema}[Invariância]
+Se $\hat{\theta}$ é o EMV de $\theta$, então o EMV de uma função $g(\theta)$ é simplesmente $g(\hat{\theta})$.
+\end{teorema}
+\textbf{Exemplo (Exponencial $Exp(\theta)$):}
+$Y_i \sim Exp(\theta)$. A f.d.p. é $f(y;\theta) = \theta e^{-\theta y}$.
+\begin{itemize}
+    \item O EMV do parâmetro $\theta$ é $\hat{\theta} = 1/\overline{Y}$.
+    \item Qual o EMV da \textit{média}, $\mu = \E(Y) = 1/\theta$?
+    \item Pela invariância, $\hat{\mu} = g(\hat{\theta}) = 1/\hat{\theta} = 1/(1/\overline{Y}) = \overline{Y}$.
+    \item Qual o EMV da $P(Y > 1) = e^{-\theta}$?
+    \item Pela invariância, $\widehat{P(Y>1)} = e^{-\hat{\theta}} = e^{-1/\overline{Y}}$.
+\end{itemize}
+
+% ---------------------------------
+\subsection{Informação de Fisher e LIRC}
+O LIRC estabelece o limite teórico de quão "bom" (preciso) um estimador pode ser.
+
+\begin{definicao}[Função Score $U(\theta)$]
+É o vetor (ou valor) das primeiras derivadas da log-verossimilhança.
+$$ U(\theta) = \frac{\partial l(\theta)}{\partial \theta} $$
+Sob condições de regularidade, $\E[U(\theta)] = 0$.
+\end{definicao}
+
+\begin{definicao}[Informação de Fisher $I(\theta)$]
+Mede a quantidade de informação que a amostra $\boldsymbol{Y}$ (ou uma única $Y$) contém sobre $\theta$. É a variância da função score.
+$$ I_n(\theta) = \V[U(\theta)] \quad \text{(Para a amostra toda)}$$
+Para uma amostra iid, $I_n(\theta) = n \cdot I_1(\theta)$. $I_1(\theta)$ é a informação de uma única observação.
+Forma computacional (mais fácil):
+$$ I_1(\theta) = -\E\left[ \frac{\partial^2 \ln f(Y; \theta)}{\partial \theta^2} \right] $$
+\end{definicao}
+
+\begin{teorema}[Limite Inferior de Cramer-Rao (LIRC)]
+Seja $T(\boldsymbol{Y})$ um estimador não-viciado para $g(\theta)$. A variância de $T$ é limitada:
+$$ \V(T) \ge \frac{[g'(\theta)]^2}{I_n(\theta)} = \frac{[g'(\theta)]^2}{n \cdot I_1(\theta)} $$
+\textbf{Caso especial (T é estimador de $\theta$):}
+Se $T$ é não-viciado para $\theta$, $g(\theta)=\theta$ e $g'(\theta)=1$. O limite se torna:
+$$ \V(T) \ge \frac{1}{I_n(\theta)} = \frac{1}{n \cdot I_1(\theta)} $$
+\end{teorema}
+\begin{definicao}[Eficiência]
+Um estimador não-viciado que atinge o LIRC (ou seja, $\V(T) = \frac{1}{I_n(\theta)}$) é dito \textbf{eficiente}.
+\end{definicao}
+
+\subsubsection{Passo a Passo (Calcular LIRC para $\theta$)}
+\begin{enumerate}
+    \item \textbf{Achar $l(\theta; y)$:} $l(\theta; y) = \ln f(y; \theta)$ (para UMA observação).
+    \item \textbf{Calcular $\frac{\partial^2 l}{\partial \theta^2}$:} A segunda derivada.
+    \item \textbf{Calcular $I_1(\theta)$:} $I_1(\theta) = -\E\left[ \frac{\partial^2 l}{\partial \theta^2} \right]$. (Lembre-se de tomar a esperança em $Y$).
+    \item \textbf{Declarar LIRC:} O limite é $LIRC = \frac{1}{n \cdot I_1(\theta)}$.
+\end{enumerate}
+
+% ---------------------------------
+\subsection{Propriedades Assintóticas do EMV}
+Este é o teorema final que junta tudo.
+
+\begin{teorema}[Distribuição Assintótica do EMV]
+Sob condições de regularidade, o EMV $\hat{\theta}$ é:
+\begin{enumerate}
+    \item \textbf{Consistente:} $\hat{\theta} \xrightarrow{p} \theta$.
+    \item \textbf{Assintoticamente Não-Viciado:} $\lim \E(\hat{\theta}) = \theta$.
+    \item \textbf{Assintoticamente Eficiente:} Atinge o LIRC.
+    \item \textbf{Assintoticamente Normal:} A distribuição de $\hat{\theta}$ se aproxima de uma Normal.
+\end{enumerate}
+O teorema é formalmente escrito como:
+$$ \sqrt{n}(\hat{\theta} - \theta) \xrightarrow{d} N\left(0, [I_1(\theta)]^{-1}\right) $$
+Ou, de forma mais prática, para $n$ grande:
+$$ \hat{\theta} \stackrel{aprox.}{\sim} N\left(\theta, \frac{1}{n \cdot I_1(\theta)}\right) $$
+A variância assintótica do EMV é o LIRC! É por isso que ele é o "melhor" estimador.
+\end{teorema}
+
+% ---------------------------------
+\subsection{Método Delta}
+Usado para encontrar a distribuição assintótica de uma \textit{função} do EMV, $g(\hat{\theta})$.
+\begin{teorema}[Método Delta]
+Se $\sqrt{n}(\hat{\theta} - \theta) \xrightarrow{d} N(0, \sigma^2_{\hat{\theta}})$, então
+$$ \sqrt{n}(g(\hat{\theta}) - g(\theta)) \xrightarrow{d} N\left(0, [g'(\theta)]^2 \cdot \sigma^2_{\hat{\theta}}\right) $$
+\end{teorema}
+\textbf{Aplicação no EMV:}
+Sabemos que $\sqrt{n}(\hat{\theta} - \theta) \xrightarrow{d} N(0, [I_1(\theta)]^{-1})$.
+Portanto, para $g(\hat{\theta})$ (o EMV de $g(\theta)$):
+$$ \sqrt{n}(g(\hat{\theta}) - g(\theta)) \xrightarrow{d} N\left(0, [g'(\theta)]^2 \cdot [I_1(\theta)]^{-1}\right) $$
+De forma prática:
+$$ g(\hat{\theta}) \stackrel{aprox.}{\sim} N\left(g(\theta), \frac{[g'(\theta)]^2}{n \cdot I_1(\theta)}\right) $$

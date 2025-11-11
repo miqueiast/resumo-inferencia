@@ -1,0 +1,136 @@
+
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{setspace}
+\setstretch{1.2}
+
+\title{Lista 1 --- Distribuições de Probabilidade}
+\author{Respostas das Questões 1 e 2}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Questão 1 — Componentes das distribuições}
+
+\subsection*{a) Poisson($\lambda$)}
+\begin{itemize}
+\item \textbf{pmf:} $P(Y=y)=\dfrac{e^{-\lambda}\lambda^{y}}{y!},\; y=0,1,2,\dots$
+\item \textbf{Suporte:} $\{0,1,2,\dots\}$
+\item \textbf{Parâmetro:} $\lambda>0$
+\item \textbf{Espaço paramétrico:} $\lambda\in(0,\infty)$
+\item \textbf{Esperança:} $E[Y]=\lambda$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=\lambda$
+\end{itemize}
+
+\subsection*{b) Binomial($n,p$)}
+\begin{itemize}
+\item \textbf{pmf:} $P(Y=y)=\binom{n}{y} p^{y}(1-p)^{n-y},\; y=0,1,\dots,n$
+\item \textbf{Suporte:} $\{0,1,\dots,n\}$
+\item \textbf{Parâmetros:} $n\in\mathbb{N}$, $p\in(0,1)$
+\item \textbf{Esperança:} $E[Y]=np$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=np(1-p)$
+\end{itemize}
+
+\subsection*{c) Exponencial($\lambda$)}
+\begin{itemize}
+\item \textbf{pdf:} $f(y)=\lambda e^{-\lambda y},\; y\ge0$
+\item \textbf{Suporte:} $[0,\infty)$
+\item \textbf{Parâmetro:} $\lambda>0$
+\item \textbf{Esperança:} $E[Y]=1/\lambda$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=1/\lambda^2$
+\end{itemize}
+
+\subsection*{d) Normal($\mu,\sigma^2$)}
+\begin{itemize}
+\item \textbf{pdf:} $f(y)=\dfrac{1}{\sqrt{2\pi\sigma^2}}\exp\!\Big(-\dfrac{(y-\mu)^2}{2\sigma^2}\Big),\; y\in\mathbb{R}$
+\item \textbf{Esperança:} $E[Y]=\mu$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=\sigma^2$
+\end{itemize}
+
+\subsection*{e) Gama($\alpha,\beta$)}
+\begin{itemize}
+\item \textbf{pdf:} $f(y)=\dfrac{\beta^{\alpha}}{\Gamma(\alpha)}y^{\alpha-1}e^{-\beta y},\; y>0$
+\item \textbf{Esperança:} $E[Y]=\dfrac{\alpha}{\beta}$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=\dfrac{\alpha}{\beta^2}$
+\end{itemize}
+
+\subsection*{f) Uniforme($a,b$)}
+\begin{itemize}
+\item \textbf{pdf:} $f(y)=\dfrac{1}{b-a},\; a\le y\le b$
+\item \textbf{Esperança:} $E[Y]=\dfrac{a+b}{2}$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=\dfrac{(b-a)^2}{12}$
+\end{itemize}
+
+\subsection*{g) Binomial negativa($\mu,\phi$)}
+\begin{itemize}
+\item \textbf{pmf:} $P(Y=y)=\binom{y+\phi-1}{y}\left(\dfrac{\phi}{\phi+\mu}\right)^{\phi}\left(\dfrac{\mu}{\phi+\mu}\right)^{y},\; y=0,1,2,\dots$
+\item \textbf{Esperança:} $E[Y]=\mu$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=\mu+\dfrac{\mu^2}{\phi}$
+\end{itemize}
+
+\subsection*{h) Log-normal($\mu,\sigma^2$)}
+\begin{itemize}
+\item \textbf{pdf:} $f(y)=\dfrac{1}{y\sqrt{2\pi\sigma^2}}\exp\!\Big(-\dfrac{(\ln y-\mu)^2}{2\sigma^2}\Big),\; y>0$
+\item \textbf{Esperança:} $E[Y]=e^{\mu+\frac{\sigma^2}{2}}$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=(e^{\sigma^2}-1)e^{2\mu+\sigma^2}$
+\end{itemize}
+
+\subsection*{i) Inversa Gaussiana ($\mu,\sigma^2$)}
+\begin{itemize}
+\item \textbf{pdf:} $f(y)=\sqrt{\dfrac{\mu^3}{2\pi\sigma^2 y^3}}\exp\!\Big(-\dfrac{(y-\mu)^2}{2\sigma^2 y/\mu^2}\Big),\; y>0$
+\item \textbf{Suporte:} $(0,\infty)$
+\item \textbf{Parâmetros:} $\mu>0,\;\sigma^2>0$
+\item \textbf{Esperança:} $E[Y]=\mu$
+\item \textbf{Variância:} $\mathrm{Var}(Y)=\sigma^2\mu^3$
+\end{itemize}
+
+\subsection*{j) Tweedie($\mu,\phi,p$)}
+\begin{itemize}
+\item \textbf{Função variância:} $\mathrm{Var}(Y)=\phi\mu^{p}$
+\item \textbf{Parâmetros:} $\mu>0,\;\phi>0,\;p\in\mathbb{R}$
+\item \textbf{Casos especiais:} 
+\begin{itemize}
+\item $p=0$: Normal
+\item $p=1$: Poisson
+\item $1<p<2$: Poisson-Gama
+\item $p=2$: Gama
+\item $p=3$: Inversa Gaussiana
+\end{itemize}
+\end{itemize}
+
+\newpage
+\section*{Questão 2 — Especificação de modelos}
+
+\subsection*{a) Itens conforme/não-conforme}
+Modelo sugerido: Bernoulli($p$) ou Binomial($n,p$). \newline
+Aspectos de inferência: estimativa de proporção $p$, testes e controle de qualidade.
+
+\subsection*{b) Pesquisa com escala Likert}
+Modelo sugerido: regressão ordinal (proportional odds) ou multinomial. \newline
+Aspectos de inferência: probabilidades por categoria, testes de proporcionalidade e confiabilidade.
+
+\subsection*{c) Número de carros chegando a um caixa automático}
+Modelo sugerido: Poisson($\lambda$) ou Binomial Negativa em caso de sobredispersão. \newline
+Aspectos de inferência: estimar taxa $\lambda$, checar overdispersion, regressão Poisson.
+
+\subsection*{d) Ocorrência de defeitos em uma rodovia}
+Modelo sugerido: Poisson ou Binomial Negativa (se sobredispersão). \newline
+Aspectos de inferência: taxa média de defeitos, modelos espaciais, testes de diferença.
+
+\subsection*{e) Medidas antropométricas (peso e altura)}
+Modelo sugerido: Normal multivariada. \newline
+Aspectos de inferência: médias, covariâncias, testes de diferença e percentis.
+
+\subsection*{f) Tempo até equipamento apresentar defeito}
+Modelo sugerido: Exponencial ou Weibull. \newline
+Aspectos de inferência: análise de sobrevivência, censura, estimativa de tempo médio de falha.
+
+\subsection*{g) Quilometragem até defeito em pneus}
+Modelo sugerido: Weibull, Log-normal ou Gama. \newline
+Aspectos de inferência: confiabilidade, censura, comparação entre marcas e vida útil esperada.
+
+\end{document}
