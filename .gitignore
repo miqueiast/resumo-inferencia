@@ -29,7 +29,6 @@
 # É uma boa prática ignorar o PDF, pois ele é gerado
 # a partir dos arquivos .tex.
 # Se você QUISER salvar o PDF no Git, remova a linha abaixo.
-*.pdf
 
 # =================================================
 # Pastas de Pacotes (ex: minted)
