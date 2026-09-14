@@ -1,0 +1,181 @@
+\documentclass[7pt,landscape,a4paper]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[margin=0.4cm,top=0.5cm,bottom=0.5cm]{geometry}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.7pt}
+\setlength{\emergencystretch}{3em}
+
+\setlist{leftmargin=*,noitemsep,topsep=0.5pt,itemsep=0pt}
+
+\titleformat{\section}{\normalfont\bfseries\color{blue!50!black}}{}{0pt}{}
+\titlespacing{\section}{0pt}{2pt}{1pt}
+\titleformat{\subsection}{\normalfont\bfseries}{}{0pt}{}
+\titlespacing{\subsection}{0pt}{1pt}{0pt}
+
+\pagestyle{empty}
+
+\begin{document}
+
+\begin{center}
+{\normalsize\bfseries Distribuição Amostral e Teorema do Limite Central --- Folha de Resumo}
+\end{center}
+\vspace{-4pt}
+
+\setlength{\columnsep}{7pt}
+\setlength{\columnseprule}{0.2pt}
+\begin{multicols*}{5}
+
+\section{1. Conceitos Fundamentais}
+\textbf{População/Universo}: $U=\{1,2,\dots,N\}$, $N$=tamanho.
+
+\textbf{Unidade elementar}: qualquer $i \in U$.
+
+\textbf{Variável}: $Y_i$, $i\in U$; dados populacionais $\mathbf{D}=(Y_1,\dots,Y_N)$.
+
+\textbf{Função paramétrica populacional}: $\theta(\mathbf{D})$ condensa os $Y_i$'s (total, média, quociente etc.) = \emph{parâmetro populacional}.
+
+\textbf{Amostra}: $\mathbf{s}=(1,\dots,i,\dots,n)$, $i\in U$, tamanho $n$.
+
+\textbf{Dados da amostra}: $\mathbf{d_s}=(Y_1,\dots,Y_n)=(Y_i,i\in\mathbf{s})$.
+
+\textbf{Estatística}: $h(\mathbf{d_s})$, função das obs. da amostra.
+
+\textbf{Distribuição amostral}: distribuição de prob. da v.a. $H(\mathbf{d_s})$.
+
+\textit{Ex. (domicílios)}: $r=\dfrac{\sum F_i}{\sum T_i}$ para $\mathbf{s}=(3,1)\to r=\dfrac{18+12}{2+1}=10$.
+
+\section{2. Parâmetros Populacionais}
+Total: $\theta(\mathbf{D})=\tau=\sum_{i=1}^N Y_i$
+
+Média: $\mu=\overline{Y}=\frac{1}{N}\sum_{i=1}^N Y_i$
+
+Variância: $\sigma^2=\frac{1}{N}\sum_{i=1}^N (Y_i-\mu)^2$
+
+Quasivariância: $S^2=\frac{1}{N-1}\sum_{i=1}^N (Y_i-\mu)^2$
+
+\textit{Ex.}: $\mathbf D=(12,30,18)\Rightarrow \mu=20$, $\sigma^2=56$.
+
+\section{3. Planos Amostrais}
+\textbf{AASc} (c/ reposição): $n$ unid. sorteadas c/ igual prob., repetição permitida. Amostras ordenadas: $N^n$.
+
+\textbf{AASs} (s/ reposição): sem repetição. $\binom{N}{n}$ (não ordenadas) ou $N!/(N-n)!$ (ordenadas).
+
+$P(\mathbf{s})=1/N^n$ (AASc) ou $1/\binom{N}{n}$ (AASs) — cada amostra equiprovável.
+
+\textit{Ex.}: $N=3,n=2$ (AASc) $\to 9$ amostras, $P(\mathbf s)=1/9$ cada.
+
+\section{4. Estatísticas Amostrais}
+Média: $\overline{Y}=\frac{1}{n}\sum_{i=1}^n Y_i$
+
+Variância: $S^2=\frac{1}{n-1}\sum_{i=1}^n (Y_i-\overline{Y})^2$ ou $\hat\sigma^2=\frac{1}{n}\sum(Y_i-\overline{Y})^2$
+
+Atalho $n=2$: $S^2=\dfrac{(Y_1-Y_2)^2}{2}$
+
+Proporção: $\hat p=\frac{1}{n}\sum_{i=1}^n Y_i$, $Y_i\sim\text{Ber}(p)$
+
+\textit{Ex.}: amostra $(1,2)$, renda $12,30\Rightarrow \overline Y=21$, $S^2=162$.
+
+\section{5. Propriedades e Esperanças}
+\textbf{Não-viciado}: $E[h(\mathbf{d_s})]=\theta(\mathbf{D})$.
+
+$E(\overline{Y})=\mu$, $\;Var(\overline{Y})=\dfrac{\sigma^2}{n}$
+
+\textbf{Erro padrão}: $EP(\overline{Y})=\dfrac{\sigma}{\sqrt n}$
+
+$E(S^2)=\sigma^2$ (viés zero c/ divisor $n{-}1$)
+
+Proporção: $E(\hat p)=p$, $\;Var(\hat p)=\dfrac{p(1-p)}{n}$
+
+\textit{Ex. (domicílios, $n=2$)}: $E(\overline{Y})=20=\mu$; $E(S^2)=56=\sigma^2$ $\to$ confirma não-viés.
+
+\columnbreak
+
+\section{6. População Normal}
+Se $Y_i\sim N(\mu,\sigma^2)$ i.i.d.:
+$$\overline{Y}\sim N\!\left(\mu,\frac{\sigma^2}{n}\right)$$
+(combinação linear de Normais é Normal)
+
+Padronização: $Z=\dfrac{\overline{Y}-\mu}{\sigma/\sqrt n}\sim N(0,1)$
+
+$P(\overline{Y}>a)=P\!\left(Z>\dfrac{a-\mu}{\sigma/\sqrt n}\right)$
+
+$P(a<\overline{Y}<b)=P\!\left(\dfrac{a-\mu}{\sigma/\sqrt n}<Z<\dfrac{b-\mu}{\sigma/\sqrt n}\right)$
+
+\textit{Ex. (pilotos)}: $\mu{=}41979,\sigma{=}5000,n{=}50$. $EP=5000/\sqrt{50}$. $P(\overline Y>\mu)=0{,}5$. $P(|\overline Y-\mu|<1000)\approx 0{,}842$ ($n{=}50$); $\approx 0{,}954$ ($n{=}100$).
+
+\section{7. Teorema do Limite Central}
+\textbf{Lindeberg-Lévy}: $Y_1,\dots,Y_n$ i.i.d., $E(Y_i)=\mu$, $V(Y_i)=\sigma^2<\infty$:
+$$\sqrt n\!\left(\frac{\overline{Y}-\mu}{\sigma}\right)\xrightarrow{D} N(0,1),\ n\to\infty$$
+
+\textbf{Forma alternativa}: $\overline{Y}\sim N(\mu,\sigma^2/n)$ — vale \textbf{mesmo sem} Normalidade de $Y_i$, $n$ grande.
+
+\textbf{Proporções} ($Y_i\sim$ Ber$(p)$):
+$$\hat p\sim N\!\left(p,\frac{p(1-p)}{n}\right)$$
+
+\textit{Ex. (internet, $p{=}0{,}56$)}: $P(|\hat p-p|<0{,}03)$: $n{=}300\to0{,}704$; $n{=}600\to0{,}861$; $n{=}1000\to0{,}944$ (cresce com $n$).
+
+\section{8. Tabela Normal $Z$}
+$\Phi(z)=P(Z\le z)$
+
+Simetria: $\Phi(-z)=1-\Phi(z)$; $P(Z>z)=1-\Phi(z)$
+
+Interv. simétrico: $P(-a<Z<a)=2\Phi(a)-1$
+
+$P(-1{<}Z{<}1)\approx0{,}683$; $P(-1{,}96{<}Z{<}1{,}96)\approx0{,}95$; $P(-2{,}58{<}Z{<}2{,}58)\approx0{,}99$
+
+\columnbreak
+
+\section{9. Dist. $\chi^2$}
+Se $Y_i\sim N(\mu,\sigma^2)$: $(n-1)\dfrac{S^2}{\sigma^2}\sim\chi^2_{n-1}$
+
+$f(y_s;k)=\dfrac{y_s^{k/2-1}e^{-y_s/2}}{2^{k/2}\Gamma(k/2)}$, $y_s>0$
+
+Usos: independência (contingência), bondade de ajuste, razão de verossimilhanças, log-rank, CMH. Soma de $n{-}1$ Normais padrão$^2$. Caso particular da Gama.
+
+\textit{Ex. (bateria, $\mu{=}60,\sigma{=}4,n{=}7$)}: $P(S^2{>}16)\approx0{,}423$; $P(4{<}S^2{<}36)\approx0{,}923$; $P(S^2{<}4)\approx0{,}040$.
+
+\section{10. Dist. $t$-Student}
+$t=\dfrac{\overline{Y}-\mu}{S/\sqrt n}\sim t_{n-1}$
+
+$f(t)=\dfrac{\Gamma(\frac{\nu+1}{2})}{\sqrt{\nu\pi}\,\Gamma(\frac{\nu}{2})}\left(1+\dfrac{t^2}{\nu}\right)^{-\frac{\nu+1}{2}}$
+
+Simétrica, caudas mais pesadas que Normal; $\nu\to\infty \Rightarrow t\to Z$. Base do teste $t$ e IC p/ média. Criada por Gosset ("Student").
+
+\textit{IC para $\mu$}: $\overline y\pm t_{\alpha/2,n-1}\dfrac{s}{\sqrt n}$
+
+\textit{Ex. (acupuntura, $\overline y{=}8{,}22,s{=}1{,}67,n{=}15$)}: IC$_{95\%}=8{,}22\pm2{,}14\cdot\frac{1{,}67}{\sqrt{15}}\approx[7{,}30;\,9{,}14]$.
+
+\section{11. Dist. $F$ de Snedecor}
+$F=\dfrac{S_1^2}{S_2^2}\sim F_{n_1-1,n_2-1}$ (se $\sigma_1^2=\sigma_2^2$)
+
+$f(y)=\sqrt{\dfrac{(d_1y)^{d_1}d_2^{d_2}}{(d_1y+d_2)^{d_1+d_2}}}\Big/\left(yB(\tfrac{d_1}{2},\tfrac{d_2}{2})\right)$
+
+Usos: teste $F$ p/ igualdade de variâncias, ANOVA, regressão, razão de $\chi^2$'s. Se $\sigma_1^2\neq\sigma_2^2$: $F$ não-central.
+
+\textit{Ex. (acupuntura, $s_1^2{=}4{,}44,n_1{=}5$; $s_2^2{=}1{,}5,n_2{=}8$)}: $P(F_{4,7}>2{,}96)\approx0{,}1$ — variâncias plausivelmente iguais.
+
+\section{12. Relações entre distribuições}
+$Z^2\sim\chi^2_1$
+
+$t^2\sim F_{1,\nu}$
+
+Razão de $\chi^2$'s/gl's $\sim F_{n_1,n_2}$
+
+$F\to\chi^2$ quando $n_2\to\infty$
+
+$t$-Student: alternativa robusta à Normal (caudas pesadas)
+
+Todas convergem à Normal quando $gl\to\infty$
+
+\end{multicols*}
+\end{document}
