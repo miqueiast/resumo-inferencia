@@ -1,0 +1,3131 @@
+\documentclass[8pt, a4paper, landscape]{extarticle}
+
+% Margens mínimas para aproveitar o máximo da folha
+\usepackage[margin=0.5cm]{geometry}
+
+% Pacote para dividir em colunas
+\usepackage{multicol}
+
+% Melhora a hifenização e o espaçamento, crucial para colunas estreitas não extrapolarem
+\usepackage{microtype}
+
+% Pacotes matemáticos (padrão para probabilidade/inferência)
+\usepackage{amsmath, amssymb, amsfonts}
+
+% Codificação e idioma
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+
+% Ajuste das colunas
+\setlength{\columnsep}{0.15cm} % Espaçamento entre colunas
+\setlength{\columnseprule}{0.1pt} % Linha divisória entre as colunas
+
+% Ajuste de espaçamento de parágrafos e listas
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=*} % Remove espaços extras em listas
+\setlength{\parindent}{0pt} % Sem recuo no início do parágrafo
+\setlength{\parskip}{1pt plus 1pt} % Espaço mínimo entre parágrafos
+
+% Ajuste de espaçamento ao redor de equações
+\AtBeginDocument{
+  \setlength{\abovedisplayskip}{2pt}
+  \setlength{\belowdisplayskip}{2pt}
+  \setlength{\abovedisplayshortskip}{0pt}
+  \setlength{\belowdisplayshortskip}{0pt}
+}
+
+\begin{document}
+
+% Tamanho da fonte: \tiny (menor de todas), \scriptsize ou \footnotesize
+\tiny 
+
+\begin{multicols}{6}
+
+% ---------------------------------------------------
+% INICIO DOCUMENTO
+% ---------------------------------------------------
+
+% ---------------------------------------------------
+% EXERCÍCIO 01
+% ---------------------------------------------------
+\textbf{Exercício 1: Em uma pesquisa sobre o impacto de um programa de treinamento de gestão sobre a produtividade dos funcionários em uma empresa, um economista coletou uma amostra aleatória de 25 funcionários. O tempo médio de aumento de produtividade após o treinamento foi de 15\%, com um desvio padrão amostral de 6\%. Suponha que a distribuição dos aumentos de produtividade segue uma distribuição normal com média de 10\% e desvio padrão, $\sigma$, desconhecido. Qual a probabilidade da média amostral não diferir da média populacional por mais do que 5\%? Como você interpreta esse resultado?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: aumento de produtividade (em \%) de um funcionário após o treinamento.
+
+$Y \sim N(\mu, \sigma^2)$, com $\mu = 10$ e $\sigma$ desconhecido.
+
+$n = 25$, \quad $\bar{y} = 15$, \quad $s = 6$.
+
+Como $\sigma$ é desconhecido, substituímos $\sigma$ por $S$. Sendo $Y$ normal, a quantidade pivotal é
+
+\begin{equation*}
+\begin{split}
+T &= \frac{\bar{Y} - \mu}{S/\sqrt{n}} \\
+  &\sim t_{(n-1)} = t_{(24)}
+\end{split}
+\end{equation*}
+
+Queremos:
+
+\begin{equation*}
+P\left(|\bar{Y} - \mu| < 5\right)
+\end{equation*}
+
+Padronizando:
+
+\begin{equation*}
+\begin{split}
+&P\left(|\bar{Y} - \mu| < 5\right) \\
+&= P\left(-5 < \bar{Y} - \mu < 5\right) \\
+&= P\left(\frac{-5}{S/\sqrt{n}} < T < \frac{5}{S/\sqrt{n}}\right) \\
+&= P\left(\frac{-5}{6/\sqrt{25}} < T < \frac{5}{6/\sqrt{25}}\right) \\
+&= P\left(\frac{-5}{1,2} < T < \frac{5}{1,2}\right) \\
+&= P\left(-4,1667 < T < 4,1667\right)
+\end{split}
+\end{equation*}
+
+Pela simetria da distribuição $t$:
+
+\begin{equation*}
+\begin{split}
+&= 2\,P(T < 4,1667) - 1 \\
+&= 2(0,99983) - 1 \\
+&\approx 0,9997
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $n = 25$, o erro padrão da média é $S/\sqrt{n} = 1,2$, bem pequeno em relação à margem de 5\%. Assim, há probabilidade de aproximadamente $99,97\%$ de que a média amostral se afaste da média populacional por menos de 5 pontos percentuais, ou seja, a média amostral é um estimador bastante preciso de $\mu$ nesse cenário.
+
+Observa-se ainda que o valor observado $\bar{y} = 15$ difere de $\mu = 10$ em exatamente 5\%, um evento de probabilidade muito baixa ($\approx 0,03\%$) sob a suposição $\mu = 10$. Isso sugere evidência de que o treinamento de fato alterou a produtividade média.
+
+% ---------------------------------------------------
+% EXERCÍCIO 02
+% ---------------------------------------------------
+\textbf{Exercício 2: Um economista está estudando os gastos mensais de famílias de classe média em uma cidade. Assume-se que os gastos mensais segue uma distribuição normal com média R\$ 1.000,00 e desvio padrão R\$ 600,00. Considere que uma amostra aleatória de 16 famílias foi coletada. Calcule a probabilidade da variância amostral ser maior que 700. Interprete o resultado obtido.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: gasto mensal (em R\$) de uma família de classe média.
+
+$Y \sim N(\mu, \sigma^2)$, com $\mu = 1000$ e $\sigma = 600$, logo $\sigma^2 = 360000$.
+
+$n = 16$, \quad $n - 1 = 15$.
+
+Como $Y$ tem distribuição normal, a quantidade pivotal para a variância é
+
+\begin{equation*}
+\begin{split}
+Q &= \frac{(n-1)S^2}{\sigma^2} \\
+  &\sim \chi^2_{(n-1)} = \chi^2_{(15)}
+\end{split}
+\end{equation*}
+
+Queremos $P(S^2 > 700)$. Padronizando:
+
+\begin{equation*}
+\begin{split}
+&P\left(S^2 > 700\right) \\
+&= P\left(\frac{(n-1)S^2}{\sigma^2} > \frac{(n-1)\cdot 700}{\sigma^2}\right) \\
+&= P\left(\chi^2_{(15)} > \frac{15 \cdot 700}{360000}\right) \\
+&= P\left(\chi^2_{(15)} > \frac{10500}{360000}\right) \\
+&= P\left(\chi^2_{(15)} > 0,0292\right) \\
+&\approx 1,0000
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} o valor 700 é ínfimo frente à variância populacional $\sigma^2 = 360000$ (o desvio padrão de R\$ 600,00 equivale a $\sigma^2 = 600^2$). O quantil padronizado $0,0292$ cai na cauda inferior extrema da $\chi^2_{(15)}$, de modo que praticamente toda a massa de probabilidade está à sua direita. Ou seja, é quase certo que a variância amostral observada supere 700; seria virtualmente impossível obter uma amostra de 16 famílias tão homogênea a ponto de $S^2 \leq 700$ (o que corresponderia a um desvio padrão amostral menor que R\$ 26,46).
+
+\vspace{0.2cm}
+
+\textbf{Obs.:} caso o enunciado se refira ao \textit{desvio padrão} amostral maior que 700, isto é, $S^2 > 490000$:
+
+\begin{equation*}
+\begin{split}
+&P\left(S^2 > 490000\right) \\
+&= P\left(\chi^2_{(15)} > \frac{15 \cdot 490000}{360000}\right) \\
+&= P\left(\chi^2_{(15)} > 20,4167\right) \\
+&\approx 0,1560
+\end{split}
+\end{equation*}
+
+Nesse caso, há cerca de $15,6\%$ de chance de a amostra apresentar dispersão superior à populacional nessa magnitude, o que não é um evento raro.
+
+% ---------------------------------------------------
+% EXERCÍCIO 03
+% ---------------------------------------------------
+\textbf{Exercício 3: Pesquisadores estão comparando o desempenho em raciocínio quantitativo entre dois grupos de candidatos do GRE:}
+
+\textbf{$\bullet$ Grupo A: candidatos que frequentaram um curso preparatório.}
+
+\textbf{$\bullet$ Grupo B: candidatos que não frequentaram o curso.}
+
+\textbf{Sabe-se que as pontuações populacionais de ambos os grupos seguem aproximadamente distribuições Normais com os seguintes parâmetros: $\mu_A = 580$, $\sigma_A = 90$, $\mu_B = 550$, $\sigma_B = 100$. Foram selecionadas amostras independentes de $n_A = 36$ candidatos do Grupo A e $n_B = 49$ candidatos do Grupo B. Qual a probabilidade de a diferença entre as médias amostrais ser maior que 50 pontos? Como você interpreta o resultado?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X$: pontuação de um candidato do Grupo A (com curso).
+
+$X \sim N(\mu_A, \sigma_A^2)$, com $\mu_A = 580$, $\sigma_A = 90$, $n_A = 36$.
+
+$Y$: pontuação de um candidato do Grupo B (sem curso).
+
+$Y \sim N(\mu_B, \sigma_B^2)$, com $\mu_B = 550$, $\sigma_B = 100$, $n_B = 49$.
+
+Como as populações são normais:
+
+\begin{equation*}
+\bar{X} \sim N\left(580, \frac{90^2}{36}\right) = N(580, 225)
+\end{equation*}
+
+\begin{equation*}
+\bar{Y} \sim N\left(550, \frac{100^2}{49}\right)
+\end{equation*}
+
+Como as amostras são independentes, a diferença de normais é normal:
+
+\begin{equation*}
+\begin{split}
+E(\bar{X} - \bar{Y}) &= \mu_A - \mu_B \\
+&= 580 - 550 = 30
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+Var(\bar{X} - \bar{Y}) &= \frac{\sigma_A^2}{n_A} + \frac{\sigma_B^2}{n_B} \\
+&= \frac{8100}{36} + \frac{10000}{49} \\
+&= 225 + 204,08 \\
+&= 429,08
+\end{split}
+\end{equation*}
+
+Logo:
+
+\begin{equation*}
+\bar{X} - \bar{Y} \sim N(30;\ 429,08)
+\end{equation*}
+
+com $\sqrt{429,08} = 20,71$.
+
+Padronizando:
+
+\begin{equation*}
+\begin{split}
+&P\left(\bar{X} - \bar{Y} > 50\right) \\
+&= P\left(Z > \frac{50 - 30}{\sqrt{429,08}}\right) \\
+&= P\left(Z > \frac{20}{20,71}\right) \\
+&= P(Z > 0,9656) \\
+&= 1 - 0,8329 \\
+&\approx 0,1671
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} a diferença esperada entre as médias amostrais é de 30 pontos, com erro padrão de aproximadamente $20,71$ pontos. A probabilidade de observar uma diferença amostral superior a 50 pontos é de cerca de $16,71\%$, ou seja, observar uma vantagem tão grande do Grupo A não é raro, mesmo que a diferença verdadeira entre as populações seja de apenas 30 pontos. Isso ocorre porque, com esses tamanhos amostrais, a variabilidade amostral ainda é considerável, e diferenças observadas podem superar bastante a diferença populacional real apenas por acaso.
+
+% ---------------------------------------------------
+% EXERCÍCIO 04
+% ---------------------------------------------------
+\textbf{Exercício 4: Dois professores diferentes aplicaram provas de Estatística em suas turmas. O interesse é verificar se a variabilidade das notas foi semelhante entre as turmas.}
+
+\textbf{$\bullet$ Na turma do Professor A, as notas podem ser modeladas por uma Normal com variância populacional $\sigma_A^2$. Foi coletada uma amostra de $n_A = 15$ alunos e a variância amostral foi $s_A^2$.}
+
+\textbf{$\bullet$ Na turma do Professor B, as notas seguem também uma Normal com variância $\sigma_B^2$. Foi coletada uma amostra de $n_B = 20$ alunos e a variância amostral foi $s_B^2$.}
+
+\textbf{Com base nisso, se o valor observado da razão das variâncias amostrais for $s_A^2/s_B^2 = 2,5$, qual a probabilidade aproximada de obter uma razão pelo menos tão grande quanto essa, sob a hipótese de $\sigma_A^2 = \sigma_B^2$? Como você interpreta o resultado obtido?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X$: nota de um aluno da turma do Professor A.
+
+$X \sim N(\mu_A, \sigma_A^2)$, \quad $n_A = 15$, \quad $n_A - 1 = 14$.
+
+$Y$: nota de um aluno da turma do Professor B.
+
+$Y \sim N(\mu_B, \sigma_B^2)$, \quad $n_B = 20$, \quad $n_B - 1 = 19$.
+
+Como as populações são normais e as amostras independentes, a quantidade pivotal para a razão de variâncias é
+
+\begin{equation*}
+\begin{split}
+F &= \frac{S_A^2/\sigma_A^2}{S_B^2/\sigma_B^2} \\
+  &\sim F_{(n_A - 1,\ n_B - 1)} = F_{(14,\ 19)}
+\end{split}
+\end{equation*}
+
+Sob a hipótese $\sigma_A^2 = \sigma_B^2$, temos $\sigma_A^2/\sigma_B^2 = 1$ e portanto
+
+\begin{equation*}
+F = \frac{S_A^2}{S_B^2} \sim F_{(14,\ 19)}
+\end{equation*}
+
+Queremos:
+
+\begin{equation*}
+\begin{split}
+&P\left(\frac{S_A^2}{S_B^2} \geq 2,5\right) \\
+&= P\left(\frac{S_A^2/\sigma_A^2}{S_B^2/\sigma_B^2} \geq 2,5 \cdot \frac{\sigma_B^2}{\sigma_A^2}\right) \\
+&= P\left(F_{(14,\ 19)} \geq 2,5 \cdot 1\right) \\
+&= P\left(F_{(14,\ 19)} \geq 2,5\right) \\
+&\approx 0,035
+\end{split}
+\end{equation*}
+
+{\raggedright Pela tabela, $F_{0,05;(14,19)} = 2,26$ e $F_{0,025;(14,19)} \approx 2,65$; como $2,26 < 2,5 < 2,65$, a probabilidade procurada está entre $0,025$ e $0,05$, resultando em aproximadamente $3,5\%$.\par}
+
+\textbf{Interpretação:} se as duas turmas tivessem de fato a mesma variabilidade nas notas, observar uma razão de variâncias amostrais igual ou maior que $2,5$ ocorreria em apenas cerca de $3,5\%$ das amostras. Trata-se, portanto, de um resultado pouco provável sob a hipótese $\sigma_A^2 = \sigma_B^2$, fornecendo evidência contra a suposição de variabilidades iguais: há indícios de que as notas da turma do Professor A são mais dispersas que as da turma do Professor B (ao nível de $5\%$ rejeitaríamos a igualdade; ao nível de $2,5\%$, não).
+
+% ---------------------------------------------------
+% EXERCÍCIO 05
+% ---------------------------------------------------
+\textbf{Exercício 5: Considere que a altura de homens adultos de uma cidade segue uma distribuição normal. Encontre o intervalo de confiança para a média populacional em cada um dos casos abaixo e por fim comente as diferenças entre os resultados obtidos:}
+
+\textbf{(a) se a média amostral for 170 cm, o desvio padrão da população for de 15 cm, o coeficiente de confiança for 95\% e o tamanho da amostra for igual a 10.}
+
+\textbf{(b) se a média amostral for 170 cm, o desvio padrão da população for de 15 cm, o coeficiente de confiança for 95\% e o tamanho da amostra for igual a 50.}
+
+\textbf{(c) se a média amostral for 170 cm, o desvio padrão da população for de 15 cm, o coeficiente de confiança for 90\% e o tamanho da amostra for igual a 100.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: altura (em cm) de um homem adulto da cidade.
+
+$Y \sim N(\mu, \sigma^2)$, com $\sigma = 15$ conhecido e $\bar{y} = 170$.
+
+Como $Y$ é normal e $\sigma$ é conhecido:
+
+\begin{equation*}
+\bar{Y} \sim N\left(\mu, \frac{\sigma^2}{n}\right)
+\end{equation*}
+
+A quantidade pivotal é
+
+\begin{equation*}
+Z = \frac{\bar{Y} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
+\end{equation*}
+
+Logo, o IC de coeficiente de confiança $\gamma = 1 - \alpha$ é
+
+\begin{equation*}
+IC(\mu;\gamma) = \bar{y} \pm z_{\alpha/2}\,\frac{\sigma}{\sqrt{n}}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} $n = 10$, $\gamma = 0,95 \Rightarrow z_{0,025} = 1,96$.
+
+\begin{equation*}
+\begin{split}
+\frac{\sigma}{\sqrt{n}} &= \frac{15}{\sqrt{10}} = 4,7434
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 170 \pm 1,96 \cdot 4,7434 \\
+   &= 170 \pm 9,2971 \\
+   &= (160,70;\ 179,30)
+\end{split}
+\end{equation*}
+
+Amplitude: $18,59$ cm.
+
+\vspace{0.2cm}
+
+\textbf{(b)} $n = 50$, $\gamma = 0,95 \Rightarrow z_{0,025} = 1,96$.
+
+\begin{equation*}
+\begin{split}
+\frac{\sigma}{\sqrt{n}} &= \frac{15}{\sqrt{50}} = 2,1213
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 170 \pm 1,96 \cdot 2,1213 \\
+   &= 170 \pm 4,1578 \\
+   &= (165,84;\ 174,16)
+\end{split}
+\end{equation*}
+
+Amplitude: $8,32$ cm.
+
+\vspace{0.2cm}
+
+\textbf{(c)} $n = 100$, $\gamma = 0,90 \Rightarrow z_{0,05} = 1,645$.
+
+\begin{equation*}
+\begin{split}
+\frac{\sigma}{\sqrt{n}} &= \frac{15}{\sqrt{100}} = 1,5
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 170 \pm 1,645 \cdot 1,5 \\
+   &= 170 \pm 2,4675 \\
+   &= (167,53;\ 172,47)
+\end{split}
+\end{equation*}
+
+Amplitude: $4,94$ cm.
+
+\vspace{0.2cm}
+
+\textbf{Comentário:} todos os intervalos são centrados em $\bar{y} = 170$, pois a média amostral é a mesma nos três casos; o que muda é a precisão.
+
+Comparando (a) e (b), com o mesmo coeficiente de confiança de $95\%$, o aumento de $n = 10$ para $n = 50$ reduz o erro padrão $\sigma/\sqrt{n}$ e, consequentemente, a amplitude do intervalo (de $18,59$ para $8,32$ cm). Ou seja, amostras maiores fornecem estimativas mais precisas de $\mu$.
+
+Em (c), além do aumento para $n = 100$, o coeficiente de confiança cai para $90\%$, o que diminui o quantil de $1,96$ para $1,645$. Ambos os efeitos estreitam o intervalo (amplitude de $4,94$ cm), mas ao custo de menor confiança: aceitamos uma chance maior de o intervalo não conter $\mu$ em troca de maior precisão.
+
+Conclui-se que há um compromisso (\textit{trade-off}) entre precisão e confiança: para aumentar a confiança mantendo a amplitude, é necessário aumentar $n$; a amplitude decresce na ordem de $1/\sqrt{n}$, de modo que quadruplicar a amostra reduz a amplitude pela metade.
+
+% ---------------------------------------------------
+% EXERCÍCIO 06
+% ---------------------------------------------------
+\textbf{Exercício 6: Uma amostra aleatória de 625 donas de casa revela que 70\% delas preferem a marca A de detergente. Construa um intervalo de confiança otimista para $p =$ proporção de donas de casa que preferem A. Utilize um coeficiente de confiança de 90\%.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: número de donas de casa, dentre as $n$ entrevistadas, que preferem a marca A.
+
+$Y \sim Bin(n, p)$, com $n = 625$ e $p$ desconhecido.
+
+O estimador é $\hat{p} = Y/n$, com
+
+\begin{equation*}
+E(\hat{p}) = p, \quad Var(\hat{p}) = \frac{p(1-p)}{n}
+\end{equation*}
+
+Valor observado: $\hat{p} = 0,70$.
+
+Como $n = 625$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\hat{p} \sim N\left(p,\ \frac{p(1-p)}{n}\right)
+\end{equation*}
+
+Logo, a quantidade pivotal é
+
+\begin{equation*}
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1)
+\end{equation*}
+
+No intervalo \textbf{otimista}, substituímos $p$ pela estimativa $\hat{p}$ no erro padrão:
+
+\begin{equation*}
+IC(p;\gamma) = \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\end{equation*}
+
+Para $\gamma = 0,90$, temos $\alpha = 0,10$ e $z_{0,05} = 1,645$.
+
+Erro padrão estimado:
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} &= \sqrt{\frac{0,70 \cdot 0,30}{625}} \\
+&= \sqrt{\frac{0,21}{625}} \\
+&= \sqrt{0,000336} \\
+&= 0,01833
+\end{split}
+\end{equation*}
+
+Margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,645 \cdot 0,01833 \\
+&= 0,0302
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+IC(p;0,90) &= 0,70 \pm 0,0302 \\
+&= (0,6698;\ 0,7302)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $90\%$ de confiança, a proporção populacional de donas de casa que preferem a marca A está entre $66,98\%$ e $73,02\%$. O intervalo é dito \textit{otimista} porque usa $\hat{p}(1-\hat{p}) = 0,21$ no lugar do valor máximo $p(1-p) = 0,25$ (usado no intervalo conservador), resultando em uma amplitude menor: $6,04$ pontos percentuais contra $6,58$ do conservador, que seria $(0,6671;\ 0,7329)$.
+
+% ---------------------------------------------------
+% EXERCÍCIO 07
+% ---------------------------------------------------
+\textbf{Exercício 7: Explique a interpretação da seguinte expressão: $IC[\mu;0,95] = [21,5;\ 32,5]$.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+A expressão representa um \textbf{intervalo de confiança} para a média populacional $\mu$, com coeficiente de confiança $\gamma = 1 - \alpha = 0,95$, cujos limites observados na amostra foram $L_I = 21,5$ e $L_S = 32,5$.
+
+\vspace{0.2cm}
+
+\textbf{Interpretação frequentista (correta):}
+
+O procedimento gera limites aleatórios $L_I(\mathbf{Y})$ e $L_S(\mathbf{Y})$, funções da amostra, tais que
+
+\begin{equation*}
+P\left(L_I \leq \mu \leq L_S\right) = 0,95
+\end{equation*}
+
+Assim, se repetíssemos o processo de amostragem infinitas vezes, retirando sempre amostras de mesmo tamanho $n$ da mesma população e construindo o intervalo pelo mesmo método, esperaríamos que $95\%$ dos intervalos construídos contivessem o verdadeiro valor de $\mu$, e $5\%$ não o contivessem.
+
+O intervalo $[21,5;\ 32,5]$ é uma \textbf{realização} particular desse procedimento, obtida a partir da amostra observada. Dizemos então que, com $95\%$ de confiança, o verdadeiro valor de $\mu$ está entre $21,5$ e $32,5$.
+
+\vspace{0.2cm}
+
+\textbf{O que NÃO se pode afirmar:}
+
+Não é correto dizer que
+
+\begin{equation*}
+P\left(21,5 \leq \mu \leq 32,5\right) = 0,95
+\end{equation*}
+
+pois, uma vez observada a amostra, os limites $21,5$ e $32,5$ deixam de ser aleatórios e $\mu$ é um parâmetro fixo (ainda que desconhecido). Logo, essa probabilidade vale $1$ (se $\mu$ pertence ao intervalo) ou $0$ (se não pertence). A aleatoriedade está no \textbf{intervalo}, não no parâmetro.
+
+Também não significa que $95\%$ das observações da população, ou $95\%$ das médias amostrais, estejam entre $21,5$ e $32,5$.
+
+\vspace{0.2cm}
+
+\textbf{Observação:} a amplitude do intervalo é $32,5 - 21,5 = 11$, com ponto médio $\bar{y} = 27$ e margem de erro $\varepsilon = 5,5$, refletindo a precisão da estimativa: quanto maior $n$, menor a amplitude; quanto maior o coeficiente de confiança, maior a amplitude.
+
+% ---------------------------------------------------
+% EXERCÍCIO 08
+% ---------------------------------------------------
+\textbf{Exercício 8: De 50.000 válvulas fabricadas por uma companhia retira-se uma amostra de 400 válvulas, e obtém-se a vida média de 800 horas e o desvio padrão de 100 horas.}
+
+\textbf{(a) Qual o intervalo de confiança de 99\% para a vida média da população? Interprete.}
+
+\textbf{(b) Que tamanho deve ter a amostra para que seja de 95\% a confiança na estimativa $800 \pm 7,84$?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: vida útil (em horas) de uma válvula fabricada pela companhia.
+
+$E(Y) = \mu$, \quad $Var(Y) = \sigma^2$.
+
+$N = 50000$, \quad $n = 400$, \quad $\bar{y} = 800$, \quad $s = 100$.
+
+Como $n = 400$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\bar{Y} \sim N\left(\mu, \frac{\sigma^2}{n}\right)
+\end{equation*}
+
+Sendo $\sigma$ desconhecido, usamos $s = 100$ como estimativa (justificável pelo $n$ grande), com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\bar{Y} - \mu}{S/\sqrt{n}} \sim N(0,1)
+\end{equation*}
+
+Como $n/N = 400/50000 = 0,008 < 0,05$, a correção para população finita é desprezível.
+
+\vspace{0.2cm}
+
+\textbf{(a)} $\gamma = 0,99 \Rightarrow \alpha = 0,01$ e $z_{0,005} = 2,576$.
+
+\begin{equation*}
+IC(\mu;\gamma) = \bar{y} \pm z_{\alpha/2}\,\frac{s}{\sqrt{n}}
+\end{equation*}
+
+Erro padrão:
+
+\begin{equation*}
+\frac{s}{\sqrt{n}} = \frac{100}{\sqrt{400}} = \frac{100}{20} = 5
+\end{equation*}
+
+Margem de erro:
+
+\begin{equation*}
+\varepsilon = 2,576 \cdot 5 = 12,88
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+IC(\mu;0,99) &= 800 \pm 12,88 \\
+&= (787,12;\ 812,88)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $99\%$ de confiança, a vida média de todas as 50.000 válvulas está entre $787,12$ e $812,88$ horas. Ou seja, se o processo de amostragem fosse repetido muitas vezes, $99\%$ dos intervalos assim construídos conteriam o verdadeiro valor de $\mu$.
+
+\vspace{0.2cm}
+
+\textbf{(b)} Agora $\gamma = 0,95 \Rightarrow z_{0,025} = 1,96$ e a margem de erro desejada é $\varepsilon = 7,84$.
+
+Da expressão da margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= z_{\alpha/2}\,\frac{\sigma}{\sqrt{n}} \\
+\sqrt{n} &= \frac{z_{\alpha/2}\,\sigma}{\varepsilon} \\
+n &= \left(\frac{z_{\alpha/2}\,\sigma}{\varepsilon}\right)^2
+\end{split}
+\end{equation*}
+
+Substituindo $\sigma \approx s = 100$:
+
+\begin{equation*}
+\begin{split}
+n &= \left(\frac{1,96 \cdot 100}{7,84}\right)^2 \\
+&= \left(\frac{196}{7,84}\right)^2 \\
+&= (25)^2 \\
+&= 625
+\end{split}
+\end{equation*}
+
+Portanto, são necessárias $n = 625$ válvulas.
+
+\textbf{Interpretação:} para reduzir a margem de erro de $9,8$ (que seria a margem com $95\%$ e $n = 400$) para $7,84$ horas, é preciso aumentar a amostra de 400 para 625 válvulas. Como $n$ cresce com o quadrado do inverso da margem, ganhos de precisão exigem aumentos proporcionalmente muito maiores no tamanho amostral.
+
+% ---------------------------------------------------
+% EXERCÍCIO 09
+% ---------------------------------------------------
+\textbf{Exercício 9: Um economista realiza uma pesquisa sobre o valor mensal gasto com alimentação de famílias em uma cidade. Ele coleta uma amostra aleatória de 25 famílias e observa que a variância amostral dos gastos mensais é de R\$ 16.000,00. Assume-se que os gastos mensais seguem uma distribuição normal. Calcule o intervalo de confiança de 95\% para a variância populacional dos gastos mensais com base na amostra fornecida.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: gasto mensal com alimentação (em R\$) de uma família da cidade.
+
+$Y \sim N(\mu, \sigma^2)$, com $\mu$ e $\sigma^2$ desconhecidos.
+
+$n = 25$, \quad $n - 1 = 24$, \quad $s^2 = 16000$.
+
+Como $Y$ tem distribuição normal, a quantidade pivotal para a variância é
+
+\begin{equation*}
+Q = \frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{(n-1)} = \chi^2_{(24)}
+\end{equation*}
+
+Assim,
+
+\begin{equation*}
+\begin{split}
+&P\left(q_1 \leq \frac{(n-1)S^2}{\sigma^2} \leq q_2\right) \\
+&= 1 - \alpha = 0,95
+\end{split}
+\end{equation*}
+
+Isolando $\sigma^2$, obtém-se
+
+\begin{equation*}
+IC(\sigma^2;\gamma) = \left[\frac{(n-1)s^2}{q_2};\ \frac{(n-1)s^2}{q_1}\right]
+\end{equation*}
+
+em que $q_1 = \chi^2_{1-\alpha/2;(24)}$ e $q_2 = \chi^2_{\alpha/2;(24)}$.
+
+Para $\gamma = 0,95$, temos $\alpha = 0,05$ e, pela tabela da $\chi^2$ com 24 g.l.:
+
+\begin{equation*}
+q_1 = 12,401, \quad q_2 = 39,364
+\end{equation*}
+
+Calculando $(n-1)s^2$:
+
+\begin{equation*}
+\begin{split}
+(n-1)s^2 &= 24 \cdot 16000 \\
+&= 384000
+\end{split}
+\end{equation*}
+
+Limite inferior:
+
+\begin{equation*}
+\begin{split}
+L_I &= \frac{384000}{39,364} \\
+&= 9755,10
+\end{split}
+\end{equation*}
+
+Limite superior:
+
+\begin{equation*}
+\begin{split}
+L_S &= \frac{384000}{12,401} \\
+&= 30964,44
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+&IC(\sigma^2;0,95) \\
+&= (9755,10;\ 30964,44)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, a variância populacional dos gastos mensais com alimentação está entre $9.755,10$ e $30.964,44$ (em R\$$^2$). Equivalentemente, para o desvio padrão:
+
+\begin{equation*}
+\begin{split}
+IC(\sigma;0,95) &= (\sqrt{9755,10};\ \sqrt{30964,44}) \\
+&= (98,77;\ 175,97)
+\end{split}
+\end{equation*}
+
+Nota-se que o intervalo é assimétrico em torno de $s^2 = 16000$, pois a distribuição $\chi^2$ não é simétrica. A amplitude é grande porque $n = 25$ é relativamente pequeno: estimativas de variância exigem amostras maiores para atingir boa precisão.
+% ---------------------------------------------------
+% EXERCÍCIO 10
+% ---------------------------------------------------
+\textbf{Exercício 10: Numa pesquisa de mercado, $n = 400$ pessoas foram entrevistadas sobre determinado produto, e 60\% delas preferiram a marca A. Aqui, $\hat{p} = 0,6$ e um intervalo de confiança para $p$ com coeficiente de confiança $\gamma = 0,95$ será?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: número de pessoas, dentre as $n$ entrevistadas, que preferem a marca A.
+
+$Y \sim Bin(n, p)$, com $n = 400$ e $p$ desconhecido.
+
+O estimador é $\hat{p} = Y/n$, com
+
+\begin{equation*}
+E(\hat{p}) = p, \quad Var(\hat{p}) = \frac{p(1-p)}{n}
+\end{equation*}
+
+Valor observado: $\hat{p} = 0,60$.
+
+Como $n = 400$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\hat{p} \sim N\left(p,\ \frac{p(1-p)}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1)
+\end{equation*}
+
+Para $\gamma = 0,95$, temos $\alpha = 0,05$ e $z_{0,025} = 1,96$.
+
+\vspace{0.2cm}
+
+\textbf{Intervalo otimista} (substitui-se $p$ por $\hat{p}$ no erro padrão):
+
+\begin{equation*}
+IC(p;\gamma) = \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} &= \sqrt{\frac{0,6 \cdot 0,4}{400}} \\
+&= \sqrt{\frac{0,24}{400}} \\
+&= \sqrt{0,0006} \\
+&= 0,0245
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,0245 \\
+&= 0,048
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC(p;0,95) &= 0,60 \pm 0,048 \\
+&= (0,552;\ 0,648)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Intervalo conservador} (usa-se o máximo $p(1-p) = 0,25$):
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,25}{400}} &= \sqrt{0,000625} = 0,025
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,025 = 0,049
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC(p;0,95) &= 0,60 \pm 0,049 \\
+&= (0,551;\ 0,649)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, a proporção populacional de pessoas que preferem a marca A está entre aproximadamente $55,2\%$ e $64,8\%$. Como $\hat{p} = 0,6$ está próximo de $0,5$, os intervalos otimista e conservador praticamente coincidem. Note ainda que todo o intervalo está acima de $0,5$, indicando evidência de que a marca A é preferida pela maioria.
+
+% ---------------------------------------------------
+% EXERCÍCIO 11
+% ---------------------------------------------------
+\textbf{Exercício 11: Calcule o intervalo de confiança para a média de uma $N(\mu, \sigma^2)$ em cada um dos casos abaixo.}
+
+\begin{center}
+\small
+\begin{tabular}{cccc}
+\hline
+$\bar{y}$ & $n$ & $\sigma$ & $\gamma$ \\
+\hline
+170 cm & 100 & 15 cm & 95\% \\
+165 cm & 184 & 30 cm & 85\% \\
+180 cm & 225 & 30 cm & 70\% \\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: variável de interesse (em cm).
+
+$Y \sim N(\mu, \sigma^2)$, com $\sigma$ conhecido.
+
+Como $Y$ é normal e $\sigma$ é conhecido:
+
+\begin{equation*}
+\bar{Y} \sim N\left(\mu, \frac{\sigma^2}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\bar{Y} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
+\end{equation*}
+
+Logo:
+
+\begin{equation*}
+IC(\mu;\gamma) = \bar{y} \pm z_{\alpha/2}\,\frac{\sigma}{\sqrt{n}}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} $\bar{y} = 170$, $n = 100$, $\sigma = 15$, $\gamma = 0,95$.
+
+$\alpha = 0,05 \Rightarrow z_{0,025} = 1,96$.
+
+\begin{equation*}
+\frac{\sigma}{\sqrt{n}} = \frac{15}{\sqrt{100}} = \frac{15}{10} = 1,5
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 170 \pm 1,96 \cdot 1,5 \\
+&= 170 \pm 2,94 \\
+&= (167,06;\ 172,94)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(b)} $\bar{y} = 165$, $n = 184$, $\sigma = 30$, $\gamma = 0,85$.
+
+$\alpha = 0,15 \Rightarrow z_{0,075} = 1,44$.
+
+\begin{equation*}
+\frac{\sigma}{\sqrt{n}} = \frac{30}{\sqrt{184}} = \frac{30}{13,5647} = 2,2116
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 165 \pm 1,44 \cdot 2,2116 \\
+&= 165 \pm 3,1847 \\
+&= (161,82;\ 168,18)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(c)} $\bar{y} = 180$, $n = 225$, $\sigma = 30$, $\gamma = 0,70$.
+
+$\alpha = 0,30 \Rightarrow z_{0,15} = 1,04$.
+
+\begin{equation*}
+\frac{\sigma}{\sqrt{n}} = \frac{30}{\sqrt{225}} = \frac{30}{15} = 2
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 180 \pm 1,04 \cdot 2 \\
+&= 180 \pm 2,08 \\
+&= (177,92;\ 182,08)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Comentário:} as amplitudes obtidas são, respectivamente, $5,88$, $6,37$ e $4,16$ cm. Elas resultam da combinação de dois fatores: o erro padrão $\sigma/\sqrt{n}$ e o quantil $z_{\alpha/2}$. Em (c), embora o erro padrão seja maior que em (a), o baixo coeficiente de confiança ($70\%$) reduz o quantil para $1,04$ e produz o intervalo mais estreito — porém com maior risco de não conter $\mu$. Isso evidencia o compromisso entre precisão e confiança.
+
+% ---------------------------------------------------
+% EXERCÍCIO 12
+% ---------------------------------------------------
+\textbf{Exercício 12: De 50.000 válvulas fabricadas por uma companhia retira-se uma amostra de 400 válvulas, e obtém-se a vida média de 800 horas e desvio padrão de 100 horas.}
+
+\textbf{(a) Qual o intervalo de confiança de 99\% para a vida média da população?}
+
+\textbf{(b) Com que confiança é possível afirmar que a vida média é $800 \pm 0,98$?}
+
+\textbf{(c) Que tamanho deve ter a amostra para que seja de 95\% a confiança na estimativa $7,84$?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: vida útil (em horas) de uma válvula fabricada pela companhia.
+
+$E(Y) = \mu$, \quad $Var(Y) = \sigma^2$.
+
+$N = 50000$, \quad $n = 400$, \quad $\bar{y} = 800$, \quad $s = 100$.
+
+Como $n = 400$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\bar{Y} \sim N\left(\mu, \frac{\sigma^2}{n}\right)
+\end{equation*}
+
+Sendo $\sigma$ desconhecido, usa-se $s = 100$, com
+
+\begin{equation*}
+Z = \frac{\bar{Y} - \mu}{S/\sqrt{n}} \sim N(0,1)
+\end{equation*}
+
+Erro padrão:
+
+\begin{equation*}
+\frac{s}{\sqrt{n}} = \frac{100}{\sqrt{400}} = \frac{100}{20} = 5
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} $\gamma = 0,99 \Rightarrow \alpha = 0,01$ e $z_{0,005} = 2,576$.
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 2,576 \cdot 5 = 12,88
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC(\mu;0,99) &= 800 \pm 12,88 \\
+&= (787,12;\ 812,88)
+\end{split}
+\end{equation*}
+
+Com $99\%$ de confiança, a vida média das válvulas está entre $787,12$ e $812,88$ horas.
+
+\vspace{0.2cm}
+
+\textbf{(b)} Agora a margem de erro é fixada em $\varepsilon = 0,98$ e busca-se $\gamma$.
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= z_{\alpha/2}\,\frac{s}{\sqrt{n}} \\
+z_{\alpha/2} &= \frac{\varepsilon}{s/\sqrt{n}} \\
+&= \frac{0,98}{5} \\
+&= 0,196
+\end{split}
+\end{equation*}
+
+Pela tabela da Normal padrão:
+
+\begin{equation*}
+\begin{split}
+\gamma &= P(-0,196 < Z < 0,196) \\
+&= 2\,P(Z < 0,196) - 1 \\
+&= 2(0,5777) - 1 \\
+&= 0,1554
+\end{split}
+\end{equation*}
+
+Portanto, a confiança é de aproximadamente $15,54\%$ — muito baixa, pois a margem de erro exigida ($0,98$ hora) é bem menor que o erro padrão ($5$ horas).
+
+\vspace{0.2cm}
+
+\textbf{(c)} $\gamma = 0,95 \Rightarrow z_{0,025} = 1,96$ e $\varepsilon = 7,84$.
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= z_{\alpha/2}\,\frac{\sigma}{\sqrt{n}} \\
+\sqrt{n} &= \frac{z_{\alpha/2}\,\sigma}{\varepsilon} \\
+n &= \left(\frac{z_{\alpha/2}\,\sigma}{\varepsilon}\right)^2
+\end{split}
+\end{equation*}
+
+Substituindo $\sigma \approx s = 100$:
+
+\begin{equation*}
+\begin{split}
+n &= \left(\frac{1,96 \cdot 100}{7,84}\right)^2 \\
+&= \left(\frac{196}{7,84}\right)^2 \\
+&= (25)^2 \\
+&= 625
+\end{split}
+\end{equation*}
+
+São necessárias $n = 625$ válvulas.
+
+\vspace{0.2cm}
+
+\textbf{Comentário:} os itens ilustram o compromisso entre precisão, confiança e tamanho amostral. Mantendo $n = 400$, exigir uma margem muito pequena (item b) derruba a confiança; para manter confiança alta com margem menor (item c), é preciso aumentar $n$, que cresce com o quadrado do inverso da margem de erro.
+
+% ---------------------------------------------------
+% EXERCÍCIO 13
+% ---------------------------------------------------
+\textbf{Exercício 13: Qual deve ser o tamanho de uma amostra cujo desvio padrão é 10 para que a diferença da média amostral para a média da população, em valor absoluto, seja menor que 1, com coeficiente de confiança igual a: (a) 95\% (b) 99\%}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: variável de interesse.
+
+$E(Y) = \mu$, \quad $Var(Y) = \sigma^2$, com $\sigma = 10$.
+
+Deseja-se $n$ tal que
+
+\begin{equation*}
+P\left(|\bar{Y} - \mu| < 1\right) = \gamma
+\end{equation*}
+
+ou seja, margem de erro $\varepsilon = 1$.
+
+Como $n$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\bar{Y} \sim N\left(\mu, \frac{\sigma^2}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\bar{Y} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
+\end{equation*}
+
+Padronizando:
+
+\begin{equation*}
+\begin{split}
+&P\left(|\bar{Y} - \mu| < \varepsilon\right) \\
+&= P\left(|Z| < \frac{\varepsilon}{\sigma/\sqrt{n}}\right) = \gamma
+\end{split}
+\end{equation*}
+
+Logo:
+
+\begin{equation*}
+\begin{split}
+\frac{\varepsilon\sqrt{n}}{\sigma} &= z_{\alpha/2} \\
+\sqrt{n} &= \frac{z_{\alpha/2}\,\sigma}{\varepsilon} \\
+n &= \left(\frac{z_{\alpha/2}\,\sigma}{\varepsilon}\right)^2
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} $\gamma = 0,95 \Rightarrow \alpha = 0,05$ e $z_{0,025} = 1,96$.
+
+\begin{equation*}
+\begin{split}
+n &= \left(\frac{1,96 \cdot 10}{1}\right)^2 \\
+&= (19,6)^2 \\
+&= 384,16
+\end{split}
+\end{equation*}
+
+Arredondando para cima: $n = 385$.
+
+\vspace{0.2cm}
+
+\textbf{(b)} $\gamma = 0,99 \Rightarrow \alpha = 0,01$ e $z_{0,005} = 2,576$.
+
+\begin{equation*}
+\begin{split}
+n &= \left(\frac{2,576 \cdot 10}{1}\right)^2 \\
+&= (25,76)^2 \\
+&= 663,58
+\end{split}
+\end{equation*}
+
+Arredondando para cima: $n = 664$.
+
+\vspace{0.2cm}
+
+\textbf{Comentário:} o tamanho amostral sempre é arredondado para cima, garantindo margem de erro no máximo igual à desejada. Mantendo-se a mesma precisão ($\varepsilon = 1$), elevar a confiança de $95\%$ para $99\%$ exige aumentar a amostra de 385 para 664 observações, um acréscimo de cerca de $73\%$. Isso mostra que ganhos de confiança são custosos em termos amostrais, já que $n$ cresce com o quadrado de $z_{\alpha/2}$.
+
+% ---------------------------------------------------
+% EXERCÍCIO 14
+% ---------------------------------------------------
+\textbf{Exercício 14: Antes de uma eleição, um determinado partido está interessado em estimar a proporção $p$ de eleitores favoráveis ao seu candidato. Uma amostra piloto de tamanho 100 revelou que 60\% dos eleitores eram favoráveis ao candidato em questão.}
+
+\textbf{(a) Determine o tamanho da amostra necessário para que o erro cometido na estimação seja de, no máximo, 0,01 com probabilidade de 80\%.}
+
+\textbf{(b) Se na amostra final, com tamanho igual ao obtido em (a), observou-se que 55\% eleitores eram favoráveis ao candidato em questão, construa um intervalo de confiança para a proporção $p$. Utilize $\gamma = 0,95$.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: número de eleitores, dentre os $n$ entrevistados, favoráveis ao candidato.
+
+$Y \sim Bin(n, p)$, com $p$ desconhecido.
+
+Estimador: $\hat{p} = Y/n$, com
+
+\begin{equation*}
+E(\hat{p}) = p, \quad Var(\hat{p}) = \frac{p(1-p)}{n}
+\end{equation*}
+
+Como $n$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\hat{p} \sim N\left(p,\ \frac{p(1-p)}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1)
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} Amostra piloto: $n_0 = 100$, $\hat{p}_0 = 0,60$. Deseja-se $\varepsilon = 0,01$ com $\gamma = 0,80$.
+
+$\alpha = 0,20 \Rightarrow z_{0,10} = 1,28$.
+
+Da margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= z_{\alpha/2}\sqrt{\frac{\hat{p}_0(1-\hat{p}_0)}{n}} \\
+n &= \frac{z_{\alpha/2}^2\,\hat{p}_0(1-\hat{p}_0)}{\varepsilon^2}
+\end{split}
+\end{equation*}
+
+Substituindo (usando a estimativa piloto):
+
+\begin{equation*}
+\begin{split}
+n &= \frac{(1,28)^2 \cdot 0,6 \cdot 0,4}{(0,01)^2} \\
+&= \frac{1,6384 \cdot 0,24}{0,0001} \\
+&= \frac{0,393216}{0,0001} \\
+&= 3932,16
+\end{split}
+\end{equation*}
+
+Arredondando para cima: $n = 3933$ eleitores.
+
+\textit{Obs.:} pelo critério conservador, com $p(1-p) = 0,25$:
+
+\begin{equation*}
+\begin{split}
+n &= \frac{1,6384 \cdot 0,25}{0,0001} \\
+&= 4096
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(b)} Amostra final: $n = 3933$, $\hat{p} = 0,55$, $\gamma = 0,95 \Rightarrow z_{0,025} = 1,96$.
+
+\begin{equation*}
+IC(p;\gamma) = \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\end{equation*}
+
+Erro padrão estimado:
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} &= \sqrt{\frac{0,55 \cdot 0,45}{3933}} \\
+&= \sqrt{\frac{0,2475}{3933}} \\
+&= \sqrt{0,00006293} \\
+&= 0,00793
+\end{split}
+\end{equation*}
+
+Margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,00793 \\
+&= 0,01554
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+IC(p;0,95) &= 0,55 \pm 0,01554 \\
+&= (0,5345;\ 0,5655)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, a proporção de eleitores favoráveis ao candidato está entre $53,45\%$ e $56,55\%$. Como todo o intervalo está acima de $0,5$, há evidência de que o candidato tem maioria do eleitorado. Note que a margem de erro em (b) ($0,0155$) é maior que os $0,01$ planejados em (a), pois o coeficiente de confiança foi elevado de $80\%$ para $95\%$.
+
+% ---------------------------------------------------
+% EXERCÍCIO 15
+% ---------------------------------------------------
+\textbf{Exercício 15: Suponha que estejamos interessados em estimar a proporção de consumidores de um certo produto. Se a amostra de tamanho 300 forneceu 100 indivíduos que consomem o dado produto, determine: (a) o intervalo de confiança para $p$, com coeficiente de confiança de 95\% (interprete o resultado); (b) o tamanho da amostra para que o erro da estimativa não exceda a 0,02 unidades com probabilidade de 95\% (interprete o resultado).}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: número de indivíduos, dentre os $n$ amostrados, que consomem o produto.
+
+$Y \sim Bin(n, p)$, com $n = 300$ e $p$ desconhecido.
+
+Estimador: $\hat{p} = Y/n$, com
+
+\begin{equation*}
+E(\hat{p}) = p, \quad Var(\hat{p}) = \frac{p(1-p)}{n}
+\end{equation*}
+
+Valor observado:
+
+\begin{equation*}
+\hat{p} = \frac{100}{300} = 0,3333
+\end{equation*}
+
+Como $n = 300$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\hat{p} \sim N\left(p,\ \frac{p(1-p)}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1)
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} $\gamma = 0,95 \Rightarrow \alpha = 0,05$ e $z_{0,025} = 1,96$.
+
+\begin{equation*}
+IC(p;\gamma) = \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\end{equation*}
+
+Erro padrão estimado:
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} &= \sqrt{\frac{0,3333 \cdot 0,6667}{300}} \\
+&= \sqrt{\frac{0,2222}{300}} \\
+&= \sqrt{0,000741} \\
+&= 0,0272
+\end{split}
+\end{equation*}
+
+Margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,0272 \\
+&= 0,0533
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+IC(p;0,95) &= 0,3333 \pm 0,0533 \\
+&= (0,2800;\ 0,3866)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, a proporção populacional de consumidores do produto está entre $28,00\%$ e $38,66\%$. Ou seja, repetindo-se o processo de amostragem muitas vezes, $95\%$ dos intervalos assim construídos conteriam o verdadeiro $p$.
+
+\vspace{0.2cm}
+
+\textbf{(b)} Deseja-se $\varepsilon = 0,02$ com $\gamma = 0,95$ ($z_{0,025} = 1,96$).
+
+Da margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} \\
+n &= \frac{z_{\alpha/2}^2\,\hat{p}(1-\hat{p})}{\varepsilon^2}
+\end{split}
+\end{equation*}
+
+Usando a estimativa piloto $\hat{p} = 0,3333$ (\textbf{otimista}):
+
+\begin{equation*}
+\begin{split}
+n &= \frac{(1,96)^2 \cdot 0,2222}{(0,02)^2} \\
+&= \frac{3,8416 \cdot 0,2222}{0,0004} \\
+&= \frac{0,85362}{0,0004} \\
+&= 2134,05
+\end{split}
+\end{equation*}
+
+Arredondando: $n = 2135$ indivíduos.
+
+Pelo critério \textbf{conservador}, com $p(1-p) = 0,25$:
+
+\begin{equation*}
+\begin{split}
+n &= \frac{3,8416 \cdot 0,25}{0,0004} \\
+&= \frac{0,9604}{0,0004} \\
+&= 2401
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} para reduzir a margem de erro de $0,0533$ (item a) para $0,02$, mantendo a confiança em $95\%$, é preciso aumentar a amostra de 300 para cerca de 2135 indivíduos (ou 2401, se não quisermos depender da estimativa piloto). Como $n$ é inversamente proporcional a $\varepsilon^2$, reduzir a margem à metade exige quadruplicar o tamanho amostral.
+
+% ---------------------------------------------------
+% EXERCÍCIO 16
+% ---------------------------------------------------
+\textbf{Exercício 16: Levando em conta as respostas dadas por 200 clientes de uma empresa a todos os itens de um questionário, foi calculado um índice de satisfação global correspondente a cada entrevistado. Ele pode variar desde 0 (totalmente insatisfeito) até 100 (totalmente satisfeito). A respeito desse índice de satisfação, foi construído um intervalo de confiança de 95\% para a sua média populacional, que vai de 43,5 até 63,9. Quais das seguintes afirmações estão corretas?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: índice de satisfação global de um cliente da empresa, $0 \leq Y \leq 100$.
+
+$E(Y) = \mu$, \quad $Var(Y) = \sigma^2$, \quad $n = 200$.
+
+Dado: $IC(\mu;0,95) = [43,5;\ 63,9]$.
+
+Elementos do intervalo:
+
+\begin{equation*}
+\begin{split}
+\bar{y} &= \frac{43,5 + 63,9}{2} \\
+&= \frac{107,4}{2} = 53,7
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= \frac{63,9 - 43,5}{2} \\
+&= \frac{20,4}{2} = 10,2
+\end{split}
+\end{equation*}
+
+Como $n = 200$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\bar{Y} \sim N\left(\mu, \frac{\sigma^2}{n}\right)
+\end{equation*}
+
+e $\varepsilon = z_{\alpha/2}\,\dfrac{s}{\sqrt{n}}$, com $z_{0,025} = 1,96$, de onde
+
+\begin{equation*}
+\begin{split}
+\frac{s}{\sqrt{n}} &= \frac{10,2}{1,96} = 5,204 \\
+s &= 5,204 \cdot \sqrt{200} = 73,6
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Afirmações CORRETAS:}
+
+\textbf{I.} Com $95\%$ de confiança, a média populacional do índice de satisfação está entre $43,5$ e $63,9$.
+
+\textbf{II.} Se o processo de amostragem fosse repetido muitas vezes, com amostras de $n = 200$ da mesma população, aproximadamente $95\%$ dos intervalos construídos pelo mesmo método conteriam o verdadeiro valor de $\mu$.
+
+\textbf{III.} A média amostral observada foi $\bar{y} = 53,7$, ponto médio do intervalo, e a margem de erro foi $\varepsilon = 10,2$.
+
+\textbf{IV.} Aumentando-se o tamanho da amostra, mantida a confiança de $95\%$, o intervalo se tornaria mais estreito (a amplitude decresce na ordem de $1/\sqrt{n}$).
+
+\textbf{V.} Reduzindo-se o coeficiente de confiança (por exemplo, para $90\%$), o intervalo também seria mais estreito, com o mesmo $n$.
+
+\vspace{0.2cm}
+
+\textbf{Afirmações INCORRETAS:}
+
+\textbf{VI.} ``$P(43,5 \leq \mu \leq 63,9) = 0,95$''. \newline
+Errado: após observada a amostra, os limites são números fixos e $\mu$ é um parâmetro (fixo, embora desconhecido); essa probabilidade vale $0$ ou $1$. A aleatoriedade está no intervalo, não em $\mu$.
+
+\textbf{VII.} ``$95\%$ dos clientes têm índice de satisfação entre $43,5$ e $63,9$''. \newline
+Errado: o intervalo é para a \textbf{média} $\mu$, não para os valores individuais de $Y$. Um intervalo para observações individuais (intervalo de predição) seria muito mais amplo, pois usa $s$ e não $s/\sqrt{n}$.
+
+\textbf{VIII.} ``$95\%$ das médias amostrais futuras cairão nesse intervalo''. \newline
+Errado: o intervalo não descreve a distribuição de $\bar{Y}$ em torno de si mesmo.
+
+\textbf{IX.} ``A probabilidade de $\mu$ ser maior que $63,9$ é $2,5\%$''. \newline
+Errado: novamente, $\mu$ não é variável aleatória sob a abordagem frequentista.
+
+\vspace{0.2cm}
+
+\textbf{Observação:} o intervalo é bastante amplo (amplitude 20,4 pontos numa escala de 0 a 100), refletindo a alta variabilidade das respostas ($s \approx 73,6$ estimado); além disso, como o intervalo contém valores abaixo e acima de 50, não há evidência conclusiva de que os clientes estejam, em média, satisfeitos ou insatisfeitos.
+
+% ---------------------------------------------------
+% EXERCÍCIO 17
+% ---------------------------------------------------
+\textbf{Exercício 17: Uma unidade fabril da indústria J produziu 50.000 chips em certo período. Foram selecionados, aleatoriamente, 400 chips para testes. Assim:}
+
+\textbf{a) Supondo que 20 chips não tenham a velocidade de processamento adequada, construir um IC para proporção de chips adequados ($1-\alpha = 95\%$). Interprete o resultado.}
+
+\textbf{b) Verifique se essa amostra é suficiente para obter um IC ($1-\alpha = 99\%$), com erro amostral máximo de 0,5\%, para proporção de chips adequados. Caso contrário, qual deveria ser o tamanho da amostra?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: número de chips adequados dentre os $n$ testados.
+
+$Y \sim Bin(n, p)$, com $n = 400$, $N = 50000$ e $p =$ proporção populacional de chips adequados.
+
+Estimador: $\hat{p} = Y/n$, com
+
+\begin{equation*}
+E(\hat{p}) = p, \quad Var(\hat{p}) = \frac{p(1-p)}{n}
+\end{equation*}
+
+Como 20 chips são inadequados, os adequados são $400 - 20 = 380$:
+
+\begin{equation*}
+\hat{p} = \frac{380}{400} = 0,95
+\end{equation*}
+
+Como $n/N = 400/50000 = 0,008 < 0,05$, a correção para população finita é desprezível.
+
+Como $n = 400$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\hat{p} \sim N\left(p,\ \frac{p(1-p)}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1)
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} $\gamma = 0,95 \Rightarrow \alpha = 0,05$ e $z_{0,025} = 1,96$.
+
+\begin{equation*}
+IC(p;\gamma) = \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\end{equation*}
+
+Erro padrão estimado:
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} &= \sqrt{\frac{0,95 \cdot 0,05}{400}} \\
+&= \sqrt{\frac{0,0475}{400}} \\
+&= \sqrt{0,00011875} \\
+&= 0,0109
+\end{split}
+\end{equation*}
+
+Margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,0109 \\
+&= 0,0214
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+IC(p;0,95) &= 0,95 \pm 0,0214 \\
+&= (0,9286;\ 0,9714)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, a proporção de chips adequados na produção de 50.000 unidades está entre $92,86\%$ e $97,14\%$ — equivalentemente, entre 46.430 e 48.570 chips adequados. A taxa de defeito situa-se entre $2,86\%$ e $7,14\%$.
+
+\vspace{0.2cm}
+
+\textbf{(b)} Agora $\gamma = 0,99 \Rightarrow z_{0,005} = 2,576$ e $\varepsilon = 0,005$.
+
+Com $n = 400$, a margem de erro seria:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 2,576 \cdot 0,0109 \\
+&= 0,0281
+\end{split}
+\end{equation*}
+
+Como $0,0281 > 0,005$, a amostra de 400 chips \textbf{não é suficiente}.
+
+Tamanho necessário:
+
+\begin{equation*}
+\begin{split}
+n &= \frac{z_{\alpha/2}^2\,\hat{p}(1-\hat{p})}{\varepsilon^2} \\
+&= \frac{(2,576)^2 \cdot 0,95 \cdot 0,05}{(0,005)^2} \\
+&= \frac{6,6358 \cdot 0,0475}{0,000025} \\
+&= \frac{0,31520}{0,000025} \\
+&= 12608,1
+\end{split}
+\end{equation*}
+
+Arredondando: $n = 12609$ chips.
+
+\textit{Obs.:} pelo critério conservador, com $p(1-p) = 0,25$:
+
+\begin{equation*}
+\begin{split}
+n &= \frac{6,6358 \cdot 0,25}{0,000025} \\
+&= 66358
+\end{split}
+\end{equation*}
+
+valor superior à própria população ($N = 50000$), o que mostra que o critério conservador é inadequado aqui; usa-se a estimativa piloto $\hat{p} = 0,95$.
+
+\textbf{Interpretação:} exigir simultaneamente confiança de $99\%$ e margem de apenas $0,5$ ponto percentual requer testar cerca de 12.609 chips, mais de 31 vezes a amostra original — o que ilustra o alto custo de ganhos conjuntos de precisão e confiança.
+
+% ---------------------------------------------------
+% EXERCÍCIO 18
+% ---------------------------------------------------
+\textbf{Exercício 18: Quer se avaliar o tempo médio que um cliente leva para ser atendido num posto de serviço, no horário de maior movimento. Uma amostra aleatória simples de 14 clientes apontou para os seguintes tempos de espera (em minutos): 15; 17; 19; 10; 13; 14; 20; 18; 16; 15; 16; 22; 13 e 16. Estime, através de um intervalo com 95\% de confiança, o tempo médio, $\mu$, de atendimento.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: tempo (em minutos) que um cliente leva para ser atendido no horário de pico.
+
+$Y \sim N(\mu, \sigma^2)$, com $\mu$ e $\sigma^2$ desconhecidos.
+
+$n = 14$, \quad $n - 1 = 13$.
+
+\vspace{0.2cm}
+
+\textbf{Estatísticas amostrais:}
+
+\begin{equation*}
+\begin{split}
+\sum y_i &= 15+17+19+10+13+14 \\
+&\quad +20+18+16+15+16 \\
+&\quad +22+13+16 \\
+&= 224
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\bar{y} = \frac{224}{14} = 16
+\end{equation*}
+
+\begin{equation*}
+\sum y_i^2 = 3730
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+s^2 &= \frac{\sum y_i^2 - n\bar{y}^2}{n-1} \\
+&= \frac{3730 - 14 \cdot 256}{13} \\
+&= \frac{3730 - 3584}{13} \\
+&= \frac{146}{13} \\
+&= 11,2308
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+s = \sqrt{11,2308} = 3,3512
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Intervalo de confiança:}
+
+Como $Y$ é normal, $\sigma$ é desconhecido e $n = 14$ é pequeno, a quantidade pivotal é
+
+\begin{equation*}
+T = \frac{\bar{Y} - \mu}{S/\sqrt{n}} \sim t_{(n-1)} = t_{(13)}
+\end{equation*}
+
+Logo:
+
+\begin{equation*}
+IC(\mu;\gamma) = \bar{y} \pm t_{\alpha/2;(n-1)}\,\frac{s}{\sqrt{n}}
+\end{equation*}
+
+Para $\gamma = 0,95$: $\alpha = 0,05$ e $t_{0,025;(13)} = 2,160$.
+
+Erro padrão:
+
+\begin{equation*}
+\begin{split}
+\frac{s}{\sqrt{n}} &= \frac{3,3512}{\sqrt{14}} \\
+&= \frac{3,3512}{3,7417} \\
+&= 0,8956
+\end{split}
+\end{equation*}
+
+Margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 2,160 \cdot 0,8956 \\
+&= 1,9345
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+IC(\mu;0,95) &= 16 \pm 1,9345 \\
+&= (14,07;\ 17,93)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, o tempo médio de atendimento no horário de maior movimento está entre $14,07$ e $17,93$ minutos. Usou-se a distribuição $t$ de Student, e não a Normal, porque $\sigma$ é desconhecido e a amostra é pequena ($n = 14 < 30$); note que $t_{0,025;(13)} = 2,160 > z_{0,025} = 1,96$, o que amplia o intervalo para compensar a incerteza adicional na estimação de $\sigma$.
+
+% ---------------------------------------------------
+% EXERCÍCIO 19
+% ---------------------------------------------------
+\textbf{Exercício 19: Foram feitas 20 medidas do tempo total gasto para a precipitação de um sal, em segundos, numa dada experiência, obtendo-se: 13 15 12 14 17 15 16 15 14 16 17 14 16 15 15 16 14 15 16 15. Esses dados são suficientes para estimar o tempo médio gasto na precipitação com precisão de meio segundo e 95\% de certeza? Caso negativo, qual o tamanho da amostra adicional necessária?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: tempo (em segundos) gasto para a precipitação do sal.
+
+$Y \sim N(\mu, \sigma^2)$, com $\mu$ e $\sigma^2$ desconhecidos.
+
+$n = 20$, \quad $n - 1 = 19$.
+
+\vspace{0.2cm}
+
+\textbf{Estatísticas amostrais:}
+
+\begin{equation*}
+\begin{split}
+\sum y_i &= 13+15+12+14+17 \\
+&\quad +15+16+15+14+16 \\
+&\quad +17+14+16+15+15 \\
+&\quad +16+14+15+16+15 \\
+&= 300
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\bar{y} = \frac{300}{20} = 15
+\end{equation*}
+
+\begin{equation*}
+\sum y_i^2 = 4538
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+s^2 &= \frac{\sum y_i^2 - n\bar{y}^2}{n-1} \\
+&= \frac{4538 - 20 \cdot 225}{19} \\
+&= \frac{4538 - 4500}{19} \\
+&= \frac{38}{19} = 2
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+s = \sqrt{2} = 1,4142
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Precisão atual:}
+
+Deseja-se $\varepsilon = 0,5$ com $\gamma = 0,95$.
+
+Como $\sigma$ é desconhecido e $n$ é pequeno:
+
+\begin{equation*}
+T = \frac{\bar{Y} - \mu}{S/\sqrt{n}} \sim t_{(19)}
+\end{equation*}
+
+com $t_{0,025;(19)} = 2,093$.
+
+Erro padrão:
+
+\begin{equation*}
+\begin{split}
+\frac{s}{\sqrt{n}} &= \frac{1,4142}{\sqrt{20}} \\
+&= \frac{1,4142}{4,4721} \\
+&= 0,3162
+\end{split}
+\end{equation*}
+
+Margem de erro atual:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 2,093 \cdot 0,3162 \\
+&= 0,6619
+\end{split}
+\end{equation*}
+
+Como $0,6619 > 0,5$, \textbf{os dados NÃO são suficientes}.
+
+\vspace{0.2cm}
+
+\textbf{Tamanho necessário:}
+
+Usando $\sigma \approx s$ e a aproximação normal ($z_{0,025} = 1,96$):
+
+\begin{equation*}
+\begin{split}
+n &= \left(\frac{z_{\alpha/2}\,s}{\varepsilon}\right)^2 \\
+&= \left(\frac{1,96 \cdot 1,4142}{0,5}\right)^2 \\
+&= \left(\frac{2,7718}{0,5}\right)^2 \\
+&= (5,5436)^2 \\
+&= 30,73
+\end{split}
+\end{equation*}
+
+Arredondando: $n = 31$ medidas.
+
+Amostra adicional:
+
+\begin{equation*}
+\begin{split}
+n_{ad} &= 31 - 20 \\
+&= 11 \text{ medidas}
+\end{split}
+\end{equation*}
+
+\textit{Obs.:} usando $t_{0,025;(19)} = 2,093$ em vez de $z$:
+
+\begin{equation*}
+\begin{split}
+n &= \left(\frac{2,093 \cdot 1,4142}{0,5}\right)^2 \\
+&= (5,9198)^2 = 35,04 \Rightarrow n = 36
+\end{split}
+\end{equation*}
+
+resultando em 16 medidas adicionais (critério mais cauteloso).
+
+\textbf{Interpretação:} com as 20 medidas atuais, o intervalo de $95\%$ seria $15 \pm 0,66$, ou seja, $(14,34;\ 15,66)$, cuja precisão ($0,66$ s) é pior que a exigida ($0,5$ s). São necessárias cerca de 11 a 16 medidas adicionais para atingir a precisão desejada.
+
+% ---------------------------------------------------
+% EXERCÍCIO 20
+% ---------------------------------------------------
+\textbf{Exercício 20: Seja o problema de construir um intervalo de confiança para a proporção $p$ de alunos favoráveis à presença da Polícia Militar no Campus de uma grande universidade, com base numa amostra aleatória simples de $n$ alunos. Faça os itens abaixo e, com base nos resultados, discuta sobre a precisão das estimativas ao variar $n$ e $p$.}
+
+\textbf{(a) confiança de 90\%, $n = 400$, com 60\% de favoráveis na amostra.}
+
+\textbf{(b) confiança de 90\%, porém considerando que a amostra tenha sido de 1000 alunos, sendo que 600 disseram favorável.}
+
+\textbf{(c) confiança de 95\%, $n = 400$, com 80 favoráveis.}
+
+\textbf{(d) confiança de 95\%, $n = 400$, com 320 favoráveis.}
+
+\textbf{(e) confiança de 95\%, $n = 400$, com 200 favoráveis.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: número de alunos, dentre os $n$ amostrados, favoráveis à presença da PM no Campus.
+
+$Y \sim Bin(n, p)$, com $p$ desconhecido.
+
+Estimador: $\hat{p} = Y/n$, com
+
+\begin{equation*}
+E(\hat{p}) = p, \quad Var(\hat{p}) = \frac{p(1-p)}{n}
+\end{equation*}
+
+Como $n$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\hat{p} \sim N\left(p,\ \frac{p(1-p)}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1)
+\end{equation*}
+
+Logo (intervalo otimista):
+
+\begin{equation*}
+IC(p;\gamma) = \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\end{equation*}
+
+Quantis: $z_{0,05} = 1,645$ ($\gamma = 0,90$) e $z_{0,025} = 1,96$ ($\gamma = 0,95$).
+
+\vspace{0.2cm}
+
+\textbf{(a)} $n = 400$, $\hat{p} = 0,60$, $\gamma = 0,90$.
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,6 \cdot 0,4}{400}} &= \sqrt{0,0006} \\
+&= 0,0245
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,645 \cdot 0,0245 = 0,0403
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 0,60 \pm 0,0403 \\
+&= (0,5597;\ 0,6403)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(b)} $n = 1000$, $\hat{p} = 600/1000 = 0,60$, $\gamma = 0,90$.
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,6 \cdot 0,4}{1000}} &= \sqrt{0,00024} \\
+&= 0,0155
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,645 \cdot 0,0155 = 0,0255
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 0,60 \pm 0,0255 \\
+&= (0,5745;\ 0,6255)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(c)} $n = 400$, $\hat{p} = 80/400 = 0,20$, $\gamma = 0,95$.
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,2 \cdot 0,8}{400}} &= \sqrt{0,0004} \\
+&= 0,02
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,02 = 0,0392
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 0,20 \pm 0,0392 \\
+&= (0,1608;\ 0,2392)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(d)} $n = 400$, $\hat{p} = 320/400 = 0,80$, $\gamma = 0,95$.
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,8 \cdot 0,2}{400}} &= 0,02
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,02 = 0,0392
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 0,80 \pm 0,0392 \\
+&= (0,7608;\ 0,8392)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(e)} $n = 400$, $\hat{p} = 200/400 = 0,50$, $\gamma = 0,95$.
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,5 \cdot 0,5}{400}} &= \sqrt{0,000625} \\
+&= 0,025
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,025 = 0,049
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC &= 0,50 \pm 0,049 \\
+&= (0,451;\ 0,549)
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Discussão sobre a precisão:}
+
+\textbf{1. Efeito de $n$:} comparando (a) e (b), com o mesmo $\hat{p} = 0,60$ e mesma confiança, o aumento de $n = 400$ para $n = 1000$ reduziu a margem de $0,0403$ para $0,0255$ — queda de aproximadamente $37\%$. Como $\varepsilon \propto 1/\sqrt{n}$, a razão esperada é $\sqrt{400/1000} = 0,632$, confirmada nos cálculos. Para reduzir a margem à metade seria preciso quadruplicar $n$.
+
+\textbf{2. Efeito de $p$:} comparando (c), (d) e (e), todos com $n = 400$ e $\gamma = 0,95$, a margem depende de $\hat{p}(1-\hat{p})$, função que é máxima em $\hat{p} = 0,5$ e simétrica em torno desse ponto. Assim, (e) tem a maior margem ($0,049$), enquanto (c) e (d) — simétricos, pois $0,2 \cdot 0,8 = 0,8 \cdot 0,2$ — têm margens idênticas e menores ($0,0392$). Proporções próximas de 0 ou 1 são estimadas com maior precisão.
+
+\textbf{3. Efeito da confiança:} maior $\gamma$ implica maior $z_{\alpha/2}$ e, portanto, intervalo mais amplo. O caso $\hat{p} = 0,5$ é usado no planejamento amostral \textit{conservador}, pois garante a margem máxima independentemente do verdadeiro $p$.
+
+% ---------------------------------------------------
+% EXERCÍCIO 19
+% ---------------------------------------------------
+\textbf{Exercício 21: Em uma população de homens com mais de 55 anos de determinado município, constatou-se em uma amostra aleatória de 20 homens que 30\% apresentaram pressão arterial fora do intervalo apropriado para essa faixa etária. Um ano após a implementação de um programa de exercícios físicos, observou-se em uma nova amostra de 20 homens que 18\% apresentaram pressão arterial fora do referido intervalo.}
+
+\textbf{(a) Deseja-se saber entre que limites esteve a verdadeira proporção de homens com pressão arterial fora do intervalo apropriado, antes e após a implementação do programa de exercícios. Utilize um grau de confiança de 95\%.}
+
+\textbf{(b) Qual o erro máximo associado a cada uma das estimativas. Interprete os valores.}
+
+\textbf{(c) Num trabalho futuro, qual seria o tamanho da amostra necessário para obter um intervalo de 95\% de confiança para a proporção de homens com pressão arterial fora do intervalo apropriado, com um erro amostral máximo de 5\%, considerando a última estimativa obtida para o parâmetro?}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X$: número de homens com pressão fora do intervalo apropriado, \textbf{antes} do programa.
+
+$X \sim Bin(n_1, p_1)$, com $n_1 = 20$ e $\hat{p}_1 = 0,30$.
+
+$Y$: número de homens com pressão fora do intervalo apropriado, \textbf{depois} do programa.
+
+$Y \sim Bin(n_2, p_2)$, com $n_2 = 20$ e $\hat{p}_2 = 0,18$.
+
+Estimadores: $\hat{p}_i = Y_i/n_i$, com
+
+\begin{equation*}
+E(\hat{p}_i) = p_i, \quad Var(\hat{p}_i) = \frac{p_i(1-p_i)}{n_i}
+\end{equation*}
+
+Pelo TCL:
+
+\begin{equation*}
+\hat{p}_i \sim N\left(p_i,\ \frac{p_i(1-p_i)}{n_i}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\hat{p}_i - p_i}{\sqrt{\frac{p_i(1-p_i)}{n_i}}} \sim N(0,1)
+\end{equation*}
+
+Logo:
+
+\begin{equation*}
+IC(p_i;\gamma) = \hat{p}_i \pm z_{\alpha/2}\sqrt{\frac{\hat{p}_i(1-\hat{p}_i)}{n_i}}
+\end{equation*}
+
+Para $\gamma = 0,95$: $z_{0,025} = 1,96$.
+
+\vspace{0.2cm}
+
+\textbf{(a) Antes do programa:} $\hat{p}_1 = 0,30$, $n_1 = 20$.
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,30 \cdot 0,70}{20}} &= \sqrt{\frac{0,21}{20}} \\
+&= \sqrt{0,0105} \\
+&= 0,1025
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon_1 &= 1,96 \cdot 0,1025 \\
+&= 0,2009
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC(p_1;0,95) &= 0,30 \pm 0,2009 \\
+&= (0,0991;\ 0,5009)
+\end{split}
+\end{equation*}
+
+ou seja, $[9,91\%;\ 50,09\%]$.
+
+\vspace{0.2cm}
+
+\textbf{Após o programa:} $\hat{p}_2 = 0,18$, $n_2 = 20$.
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{0,18 \cdot 0,82}{20}} &= \sqrt{\frac{0,1476}{20}} \\
+&= \sqrt{0,00738} \\
+&= 0,0859
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\varepsilon_2 &= 1,96 \cdot 0,0859 \\
+&= 0,1683
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC(p_2;0,95) &= 0,18 \pm 0,1683 \\
+&= (0,0117;\ 0,3483)
+\end{split}
+\end{equation*}
+
+ou seja, $[1,17\%;\ 34,83\%]$.
+
+\vspace{0.2cm}
+
+\textbf{(b) Erros máximos:}
+
+\begin{equation*}
+\varepsilon_1 = 0,2009 \approx 20\%
+\end{equation*}
+
+\begin{equation*}
+\varepsilon_2 = 0,1683 \approx 16,83\%
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, a estimativa antes do programa ($30\%$) erra o verdadeiro $p_1$ em no máximo 20 pontos percentuais; após o programa ($18\%$), o erro máximo é de $16,83$ pontos percentuais. São margens muito grandes, decorrentes do tamanho amostral reduzido ($n = 20$): as estimativas têm baixíssima precisão. O erro é menor no segundo caso porque $\hat{p}_2 = 0,18$ está mais distante de $0,5$ que $\hat{p}_1 = 0,30$, reduzindo $\hat{p}(1-\hat{p})$.
+
+Note ainda que os dois intervalos se sobrepõem amplamente, de modo que \textbf{não há evidência} de que o programa tenha reduzido a proporção — a aparente queda de $30\%$ para $18\%$ pode ser apenas variabilidade amostral.
+
+\vspace{0.2cm}
+
+\textbf{(c)} $\varepsilon = 0,05$, $\gamma = 0,95$, usando a última estimativa $\hat{p} = 0,18$:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} \\
+n &= \frac{z_{\alpha/2}^2\,\hat{p}(1-\hat{p})}{\varepsilon^2}
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+n &= \frac{(1,96)^2 \cdot 0,18 \cdot 0,82}{(0,05)^2} \\
+&= \frac{3,8416 \cdot 0,1476}{0,0025} \\
+&= \frac{0,56702}{0,0025} \\
+&= 226,81
+\end{split}
+\end{equation*}
+
+Arredondando para cima: $n = 227$ homens.
+
+\textbf{Interpretação:} para reduzir o erro máximo de $16,83\%$ para $5\%$, mantendo $95\%$ de confiança, é preciso ampliar a amostra de 20 para aproximadamente 227 homens — cerca de 11 vezes mais, já que $n$ é inversamente proporcional a $\varepsilon^2$.
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+\textbf{Exercício 22: Um antropólogo mediu as alturas de uma amostra aleatória de 100 homens de determinada população, encontrando uma altura média de 173 cm. Se a variância da população for 9 cm$^2$, calcular:}
+
+\textbf{(a) um intervalo de 95\% de confiança para a altura média populacional. Interpretar o intervalo.}
+
+\textbf{(b) um intervalo de 99\% de confiança para a altura média populacional. Interpretar o intervalo.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: altura (em cm) de um homem da população.
+
+$E(Y) = \mu$, \quad $Var(Y) = \sigma^2 = 9 \Rightarrow \sigma = 3$ cm.
+
+$n = 100$, \quad $\bar{y} = 173$.
+
+Como $n = 100$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\bar{Y} \sim N\left(\mu, \frac{\sigma^2}{n}\right) = N\left(\mu, \frac{9}{100}\right)
+\end{equation*}
+
+Como $\sigma$ é conhecido, a quantidade pivotal é
+
+\begin{equation*}
+Z = \frac{\bar{Y} - \mu}{\sigma/\sqrt{n}} \sim N(0,1)
+\end{equation*}
+
+Logo:
+
+\begin{equation*}
+IC(\mu;\gamma) = \bar{y} \pm z_{\alpha/2}\,\frac{\sigma}{\sqrt{n}}
+\end{equation*}
+
+Erro padrão:
+
+\begin{equation*}
+\frac{\sigma}{\sqrt{n}} = \frac{3}{\sqrt{100}} = \frac{3}{10} = 0,3
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} $\gamma = 0,95 \Rightarrow \alpha = 0,05$ e $z_{0,025} = 1,96$.
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,3 \\
+&= 0,588
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC(\mu;0,95) &= 173 \pm 0,588 \\
+&= (172,41;\ 173,59)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $95\%$ de confiança, a altura média populacional dos homens está entre $172,41$ e $173,59$ cm. Ou seja, repetindo-se o processo de amostragem muitas vezes com $n = 100$, aproximadamente $95\%$ dos intervalos construídos pelo mesmo método conteriam o verdadeiro valor de $\mu$.
+
+\vspace{0.2cm}
+
+\textbf{(b)} $\gamma = 0,99 \Rightarrow \alpha = 0,01$ e $z_{0,005} = 2,576$.
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 2,576 \cdot 0,3 \\
+&= 0,7728
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+IC(\mu;0,99) &= 173 \pm 0,7728 \\
+&= (172,23;\ 173,77)
+\end{split}
+\end{equation*}
+
+\textbf{Interpretação:} com $99\%$ de confiança, a altura média populacional está entre $172,23$ e $173,77$ cm.
+
+\vspace{0.2cm}
+
+\textbf{Comparação:} ambos os intervalos são centrados em $\bar{y} = 173$, mas a amplitude passa de $1,18$ cm (a) para $1,55$ cm (b). Elevar a confiança de $95\%$ para $99\%$ aumenta o quantil de $1,96$ para $2,576$ e, consequentemente, alarga o intervalo em cerca de $31\%$. Isso ilustra o compromisso entre confiança e precisão: para ter mais certeza de conter $\mu$, paga-se com uma estimativa menos precisa. Para manter a precisão original com $99\%$ de confiança, seria necessário aumentar $n$.
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+\textbf{Exercício 23: Um instituto de pesquisa observou uma amostra aleatória de 800 habitantes de uma grande cidade. Verificou que 320 indivíduos desta amostra apoiam a administração da prefeitura, enquanto que os outros 480 a criticam.}
+
+\textbf{(a) O que se pode dizer sobre a porcentagem de indivíduos que apoiam a administração da prefeitura, dentre os indivíduos da amostra?}
+
+\textbf{(b) O que se pode dizer sobre a porcentagem de indivíduos que apoiam a administração da prefeitura, dentre os habitantes da cidade? Em caso de estimativa usar 95\% de confiança.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$Y$: número de habitantes, dentre os $n$ amostrados, que apoiam a administração da prefeitura.
+
+$Y \sim Bin(n, p)$, com $n = 800$ e $p$ desconhecido.
+
+Estimador: $\hat{p} = Y/n$, com
+
+\begin{equation*}
+E(\hat{p}) = p, \quad Var(\hat{p}) = \frac{p(1-p)}{n}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(a)} Dentre os indivíduos \textbf{da amostra}, a porcentagem é uma \textit{medida descritiva}, calculada sem incerteza:
+
+\begin{equation*}
+\begin{split}
+\hat{p} &= \frac{320}{800} \\
+&= 0,40 = 40\%
+\end{split}
+\end{equation*}
+
+Ou seja, exatamente $40\%$ dos 800 entrevistados apoiam a administração (e $60\%$ a criticam). Aqui não cabe intervalo de confiança: a amostra foi integralmente observada, e $40\%$ é o valor exato para esse conjunto.
+
+\vspace{0.2cm}
+
+\textbf{(b)} Dentre \textbf{todos os habitantes} da cidade, $p$ é um parâmetro desconhecido e deve ser \textit{estimado} por intervalo.
+
+Como $n = 800$ é suficientemente grande, pelo TCL:
+
+\begin{equation*}
+\hat{p} \sim N\left(p,\ \frac{p(1-p)}{n}\right)
+\end{equation*}
+
+com quantidade pivotal
+
+\begin{equation*}
+Z = \frac{\hat{p} - p}{\sqrt{\frac{p(1-p)}{n}}} \sim N(0,1)
+\end{equation*}
+
+Logo:
+
+\begin{equation*}
+IC(p;\gamma) = \hat{p} \pm z_{\alpha/2}\sqrt{\frac{\hat{p}(1-\hat{p})}{n}}
+\end{equation*}
+
+Para $\gamma = 0,95$: $z_{0,025} = 1,96$.
+
+Erro padrão estimado:
+
+\begin{equation*}
+\begin{split}
+\sqrt{\frac{\hat{p}(1-\hat{p})}{n}} &= \sqrt{\frac{0,40 \cdot 0,60}{800}} \\
+&= \sqrt{\frac{0,24}{800}} \\
+&= \sqrt{0,0003} \\
+&= 0,01732
+\end{split}
+\end{equation*}
+
+Margem de erro:
+
+\begin{equation*}
+\begin{split}
+\varepsilon &= 1,96 \cdot 0,01732 \\
+&= 0,03395
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+IC(p;0,95) &= 0,40 \pm 0,03395 \\
+&= (0,3660;\ 0,4340)
+\end{split}
+\end{equation*}
+
+ou seja, $[36,60\%;\ 43,40\%]$.
+
+\textbf{Interpretação:} com $95\%$ de confiança, a porcentagem de habitantes da cidade que apoiam a administração da prefeitura está entre $36,60\%$ e $43,40\%$, com margem de erro de aproximadamente $3,4$ pontos percentuais.
+
+\vspace{0.2cm}
+
+\textbf{Comentário:} a diferença entre (a) e (b) é essencial: em (a) trata-se de \textbf{estatística descritiva} sobre a amostra observada; em (b), de \textbf{inferência} sobre a população, e por isso é necessário quantificar a incerteza amostral. Note ainda que todo o intervalo está abaixo de $0,5$, indicando evidência de que a administração \textbf{não} conta com o apoio da maioria dos habitantes.
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+\textbf{Exercício 24: Se $L(x)$ e $U(x)$ satisfazem $P_\theta(L(X) \leq \theta) = 1 - \alpha_1$ e $P_\theta(U(X) \geq \theta) = 1 - \alpha_2$, e $L(x) \leq U(x)$ para todo $x$, mostre que $P_\theta(L(X) \leq \theta \leq U(X)) = 1 - \alpha_1 - \alpha_2$.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X$: vetor de dados observados, com distribuição indexada por $\theta$.
+
+$L(X)$ e $U(X)$: limites aleatórios (estatísticas), com
+
+\begin{equation*}
+P_\theta(L(X) \leq \theta) = 1 - \alpha_1
+\end{equation*}
+
+\begin{equation*}
+P_\theta(U(X) \geq \theta) = 1 - \alpha_2
+\end{equation*}
+
+e $L(x) \leq U(x)$, $\forall x$.
+
+\vspace{0.2cm}
+
+Definam-se os eventos:
+
+\begin{equation*}
+\begin{split}
+A &= \{L(X) \leq \theta\} \\
+B &= \{U(X) \geq \theta\}
+\end{split}
+\end{equation*}
+
+Note que a interseção é justamente o evento de interesse:
+
+\begin{equation*}
+A \cap B = \{L(X) \leq \theta \leq U(X)\}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Passo 1: mostrar que $A \cup B = \Omega$.}
+
+Pelas leis de De Morgan, basta mostrar que $A^c \cap B^c = \varnothing$, em que
+
+\begin{equation*}
+A^c = \{L(X) > \theta\}, \quad B^c = \{U(X) < \theta\}
+\end{equation*}
+
+Suponha, por absurdo, que exista $x$ com $x \in A^c \cap B^c$. Então
+
+\begin{equation*}
+L(x) > \theta \quad \text{e} \quad U(x) < \theta
+\end{equation*}
+
+Como por hipótese $L(x) \leq U(x)$ para todo $x$, segue
+
+\begin{equation*}
+\theta < L(x) \leq U(x) < \theta
+\end{equation*}
+
+ou seja, $\theta < \theta$, o que é absurdo. Logo
+
+\begin{equation*}
+A^c \cap B^c = \varnothing
+\end{equation*}
+
+e, portanto,
+
+\begin{equation*}
+\begin{split}
+A \cup B &= (A^c \cap B^c)^c \\
+&= \varnothing^c = \Omega
+\end{split}
+\end{equation*}
+
+de modo que $P_\theta(A \cup B) = 1$.
+
+\vspace{0.2cm}
+
+\textbf{Passo 2: aplicar a regra da adição.}
+
+Pela propriedade da probabilidade da união:
+
+\begin{equation*}
+\begin{split}
+&P_\theta(A \cup B) \\
+&= P_\theta(A) + P_\theta(B) - P_\theta(A \cap B)
+\end{split}
+\end{equation*}
+
+Isolando $P_\theta(A \cap B)$:
+
+\begin{equation*}
+\begin{split}
+&P_\theta(A \cap B) \\
+&= P_\theta(A) + P_\theta(B) - P_\theta(A \cup B)
+\end{split}
+\end{equation*}
+
+Substituindo os valores:
+
+\begin{equation*}
+\begin{split}
+&P_\theta(L(X) \leq \theta \leq U(X)) \\
+&= (1 - \alpha_1) + (1 - \alpha_2) - 1 \\
+&= 2 - \alpha_1 - \alpha_2 - 1 \\
+&= 1 - \alpha_1 - \alpha_2
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Conclusão:} o intervalo aleatório $[L(X);\ U(X)]$ é um intervalo de confiança para $\theta$ com coeficiente de confiança
+
+\begin{equation*}
+\gamma = 1 - \alpha_1 - \alpha_2
+\end{equation*}
+
+\textbf{Observação:} o resultado mostra que os erros das caudas se somam: combinando um limite inferior de nível $1-\alpha_1$ com um limite superior de nível $1-\alpha_2$, a confiança conjunta é $1-\alpha_1-\alpha_2$, e não o produto das confianças individuais. A hipótese $L(x) \leq U(x)$ é essencial: sem ela os eventos $A$ e $B$ poderiam deixar de cobrir $\Omega$, e teríamos apenas a desigualdade
+
+\begin{equation*}
+\begin{split}
+&P_\theta(L \leq \theta \leq U) \\
+&\geq 1 - \alpha_1 - \alpha_2
+\end{split}
+\end{equation*}
+
+No caso simétrico usual, $\alpha_1 = \alpha_2 = \alpha/2$, resultando em $\gamma = 1 - \alpha$.
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+\textbf{Exercício 25: Sejam $X_1,\dots,X_n \sim n(\theta,1)$ iid. O intervalo de confiança de 95\% para $\theta$ é $\bar{x} \pm 1,96/\sqrt{n}$. Seja $p$ denotando a probabilidade de que uma observação independente adicional, $X_{n+1}$, estará neste intervalo. $p$ é maior, menor ou igual a 0,95? Prove sua resposta.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X_i \sim N(\theta, 1)$, iid, $i = 1,\dots,n+1$.
+
+$\bar{X} = \frac{1}{n}\sum_{i=1}^{n} X_i$, com
+
+\begin{equation*}
+\bar{X} \sim N\left(\theta, \frac{1}{n}\right)
+\end{equation*}
+
+Queremos
+
+\begin{equation*}
+\begin{split}
+p &= P\left(\bar{X} - \frac{1,96}{\sqrt{n}} \leq X_{n+1} \right. \\
+&\quad \left. \leq \bar{X} + \frac{1,96}{\sqrt{n}}\right) \\
+&= P\left(|X_{n+1} - \bar{X}| \leq \frac{1,96}{\sqrt{n}}\right)
+\end{split}
+\end{equation*}
+
+\textbf{Distribuição de $X_{n+1} - \bar{X}$:}
+
+Como $X_{n+1}$ é independente de $X_1,\dots,X_n$ (logo de $\bar{X}$), a diferença de normais independentes é normal:
+
+\begin{equation*}
+\begin{split}
+E(X_{n+1} - \bar{X}) &= \theta - \theta = 0
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+Var(X_{n+1} - \bar{X}) &= Var(X_{n+1}) + Var(\bar{X}) \\
+&= 1 + \frac{1}{n} \\
+&= \frac{n+1}{n}
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+X_{n+1} - \bar{X} \sim N\left(0, \frac{n+1}{n}\right)
+\end{equation*}
+
+\textbf{Cálculo de $p$:} padronizando,
+
+\begin{equation*}
+\begin{split}
+p &= P\left(|Z| \leq \frac{1,96/\sqrt{n}}{\sqrt{(n+1)/n}}\right) \\
+&= P\left(|Z| \leq \frac{1,96}{\sqrt{n}} \cdot \frac{\sqrt{n}}{\sqrt{n+1}}\right) \\
+&= P\left(|Z| \leq \frac{1,96}{\sqrt{n+1}}\right)
+\end{split}
+\end{equation*}
+
+com $Z \sim N(0,1)$.
+
+\textbf{Comparação:} para todo $n \geq 1$ tem-se $\sqrt{n+1} > 1$, logo
+
+\begin{equation*}
+\frac{1,96}{\sqrt{n+1}} < 1,96
+\end{equation*}
+
+Como $P(|Z| \leq c)$ é estritamente crescente em $c > 0$:
+
+\begin{equation*}
+\begin{split}
+p &= P\left(|Z| \leq \frac{1,96}{\sqrt{n+1}}\right) \\
+&< P(|Z| \leq 1,96) \\
+&= 0,95
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Conclusão:} $p < 0,95$.
+
+\textbf{Interpretação:} o intervalo foi construído para conter o \textbf{parâmetro} $\theta$, cuja incerteza tem desvio $1/\sqrt{n}$, e não uma \textbf{observação futura}, cuja variabilidade é $\sqrt{1 + 1/n}$ — muito maior. Assim, à medida que $n$ cresce, o intervalo encolhe e $p \to 0$:
+
+\begin{equation*}
+\lim_{n \to \infty} P\left(|Z| \leq \frac{1,96}{\sqrt{n+1}}\right) = 0
+\end{equation*}
+
+Por exemplo, com $n = 10$: $p = P(|Z| \leq 0,591) = 0,4455$.
+
+Para conter $X_{n+1}$ com probabilidade $0,95$ seria preciso o \textbf{intervalo de predição}:
+
+\begin{equation*}
+\bar{x} \pm 1,96\sqrt{1 + \frac{1}{n}}
+\end{equation*}
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+\textbf{Exercício 26: As variáveis aleatórias independentes $X_1,\dots,X_n$ têm a distribuição comum}
+
+\begin{equation*}
+P(X_i \leq x) =
+\begin{cases}
+0 & \text{se } x \leq 0 \\
+(x/\beta)^\alpha & \text{se } 0 < x < \beta \\
+1 & \text{se } x \geq \beta
+\end{cases}
+\end{equation*}
+
+\textbf{a. No Exercício 7.10 os EMVs de $\alpha$ e $\beta$ foram encontrados. Se $\alpha$ é uma constante conhecida, $\alpha_0$, encontre um limite de confiança superior para $\beta$ com coeficiente de confiança de 0,95.}
+
+\textbf{b. Utilize os dados do Exercício 7.10 para construir uma estimativa de intervalo para $\beta$. Assuma que $\alpha$ é conhecido e igual a seu EMV.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X_i$: variável com f.d.a. $F(x) = (x/\beta)^{\alpha_0}$, $0 < x < \beta$, com $\alpha = \alpha_0$ conhecido e $\beta > 0$ desconhecido.
+
+O EMV de $\beta$ é a maior observação:
+
+\begin{equation*}
+\hat{\beta} = X_{(n)} = \max_i X_i
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Quantidade pivotal:}
+
+Seja $T = X_{(n)}/\beta$. Sua f.d.a. é, para $0 < t < 1$:
+
+\begin{equation*}
+\begin{split}
+F_T(t) &= P\left(\frac{X_{(n)}}{\beta} \leq t\right) \\
+&= P(X_{(n)} \leq t\beta) \\
+&= \prod_{i=1}^{n} P(X_i \leq t\beta) \\
+&= \left[\left(\frac{t\beta}{\beta}\right)^{\alpha_0}\right]^n \\
+&= t^{n\alpha_0}
+\end{split}
+\end{equation*}
+
+Como $F_T$ não depende de $\beta$, $T$ é uma \textbf{quantidade pivotal}.
+
+\vspace{0.2cm}
+
+\textbf{(a) Limite de confiança superior:}
+
+Queremos $U(X)$ tal que $P(\beta \leq U(X)) = 0,95$.
+
+Buscamos $c$ com
+
+\begin{equation*}
+\begin{split}
+P(T \geq c) &= 0,95 \\
+1 - c^{n\alpha_0} &= 0,95 \\
+c^{n\alpha_0} &= 0,05 \\
+c &= (0,05)^{1/(n\alpha_0)}
+\end{split}
+\end{equation*}
+
+Então:
+
+\begin{equation*}
+\begin{split}
+0,95 &= P\left(\frac{X_{(n)}}{\beta} \geq c\right) \\
+&= P\left(\beta \leq \frac{X_{(n)}}{c}\right)
+\end{split}
+\end{equation*}
+
+Logo, o limite superior de confiança $95\%$ é
+
+\begin{equation*}
+U(X) = \frac{X_{(n)}}{(0,05)^{1/(n\alpha_0)}}
+\end{equation*}
+
+isto é, $\beta \leq X_{(n)}\,(0,05)^{-1/(n\alpha_0)}$ com confiança $0,95$.
+
+Note que $U(X) > X_{(n)}$, como deve ser, já que necessariamente $\beta \geq X_{(n)}$.
+
+\vspace{0.2cm}
+
+\textbf{(b) Intervalo de confiança:}
+
+Buscamos $a < b$ em $(0,1)$ com $P(a \leq T \leq b) = 1-\alpha$. Tomando caudas iguais:
+
+\begin{equation*}
+\begin{split}
+a^{n\hat{\alpha}} &= \frac{\alpha}{2} \Rightarrow a = \left(\frac{\alpha}{2}\right)^{1/(n\hat{\alpha})}
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+b^{n\hat{\alpha}} &= 1 - \frac{\alpha}{2} \Rightarrow b = \left(1-\frac{\alpha}{2}\right)^{1/(n\hat{\alpha})}
+\end{split}
+\end{equation*}
+
+Invertendo:
+
+\begin{equation*}
+\begin{split}
+&P\left(a \leq \frac{X_{(n)}}{\beta} \leq b\right) \\
+&= P\left(\frac{X_{(n)}}{b} \leq \beta \leq \frac{X_{(n)}}{a}\right)
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+&IC(\beta;1-\alpha) \\
+&= \left[\frac{X_{(n)}}{(1-\frac{\alpha}{2})^{\frac{1}{n\hat{\alpha}}}};\ \frac{X_{(n)}}{(\frac{\alpha}{2})^{\frac{1}{n\hat{\alpha}}}}\right]
+\end{split}
+\end{equation*}
+
+com $\hat{\alpha}$ o EMV de $\alpha$, dado por
+
+\begin{equation*}
+\hat{\alpha} = \frac{n}{\sum_{i=1}^{n}\log\left(\frac{X_{(n)}}{X_i}\right)}
+\end{equation*}
+
+\textbf{Observação:} o intervalo é multiplicativo (não simétrico em torno de $X_{(n)}$) e tem amplitude que decresce exponencialmente com $n\hat{\alpha}$. Sua amplitude é
+
+\begin{equation*}
+X_{(n)}\left[\left(\tfrac{\alpha}{2}\right)^{-\frac{1}{n\hat{\alpha}}} - \left(1-\tfrac{\alpha}{2}\right)^{-\frac{1}{n\hat{\alpha}}}\right]
+\end{equation*}
+
+\vspace{0.4cm}
+
+\textbf{Exercício 27: Sejam $X_1,\dots,X_n$ uma amostra aleatória de um $n(0,\sigma_X^2)$, e que $Y_1,\dots,Y_m$ sejam uma amostra aleatória de um $n(0,\sigma_Y^2)$, independente dos $X$s. Defina $\lambda = \sigma_Y^2/\sigma_X^2$.}
+
+\textbf{a. Encontre o TRV de nível $\alpha$ de $H_0: \lambda = \lambda_0$ versus $H_1: \lambda \neq \lambda_0$.}
+
+\textbf{b. Expresse a região de rejeição do TRV da parte (a) em termos de uma variável aleatória $F$.}
+
+\textbf{c. Encontre um intervalo de confiança $1-\alpha$ para $\lambda$.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X_i \sim N(0,\sigma_X^2)$, $i=1,\dots,n$; \quad $Y_j \sim N(0,\sigma_Y^2)$, $j=1,\dots,m$; amostras independentes.
+
+Como as médias são conhecidas ($=0$), os EMVs são
+
+\begin{equation*}
+\hat{\sigma}_X^2 = \frac{1}{n}\sum_{i=1}^{n} X_i^2, \quad \hat{\sigma}_Y^2 = \frac{1}{m}\sum_{j=1}^{m} Y_j^2
+\end{equation*}
+
+Denote $S_X = \sum X_i^2$ e $S_Y = \sum Y_j^2$.
+
+\vspace{0.2cm}
+
+\textbf{(a) Teste da razão de verossimilhanças:}
+
+A verossimilhança conjunta é
+
+\begin{equation*}
+\begin{split}
+L(\sigma_X^2,\sigma_Y^2) &= (2\pi\sigma_X^2)^{-n/2}e^{-\frac{S_X}{2\sigma_X^2}} \\
+&\quad \times (2\pi\sigma_Y^2)^{-m/2}e^{-\frac{S_Y}{2\sigma_Y^2}}
+\end{split}
+\end{equation*}
+
+Sob $H_1$ (irrestrito), o máximo usa $\hat{\sigma}_X^2 = S_X/n$ e $\hat{\sigma}_Y^2 = S_Y/m$.
+
+Sob $H_0$, com $\sigma_Y^2 = \lambda_0\sigma_X^2$, a log-verossimilhança em $\sigma_X^2$ leva a
+
+\begin{equation*}
+\hat{\sigma}_{X,0}^2 = \frac{S_X + S_Y/\lambda_0}{n+m}
+\end{equation*}
+
+A estatística é
+
+\begin{equation*}
+\Lambda = \frac{L(\hat{\sigma}_{X,0}^2,\ \lambda_0\hat{\sigma}_{X,0}^2)}{L(\hat{\sigma}_X^2,\ \hat{\sigma}_Y^2)}
+\end{equation*}
+
+Após simplificação, escrevendo $W = \dfrac{S_Y/\lambda_0}{S_X + S_Y/\lambda_0}$:
+
+\begin{equation*}
+\Lambda = C\,(1-W)^{n/2}\,W^{m/2}
+\end{equation*}
+
+com $C = \left(\frac{n+m}{n}\right)^{n/2}\left(\frac{n+m}{m}\right)^{m/2}$.
+
+Rejeita-se $H_0$ se $\Lambda < k$, ou seja, quando $W$ é muito pequeno ou muito grande.
+
+\vspace{0.2cm}
+
+\textbf{(b) Em termos de $F$:}
+
+Como $S_X/\sigma_X^2 \sim \chi^2_{(n)}$ e $S_Y/\sigma_Y^2 \sim \chi^2_{(m)}$, independentes:
+
+\begin{equation*}
+\begin{split}
+F &= \frac{S_Y/(m\sigma_Y^2)}{S_X/(n\sigma_X^2)} \\
+&= \frac{S_Y/m}{S_X/n}\cdot\frac{1}{\lambda} \\
+&\sim F_{(m,n)}
+\end{split}
+\end{equation*}
+
+Como $W$ é função monótona de $F$, a região de rejeição equivale a
+
+\begin{equation*}
+\begin{split}
+RC: \ &\frac{nS_Y}{m\lambda_0 S_X} < F_{1-\frac{\alpha}{2};(m,n)} \\
+&\text{ou } \frac{nS_Y}{m\lambda_0 S_X} > F_{\frac{\alpha}{2};(m,n)}
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{(c) Intervalo de confiança:}
+
+Invertendo o teste, de
+
+\begin{equation*}
+\begin{split}
+&P\left(f_1 \leq \frac{nS_Y}{m\lambda S_X} \leq f_2\right) = 1-\alpha
+\end{split}
+\end{equation*}
+
+com $f_1 = F_{1-\frac{\alpha}{2};(m,n)}$ e $f_2 = F_{\frac{\alpha}{2};(m,n)}$, isola-se $\lambda$:
+
+\begin{equation*}
+\begin{split}
+&IC(\lambda;1-\alpha) \\
+&= \left[\frac{nS_Y}{mS_X f_2};\ \frac{nS_Y}{mS_X f_1}\right]
+\end{split}
+\end{equation*}
+
+\textbf{Observação:} o intervalo é assimétrico em torno de $\hat{\lambda} = \dfrac{S_Y/m}{S_X/n}$, pois a distribuição $F$ não é simétrica. Se o intervalo contiver 1, não há evidência de que as variâncias difiram.
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+\textbf{Exercício 27 — detalhamento do item (a): dedução completa do TRV}
+
+\vspace{0.3cm}
+
+$X_1,\dots,X_n \sim N(0,\sigma_X^2)$ iid; \quad $Y_1,\dots,Y_m \sim N(0,\sigma_Y^2)$ iid; amostras independentes.
+
+$\lambda = \sigma_Y^2/\sigma_X^2$, \quad $S_X = \sum_{i=1}^{n} X_i^2$, \quad $S_Y = \sum_{j=1}^{m} Y_j^2$.
+
+\vspace{0.2cm}
+
+\textbf{1) Verossimilhança:}
+
+\begin{equation*}
+\begin{split}
+L(\sigma_X^2,\sigma_Y^2) &= \prod_{i=1}^{n}\frac{1}{\sqrt{2\pi\sigma_X^2}}e^{-\frac{x_i^2}{2\sigma_X^2}} \\
+&\quad \times \prod_{j=1}^{m}\frac{1}{\sqrt{2\pi\sigma_Y^2}}e^{-\frac{y_j^2}{2\sigma_Y^2}}
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+L &= (2\pi)^{-\frac{n+m}{2}}(\sigma_X^2)^{-\frac{n}{2}}(\sigma_Y^2)^{-\frac{m}{2}} \\
+&\quad \times \exp\left\{-\frac{S_X}{2\sigma_X^2}-\frac{S_Y}{2\sigma_Y^2}\right\}
+\end{split}
+\end{equation*}
+
+Log-verossimilhança:
+
+\begin{equation*}
+\begin{split}
+\ell &= -\frac{n+m}{2}\log(2\pi) - \frac{n}{2}\log\sigma_X^2 \\
+&\quad - \frac{m}{2}\log\sigma_Y^2 - \frac{S_X}{2\sigma_X^2} - \frac{S_Y}{2\sigma_Y^2}
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{2) Máximo irrestrito (sob $\Theta$):}
+
+Função escore em $\sigma_X^2$:
+
+\begin{equation*}
+\begin{split}
+\frac{\partial\ell}{\partial\sigma_X^2} &= -\frac{n}{2\sigma_X^2} + \frac{S_X}{2(\sigma_X^2)^2} = 0 \\
+\hat{\sigma}_X^2 &= \frac{S_X}{n}
+\end{split}
+\end{equation*}
+
+Analogamente:
+
+\begin{equation*}
+\hat{\sigma}_Y^2 = \frac{S_Y}{m}
+\end{equation*}
+
+Substituindo em $L$:
+
+\begin{equation*}
+\begin{split}
+L(\hat{\Theta}) &= (2\pi)^{-\frac{n+m}{2}}\left(\frac{S_X}{n}\right)^{-\frac{n}{2}} \\
+&\quad \times \left(\frac{S_Y}{m}\right)^{-\frac{m}{2}} e^{-\frac{n+m}{2}}
+\end{split}
+\end{equation*}
+
+pois $\frac{S_X}{2\hat{\sigma}_X^2} = \frac{n}{2}$ e $\frac{S_Y}{2\hat{\sigma}_Y^2} = \frac{m}{2}$.
+
+\vspace{0.2cm}
+
+\textbf{3) Máximo sob $H_0$ ($\sigma_Y^2 = \lambda_0\sigma_X^2$):}
+
+Escrevendo tudo em função de $\sigma^2 := \sigma_X^2$:
+
+\begin{equation*}
+\begin{split}
+\ell_0 &= c - \frac{n+m}{2}\log\sigma^2 - \frac{m}{2}\log\lambda_0 \\
+&\quad - \frac{1}{2\sigma^2}\left(S_X + \frac{S_Y}{\lambda_0}\right)
+\end{split}
+\end{equation*}
+
+Derivando:
+
+\begin{equation*}
+\begin{split}
+\frac{\partial\ell_0}{\partial\sigma^2} &= -\frac{n+m}{2\sigma^2} + \frac{S_X + S_Y/\lambda_0}{2(\sigma^2)^2} = 0
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\hat{\sigma}_0^2 = \frac{S_X + S_Y/\lambda_0}{n+m} =: \frac{D}{n+m}
+\end{equation*}
+
+com $D = S_X + S_Y/\lambda_0$. Assim:
+
+\begin{equation*}
+\begin{split}
+L(\hat{\Theta}_0) &= (2\pi)^{-\frac{n+m}{2}}\lambda_0^{-\frac{m}{2}} \\
+&\quad \times \left(\frac{D}{n+m}\right)^{-\frac{n+m}{2}} e^{-\frac{n+m}{2}}
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{4) Razão de verossimilhanças:}
+
+\begin{equation*}
+\Lambda = \frac{L(\hat{\Theta}_0)}{L(\hat{\Theta})}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\Lambda &= \frac{\lambda_0^{-\frac{m}{2}}\left(\frac{D}{n+m}\right)^{-\frac{n+m}{2}}}{\left(\frac{S_X}{n}\right)^{-\frac{n}{2}}\left(\frac{S_Y}{m}\right)^{-\frac{m}{2}}} \\
+&= C\,\frac{S_X^{\frac{n}{2}}\,(S_Y/\lambda_0)^{\frac{m}{2}}}{D^{\frac{n+m}{2}}}
+\end{split}
+\end{equation*}
+
+com
+
+\begin{equation*}
+C = \left(\frac{n+m}{n}\right)^{\frac{n}{2}}\left(\frac{n+m}{m}\right)^{\frac{m}{2}}
+\end{equation*}
+
+Definindo
+
+\begin{equation*}
+W = \frac{S_Y/\lambda_0}{S_X + S_Y/\lambda_0} \in (0,1)
+\end{equation*}
+
+tem-se $1-W = S_X/D$ e, portanto:
+
+\begin{equation*}
+\Lambda = C\,(1-W)^{\frac{n}{2}}\,W^{\frac{m}{2}}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{5) Forma da região crítica:}
+
+A função $g(w) = (1-w)^{n/2}w^{m/2}$ tem derivada
+
+\begin{equation*}
+\begin{split}
+g'(w) &= w^{\frac{m}{2}-1}(1-w)^{\frac{n}{2}-1} \\
+&\quad \times \left[\frac{m}{2}(1-w) - \frac{n}{2}w\right]
+\end{split}
+\end{equation*}
+
+anulando-se em $w^* = \dfrac{m}{n+m}$. Logo $g$ é unimodal: cresce até $w^*$ e decresce depois.
+
+Assim, $\Lambda < k$ equivale a $W < w_1$ ou $W > w_2$, com $g(w_1) = g(w_2) = k/C$.
+
+\begin{equation*}
+\begin{split}
+RC = \{&\Lambda < k\} \\
+= \{&W < w_1\} \cup \{W > w_2\}
+\end{split}
+\end{equation*}
+
+O nível $\alpha$ é fixado exigindo
+
+\begin{equation*}
+P_{H_0}(W < w_1) + P_{H_0}(W > w_2) = \alpha
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{6) Ligação com $F$ (item b):}
+
+Note que
+
+\begin{equation*}
+\frac{W}{1-W} = \frac{S_Y/\lambda_0}{S_X}
+\end{equation*}
+
+é transformação estritamente crescente de $W$. Como
+
+\begin{equation*}
+\frac{S_X}{\sigma_X^2} \sim \chi^2_{(n)}, \quad \frac{S_Y}{\sigma_Y^2} \sim \chi^2_{(m)}
+\end{equation*}
+
+são independentes, pela definição da $F$:
+
+\begin{equation*}
+\begin{split}
+F &= \frac{\left(\frac{S_Y}{\sigma_Y^2}\right)/m}{\left(\frac{S_X}{\sigma_X^2}\right)/n} \\
+&= \frac{n\,S_Y}{m\,\lambda\,S_X} \sim F_{(m,n)}
+\end{split}
+\end{equation*}
+
+Sob $H_0$ ($\lambda = \lambda_0$), a estatística de teste é
+
+\begin{equation*}
+F_{obs} = \frac{n\,S_Y}{m\,\lambda_0\,S_X} \sim F_{(m,n)}
+\end{equation*}
+
+e a região crítica de caudas iguais fica
+
+\begin{equation*}
+\begin{split}
+RC: \ &F_{obs} < F_{1-\frac{\alpha}{2};(m,n)} \\
+&\text{ou } F_{obs} > F_{\frac{\alpha}{2};(m,n)}
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{7) Inversão do teste (item c):}
+
+O IC é o conjunto dos $\lambda_0$ não rejeitados:
+
+\begin{equation*}
+\begin{split}
+&P\left(f_1 \leq \frac{nS_Y}{m\lambda S_X} \leq f_2\right) = 1-\alpha
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+&\Leftrightarrow P\left(\frac{nS_Y}{mS_Xf_2} \leq \lambda \leq \frac{nS_Y}{mS_Xf_1}\right)
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+\begin{split}
+&IC(\lambda;1-\alpha) \\
+&= \left[\frac{n\,S_Y}{m\,S_X\,F_{\frac{\alpha}{2};(m,n)}};\ \frac{n\,S_Y}{m\,S_X\,F_{1-\frac{\alpha}{2};(m,n)}}\right]
+\end{split}
+\end{equation*}
+
+Usando a relação recíproca dos quantis,
+
+\begin{equation*}
+F_{1-\frac{\alpha}{2};(m,n)} = \frac{1}{F_{\frac{\alpha}{2};(n,m)}}
+\end{equation*}
+
+o limite superior pode ser escrito como
+
+\begin{equation*}
+\frac{n\,S_Y}{m\,S_X}\,F_{\frac{\alpha}{2};(n,m)}
+\end{equation*}
+
+\textbf{Observação final:} com $\hat{\lambda} = \dfrac{S_Y/m}{S_X/n}$, o intervalo assume a forma compacta
+
+\begin{equation*}
+\left[\frac{\hat{\lambda}}{F_{\frac{\alpha}{2};(m,n)}};\ \hat{\lambda}\cdot F_{\frac{\alpha}{2};(n,m)}\right]
+\end{equation*}
+
+sendo multiplicativo (e não simétrico) em torno de $\hat{\lambda}$, pois a $F$ é assimétrica. Se $1 \in IC$, não se rejeita $\sigma_X^2 = \sigma_Y^2$ ao nível $\alpha$.
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+\textbf{Exercício 28: Encontre $c_1$ e $c_2$ na Figura 1.1, que são os pontos de intersecção dos erros quadráticos médios de $\hat{\theta}_1$ e $\hat{\theta}_2$.}
+
+\vspace{0.3cm}
+
+\textbf{Solução:}
+
+$X$: número de sucessos em $n$ ensaios de Bernoulli.
+
+$X \sim Bin(n,\theta)$, com
+
+\begin{equation*}
+E(X) = n\theta, \quad Var(X) = n\theta(1-\theta)
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{1) EQM de $\hat{\theta}_1 = X/n$ (estimador usual):}
+
+Como $\hat{\theta}_1$ é não viesado, $B(\hat{\theta}_1) = 0$ e
+
+\begin{equation*}
+\begin{split}
+EQM(\hat{\theta}_1) &= Var(\hat{\theta}_1) + [B(\hat{\theta}_1)]^2 \\
+&= \frac{n\theta(1-\theta)}{n^2} \\
+&= \frac{\theta(1-\theta)}{n}
+\end{split}
+\end{equation*}
+
+É uma parábola côncava em $\theta$, nula em $\theta = 0$ e $\theta = 1$, com máximo em $\theta = 1/2$:
+
+\begin{equation*}
+\max_\theta EQM(\hat{\theta}_1) = \frac{1}{4n}
+\end{equation*}
+
+Pela figura, esse máximo vale $1/36$, logo:
+
+\begin{equation*}
+\begin{split}
+\frac{1}{4n} &= \frac{1}{36} \\
+4n &= 36 \\
+n &= 9
+\end{split}
+\end{equation*}
+
+Portanto:
+
+\begin{equation*}
+EQM(\hat{\theta}_1) = \frac{\theta(1-\theta)}{9}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{2) EQM de $\hat{\theta}_2$ (estimador de EQM constante):}
+
+Pela figura, $EQM(\hat{\theta}_2) = 1/64$, constante em $\theta$. Trata-se do estimador Bayesiano
+
+\begin{equation*}
+\begin{split}
+\hat{\theta}_2 &= \frac{X + \frac{\sqrt{n}}{2}}{n + \sqrt{n}} \\
+&= \frac{X + 1,5}{12}
+\end{split}
+\end{equation*}
+
+cujo EQM é
+
+\begin{equation*}
+\begin{split}
+EQM(\hat{\theta}_2) &= \frac{n}{4(n+\sqrt{n})^2} \\
+&= \frac{9}{4(9+3)^2} \\
+&= \frac{9}{4 \cdot 144} \\
+&= \frac{9}{576} = \frac{1}{64}
+\end{split}
+\end{equation*}
+
+confirmando o valor da figura.
+
+\vspace{0.2cm}
+
+\textbf{3) Pontos de intersecção:}
+
+Igualando os dois EQM:
+
+\begin{equation*}
+\begin{split}
+\frac{\theta(1-\theta)}{9} &= \frac{1}{64} \\
+64\,\theta(1-\theta) &= 9 \\
+64\theta - 64\theta^2 &= 9 \\
+64\theta^2 - 64\theta + 9 &= 0
+\end{split}
+\end{equation*}
+
+Pela fórmula quadrática:
+
+\begin{equation*}
+\begin{split}
+\Delta &= (-64)^2 - 4(64)(9) \\
+&= 4096 - 2304 \\
+&= 1792
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\sqrt{1792} = \sqrt{256 \cdot 7} = 16\sqrt{7}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+\theta &= \frac{64 \pm 16\sqrt{7}}{2 \cdot 64} \\
+&= \frac{64 \pm 16\sqrt{7}}{128} \\
+&= \frac{4 \pm \sqrt{7}}{8}
+\end{split}
+\end{equation*}
+
+Como $\sqrt{7} = 2,6458$:
+
+\begin{equation*}
+\begin{split}
+c_1 &= \frac{4 - \sqrt{7}}{8} \\
+&= \frac{1,3542}{8} \\
+&= 0,1693
+\end{split}
+\end{equation*}
+
+\begin{equation*}
+\begin{split}
+c_2 &= \frac{4 + \sqrt{7}}{8} \\
+&= \frac{6,6458}{8} \\
+&= 0,8307
+\end{split}
+\end{equation*}
+
+\vspace{0.2cm}
+
+\textbf{Interpretação:} os pontos são simétricos em torno de $\theta = 1/2$, pois $c_1 + c_2 = 1$. Nenhum dos estimadores domina o outro uniformemente:
+
+\begin{equation*}
+\begin{split}
+&\theta \in (c_1, c_2) \Rightarrow \hat{\theta}_2 \text{ é melhor} \\
+&\theta \notin [c_1, c_2] \Rightarrow \hat{\theta}_1 \text{ é melhor}
+\end{split}
+\end{equation*}
+
+Ou seja, para valores de $\theta$ próximos de $1/2$ (entre $16,93\%$ e $83,07\%$), $\hat{\theta}_2$ tem menor EQM; nas caudas (próximo de 0 ou 1), $\hat{\theta}_1$ é preferível. Como não há dominância uniforme, a escolha depende da informação prévia sobre $\theta$ — o que ilustra por que o EQM sozinho não induz uma ordenação completa entre estimadores.
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+
+% ---------------------------------------------------
+% Exercicio
+% ---------------------------------------------------
+
+
+% ---------------------------------------------------
+% FINAL DO DOCUMENTO
+% ---------------------------------------------------
+
+\end{multicols}
+\end{document}

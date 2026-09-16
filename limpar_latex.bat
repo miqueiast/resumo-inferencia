@@ -1,0 +1,7 @@
+@echo off
+echo Limpando arquivos auxiliares do LaTeX...
+
+del /q /f *.aux *.log *.out *.toc *.lof *.lot *.fls *.fdb_latexmk *.synctex.gz *.bbl *.blg *.bcf *.run.xml *.nav *.snm *.vrb
+
+echo Limpeza concluida!
+pause
