@@ -1,0 +1,1909 @@
+\documentclass[8pt, a4paper, landscape]{extarticle}
+
+% Margens mínimas para aproveitar o máximo da folha
+\usepackage[margin=0.5cm]{geometry}
+
+% Pacote para dividir em colunas
+\usepackage{multicol}
+
+% Melhora a hifenização e o espaçamento, crucial para colunas estreitas não extrapolarem
+\usepackage{microtype}
+
+% Pacotes matemáticos (padrão para probabilidade/inferência)
+\usepackage{amsmath, amssymb, amsfonts}
+
+% Codificação e idioma
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+
+% Necessários para o ambiente eqfit e para o alinhamento do texto
+\usepackage{graphicx}
+\usepackage{environ}
+\usepackage{ragged2e}
+
+% Ajuste das colunas
+\setlength{\columnsep}{0.15cm} % Espaçamento entre colunas
+\setlength{\columnseprule}{0.1pt} % Linha divisória entre as colunas
+
+% Ajuste de espaçamento de parágrafos e listas
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=*} % Remove espaços extras em listas
+\setlength{\parindent}{0pt} % Sem recuo no início do parágrafo
+\setlength{\parskip}{1pt plus 1pt} % Espaço mínimo entre parágrafos
+
+% Texto alinhado à esquerda: evita espaçamento esticado em coluna estreita
+\RaggedRight
+\setlength{\emergencystretch}{2em}
+\hyphenpenalty=50
+
+% Marca em preto qualquer linha que ainda vaze (comentar na versão final)
+\overfullrule=5pt
+
+% Display que se ajusta sozinho à largura da coluna:
+% se a fórmula cabe, sai normal; se não cabe, encolhe até caber.
+\newsavebox{\eqfitbox}
+\NewEnviron{eqfit}{%
+  \sbox{\eqfitbox}{$\displaystyle\BODY$}%
+  \par\vspace{2pt}\noindent
+  \ifdim\wd\eqfitbox>\columnwidth
+    \resizebox{\columnwidth}{!}{\usebox{\eqfitbox}}%
+  \else
+    \hfill\usebox{\eqfitbox}\hfill\null
+  \fi
+  \par\vspace{2pt}}
+
+% Ajuste de espaçamento ao redor de equações
+\AtBeginDocument{
+  \setlength{\abovedisplayskip}{2pt}
+  \setlength{\belowdisplayskip}{2pt}
+  \setlength{\abovedisplayshortskip}{0pt}
+  \setlength{\belowdisplayshortskip}{0pt}
+}
+
+\begin{document}
+
+% Tamanho da fonte: \tiny (menor de todas), \scriptsize ou \footnotesize
+\tiny 
+
+\begin{multicols}{6}
+% Evita que o balanceamento final tente colocar todo o conteúdo em uma
+% única caixa vertical (o que causa o ``Overfull \\vbox'' neste resumo longo).
+\raggedcolumns
+
+\textbf{Exercício 1: Em uma pesquisa sobre o impacto de um programa de treinamento de gestão sobre a produtividade dos funcionários em uma empresa, um economista coletou uma amostra aleatória de 25 funcionários. O tempo médio de aumento de produtividade após o treinamento foi de 15\%, com um desvio padrão amostral de 6\%. Suponha que a distribuição dos aumentos de produtividade segue uma distribuição normal com média de 10\% e desvio padrão, $\sigma$, desconhecido. Qual a probabilidade da média amostral não diferir da média populacional por mais do que 5\%? Como você interpreta esse resultado?}
+
+\vspace{0.3cm}
+Seja $Y$: aumento de produtividade após o treinamento (\%).
+Parâmetros: $\mu = E(Y) = 10$, $S = 6$, tamanho da amostra $n = 25$.
+
+Como a população segue uma distribuição normal e a variância populacional ($\sigma^2$) é desconhecida, utilizamos a distribuição $t$ de Student para a média amostral.
+
+Distribuição do estimador:
+\begin{eqfit}
+\frac{\bar{Y} - \mu}{S/\sqrt{n}} \sim t_{n-1}
+\end{eqfit}
+
+Para $n = 25$, temos graus de liberdade $gl = 24$.
+
+Padronização e cálculo da probabilidade pedida:
+\begin{eqfit}
+\begin{aligned}
+P(|\bar{Y} - \mu| \le 5) &= P(-5 \le \bar{Y} - \mu \le 5) \\
+&= P\left(\frac{-5}{S/\sqrt{n}} \le \frac{\bar{Y} - \mu}{S/\sqrt{n}} \le \frac{5}{S/\sqrt{n}}\right) \\
+&= P\left(\frac{-5}{6/\sqrt{25}} \le T \le \frac{5}{6/\sqrt{25}}\right) \\
+&= P\left(\frac{-5}{1,2} \le T \le \frac{5}{1,2}\right) \\
+&= P(-4,167 \le T \le 4,167)
+\end{aligned}
+\end{eqfit}
+
+Como $T \sim t_{24}$, consultando a tabela da distribuição $t$ de Student, verificamos que o valor crítico $4,167$ está na extrema cauda da distribuição. Logo:
+\begin{eqfit}
+P(-4,167 \le T \le 4,167) \approx 0,999 \text{ (ou } 99,9\%)
+\end{eqfit}
+
+Interpretação: A probabilidade de a média amostral obtida estar a no máximo 5\% de distância da verdadeira média populacional é de aproximadamente 99,9\%. Isso indica que, dada a variabilidade amostral observada, é quase certo que a estimativa não se desvie da média real por mais do que essa margem.
+
+\vspace{0.8cm}
+
+\textbf{1. A função de distribuição conjunta (FDC) de $X$ e $Y$ é dada por:}
+\begin{eqfit}
+F(x,y) =
+\begin{cases}
+0, & x < 0 \text{ ou } y < 0; \\
+\frac{x}{3}(1 - e^{-y}), & 0 \le x < 3, y \ge 0; \\
+1 - e^{-y}, & x \ge 3, y \ge 0.
+\end{cases}
+\end{eqfit}
+
+\textbf{a) Verifique que $F(x,y)$ satisfaz todas as condições para ser uma FDC.}
+\vspace{0.2cm}
+
+As propriedades para ser FDC conjunta são:
+1. Limites nas extremidades:
+\begin{eqfit}
+\begin{aligned}
+\lim_{x \to -\infty} F(x,y) &= 0 \\
+\lim_{y \to -\infty} F(x,y) &= 0 \\
+\lim_{x,y \to \infty} F(x,y) &= \lim_{y \to \infty} (1 - e^{-y}) = 1
+\end{aligned}
+\end{eqfit}
+2. Contínua à direita: Pela definição das funções componentes, os limites laterais à direita nos pontos de transição coincidem com o valor da função.
+3. Não-decrescente: As derivadas parciais existem e são não-negativas em todo o domínio, garantindo que a função não decresce.
+
+\vspace{0.3cm}
+\textbf{b) Encontre, pela definição, as funções de distribuição marginais de $X$ e $Y$.}
+\vspace{0.2cm}
+
+Para a marginal de $X$, tomamos o limite quando $y \to \infty$:
+\begin{eqfit}
+\begin{aligned}
+F_X(x) &= \lim_{y \to \infty} F(x,y) \\
+&= \lim_{y \to \infty} \frac{x}{3}(1 - e^{-y}) = \frac{x}{3}
+\end{aligned}
+\end{eqfit}
+para $0 \le x < 3$. Para $x \ge 3$, o limite é 1. Logo:
+\begin{eqfit}
+F_X(x) =
+\begin{cases}
+0, & x < 0 \\
+\frac{x}{3}, & 0 \le x < 3 \\
+1, & x \ge 3
+\end{cases}
+\end{eqfit}
+
+Para a marginal de $Y$, tomamos o limite quando $x \to \infty$:
+\begin{eqfit}
+\begin{aligned}
+F_Y(y) &= \lim_{x \to \infty} F(x,y) \\
+&= 1 - e^{-y}
+\end{aligned}
+\end{eqfit}
+para $y \ge 0$. Logo:
+\begin{eqfit}
+F_Y(y) =
+\begin{cases}
+0, & y < 0 \\
+1 - e^{-y}, & y \ge 0
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{c) Encontre a função densidade conjunta (fdc) de $X$ e $Y$.}
+\vspace{0.2cm}
+
+A densidade conjunta é a derivada parcial mista da FDC:
+\begin{eqfit}
+\begin{aligned}
+f(x,y) &= \frac{\partial^2 F(x,y)}{\partial x \partial y} \\
+&= \frac{\partial}{\partial y} \left( \frac{1}{3}(1 - e^{-y}) \right) \\
+&= \frac{1}{3} e^{-y}
+\end{aligned}
+\end{eqfit}
+para $0 < x < 3$ e $y > 0$. Para outros valores, $f(x,y) = 0$.
+
+\vspace{0.3cm}
+\textbf{d) Encontre as densidades marginais de $X$ e $Y$.}
+\vspace{0.2cm}
+
+Derivando as distribuições marginais encontradas em (b):
+\begin{eqfit}
+f_X(x) = \frac{d F_X(x)}{dx} = \frac{1}{3} \quad \text{para } 0 < x < 3
+\end{eqfit}
+
+\begin{eqfit}
+f_Y(y) = \frac{d F_Y(y)}{dy} = e^{-y} \quad \text{para } y > 0
+\end{eqfit}
+Ambas são $0$ fora de seus respectivos intervalos.
+
+\vspace{0.3cm}
+\textbf{e) São $X$ e $Y$ independentes?}
+\vspace{0.2cm}
+
+Sim. Pela propriedade de independência, o produto das densidades marginais deve ser igual à densidade conjunta:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) \cdot f_Y(y) &= \left(\frac{1}{3}\right) \cdot (e^{-y}) \\
+&= \frac{1}{3} e^{-y} \\
+&= f(x,y)
+\end{aligned}
+\end{eqfit}
+Como a igualdade se verifica para todo $(x,y)$, as variáveis $X$ e $Y$ são independentes.
+
+\textbf{2. Considere a função de distribuição conjunta de $X$ e $Y$ como:}
+\begin{eqfit}
+F(x,y) =
+\begin{cases}
+0, & x < 0 \text{ ou } y < 0 \\
+   & \text{ou } x \ge y; \\
+\frac{2x^2y^2 - x^4}{16}, & 0 \le x < y, \\
+                          & 0 \le y < 2; \\
+\frac{8x^2 - x^4}{16}, & 0 \le x < 2, \\
+                       & y \ge 2; \\
+1, & x \ge 2, y \ge 2, \\
+   & x < y.
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{a) Desenhe a região de definição $R$.}
+\vspace{0.2cm}
+
+A região de definição $R$ (suporte da densidade), onde a probabilidade se acumula simultaneamente para as variáveis, é dada pelas restrições do segundo ramo da FDC conjunta:
+\begin{eqfit}
+R = \{(x,y) \in \mathbb{R}^2 \mid 0 \le x \le y \le 2\}
+\end{eqfit}
+Trata-se de uma região triangular no primeiro quadrante, delimitada pelo eixo $y$ (onde $x=0$), pela reta horizontal $y=2$ e pela reta bissetriz $y=x$.
+
+\vspace{0.3cm}
+\textbf{b) Obtenha as funções de distribuição marginais de $X$ e $Y$.}
+\vspace{0.2cm}
+
+Pela definição de FDC marginal, para $X$, tomamos o limite quando $y \to \infty$. No domínio aplicável ($0 \le x < 2$), usamos o ramo onde $y \ge 2$:
+\begin{eqfit}
+\begin{aligned}
+F_X(x) &= \lim_{y \to \infty} F(x,y) \\
+&= \frac{8x^2 - x^4}{16}
+\end{aligned}
+\end{eqfit}
+Logo, a FDC marginal de $X$ é:
+\begin{eqfit}
+F_X(x) =
+\begin{cases}
+0, & x < 0 \\
+\frac{8x^2 - x^4}{16}, & 0 \le x < 2 \\
+1, & x \ge 2
+\end{cases}
+\end{eqfit}
+
+Para $Y$, tomamos o limite quando $x \to \infty$. Como $x$ é intrinsecamente limitado por $y$ no suporte da conjunta ($x < y$), avaliamos o limite superior $x \to y$ no ramo em que $0 \le y < 2$:
+\begin{eqfit}
+\begin{aligned}
+F_Y(y) &= \lim_{x \to y} F(x,y) \\
+&= \frac{2y^2(y)^2 - (y)^4}{16} \\
+&= \frac{2y^4 - y^4}{16} \\
+&= \frac{y^4}{16}
+\end{aligned}
+\end{eqfit}
+Logo, a FDC marginal de $Y$ é:
+\begin{eqfit}
+F_Y(y) =
+\begin{cases}
+0, & y < 0 \\
+\frac{y^4}{16}, & 0 \le y < 2 \\
+1, & y \ge 2
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{c) Calcule a densidade conjunta de $X$ e $Y$.}
+\vspace{0.2cm}
+
+A densidade conjunta é obtida pela derivada parcial mista da FDC na região onde $0 \le x < y < 2$:
+\begin{eqfit}
+\begin{aligned}
+f(x,y) &= \frac{\partial^2 F(x,y)}{\partial x \partial y} \\
+&= \frac{\partial}{\partial x} \left( \frac{\partial}{\partial y} \left[\frac{2x^2y^2 - x^4}{16}\right] \right) \\
+&= \frac{\partial}{\partial x} \left( \frac{4x^2y}{16} \right) \\
+&= \frac{\partial}{\partial x} \left( \frac{x^2y}{4} \right) \\
+&= \frac{2xy}{4} = \frac{xy}{2}
+\end{aligned}
+\end{eqfit}
+Para outros valores de $(x,y)$ fora de $R$, $f(x,y) = 0$.
+
+\vspace{0.3cm}
+\textbf{d) Calcule as densidades marginais de $X$ e $Y$ de duas formas diferentes.}
+\vspace{0.2cm}
+
+\textbf{Forma 1: Derivando as FDCs marginais obtidas no Item b}
+Para a marginal de $X$:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \frac{d}{dx} F_X(x) \\
+&= \frac{d}{dx} \left( \frac{8x^2 - x^4}{16} \right) \\
+&= \frac{16x - 4x^3}{16} \\
+&= x - \frac{x^3}{4}, \quad \text{para } 0 < x < 2
+\end{aligned}
+\end{eqfit}
+
+Para a marginal de $Y$:
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \frac{d}{dy} F_Y(y) \\
+&= \frac{d}{dy} \left( \frac{y^4}{16} \right) \\
+&= \frac{4y^3}{16} \\
+&= \frac{y^3}{4}, \quad \text{para } 0 < y < 2
+\end{aligned}
+\end{eqfit}
+
+\textbf{Forma 2: Integrando a densidade conjunta obtida no Item c}
+Para a densidade marginal de $X$, integramos $f(x,y)$ em $y$ no suporte (de $x$ até $2$):
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \int_{-\infty}^{\infty} f(x,y) \, dy \\
+&= \int_{x}^{2} \frac{xy}{2} \, dy \\
+&= \frac{x}{2} \left[ \frac{y^2}{2} \right]_{y=x}^{y=2} \\
+&= \frac{x}{2} \left( \frac{4}{2} - \frac{x^2}{2} \right) \\
+&= x - \frac{x^3}{4}, \quad \text{para } 0 < x < 2
+\end{aligned}
+\end{eqfit}
+
+Para a densidade marginal de $Y$, integramos $f(x,y)$ em $x$ no suporte (de $0$ até $y$):
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \int_{-\infty}^{\infty} f(x,y) \, dx \\
+&= \int_{0}^{y} \frac{xy}{2} \, dx \\
+&= \frac{y}{2} \left[ \frac{x^2}{2} \right]_{x=0}^{x=y} \\
+&= \frac{y}{2} \left( \frac{y^2}{2} - 0 \right) \\
+&= \frac{y^3}{4}, \quad \text{para } 0 < y < 2
+\end{aligned}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{e) São $X$ e $Y$ independentes?}
+\vspace{0.2cm}
+
+Pela definição, duas variáveis aleatórias contínuas são independentes se, e somente se, a densidade conjunta for igual ao produto das marginais e o suporte for um produto cartesiano (retangular). 
+
+Primeiro, observamos o suporte de definição: o intervalo de variação de $X$ depende de $Y$ (pois $x < y$). Como o suporte $0 \le x \le y \le 2$ não é retangular, as variáveis $X$ e $Y$ já são dependentes.
+
+Verificando algebricamente o produto das densidades:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) \cdot f_Y(y) &= \left(x - \frac{x^3}{4}\right) \cdot \left(\frac{y^3}{4}\right) \\
+&= \frac{xy^3}{4} - \frac{x^3y^3}{16}
+\end{aligned}
+\end{eqfit}
+
+Como verificamos que:
+\begin{eqfit}
+f(x,y) = \frac{xy}{2} \neq f_X(x) \cdot f_Y(y)
+\end{eqfit}
+Concluímos que $X$ e $Y$ \textbf{não} são independentes.
+
+\textbf{3. A densidade conjunta de $X$ e $Y$ é dada por:}
+\begin{eqfit}
+f(x,y) =
+\begin{cases}
+1/4, & \text{se } -2 \le x < 0, 0 \le y \le 1; \\
+1/4, & \text{se } 0 \le x \le 1, -2 \le y < 0; \\
+0, & \text{caso contrário.}
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{a) Calcule as marginais e verifique se $X$ e $Y$ são independentes.}
+\vspace{0.2cm}
+
+Para encontrar a densidade marginal de $X$, integramos a densidade conjunta em relação a $Y$ em todo o seu suporte:
+\begin{eqfit}
+f_X(x) = \int_{-\infty}^{\infty} f(x,y) \, dy
+\end{eqfit}
+- Para $-2 \le x < 0$:
+\begin{eqfit}
+f_X(x) = \int_{0}^{1} \frac{1}{4} \, dy = \frac{1}{4}
+\end{eqfit}
+- Para $0 \le x \le 1$:
+\begin{eqfit}
+f_X(x) = \int_{-2}^{0} \frac{1}{4} \, dy = \frac{1}{4}
+\end{eqfit}
+Logo, a densidade marginal de $X$ é:
+\begin{eqfit}
+f_X(x) =
+\begin{cases}
+1/4, & -2 \le x \le 1 \\
+0, & \text{caso contrário}
+\end{cases}
+\end{eqfit}
+
+Para encontrar a densidade marginal de $Y$, integramos a densidade conjunta em relação a $X$ em todo o seu suporte:
+\begin{eqfit}
+f_Y(y) = \int_{-\infty}^{\infty} f(x,y) \, dx
+\end{eqfit}
+- Para $-2 \le y < 0$:
+\begin{eqfit}
+f_Y(y) = \int_{0}^{1} \frac{1}{4} \, dx = \frac{1}{4}
+\end{eqfit}
+- Para $0 \le y \le 1$:
+\begin{eqfit}
+f_Y(y) = \int_{-2}^{0} \frac{1}{4} \, dx = \frac{2}{4} = \frac{1}{2}
+\end{eqfit}
+Logo, a densidade marginal de $Y$ é:
+\begin{eqfit}
+f_Y(y) =
+\begin{cases}
+1/4, & -2 \le y < 0 \\
+1/2, & 0 \le y \le 1 \\
+0, & \text{caso contrário}
+\end{cases}
+\end{eqfit}
+
+Verificação de independência:
+Duas variáveis são independentes se $f(x,y) = f_X(x) f_Y(y)$ para todo $(x,y)$. 
+Pegando um ponto no primeiro retângulo, por exemplo, $x = -1$ e $y = 0,5$:
+\begin{eqfit}
+\begin{aligned}
+f(-1; 0,5) &= \frac{1}{4} \\
+f_X(-1) \cdot f_Y(0,5) &= \left(\frac{1}{4}\right) \cdot \left(\frac{1}{2}\right) = \frac{1}{8}
+\end{aligned}
+\end{eqfit}
+Como $f(x,y) \neq f_X(x) f_Y(y)$, conclui-se que $X$ e $Y$ \textbf{não} são independentes. Além disso, o suporte da distribuição conjunta não forma um produto cartesiano (retangular).
+
+\vspace{0.3cm}
+\textbf{b) Determine a função de distribuição conjunta entre $X$ e $Y$.}
+\vspace{0.2cm}
+
+A função de distribuição acumulada conjunta é definida por $F(x,y) = \int_{-\infty}^{y} \int_{-\infty}^{x} f(u,v) \, du \, dv$. Analisando por regiões:
+
+1. Se $x < -2$ ou $y < -2$:
+\begin{eqfit}
+F(x,y) = 0
+\end{eqfit}
+
+2. Se $-2 \le x < 0$ e $0 \le y \le 1$:
+\begin{eqfit}
+F(x,y) = \int_{0}^{y} \int_{-2}^{x} \frac{1}{4} \, du \, dv = \frac{(x+2)y}{4}
+\end{eqfit}
+
+3. Se $0 \le x \le 1$ e $-2 \le y < 0$:
+\begin{eqfit}
+F(x,y) = \int_{-2}^{y} \int_{0}^{x} \frac{1}{4} \, du \, dv = \frac{x(y+2)}{4}
+\end{eqfit}
+
+4. Se $0 \le x \le 1$ e $0 \le y \le 1$:
+\begin{eqfit}
+F(x,y) = \frac{y}{2} + \frac{x}{2} = \frac{x+y}{2}
+\end{eqfit}
+
+5. Se $x \ge 1$ e $y \ge 1$:
+\begin{eqfit}
+F(x,y) = 1
+\end{eqfit}
+
+\textbf{4. Uma empresa de alimentos comercializa latas de um mix de oleaginosas contendo nozes, amêndoas e castanhas de caju. Suponha que o peso líquido de cada lata seja exatamente 1 kg, mas a contribuição, em peso, de cada tipo de oleaginosa seja aleatória. Como a soma dos três pesos é fixa, um modelo de probabilidade conjunta para quaisquer dois pesos fornece todas as informações necessárias sobre o peso do terceiro tipo. Para uma lata selecionada seja $X = $ peso das nozes e $Y = $ peso das amêndoas. Suponha que a função que descreve o comportamento probabilístico de $X$ e $Y$ seja proporcional ao produto dos pesos, isto é $f(x,y) = kxy$, onde $k$ é uma constante de proporcionalidade não negativa.}
+
+\vspace{0.3cm}
+Definição do suporte: Como o peso total é 1 kg e os pesos são não negativos, temos $X \ge 0$, $Y \ge 0$ e $X + Y \le 1$ (pois o peso da castanha de caju $Z = 1 - X - Y \ge 0$). 
+A região de definição (suporte) é $R = \{(x,y) \in \mathbb{R}^2 \mid 0 \le x \le 1, 0 \le y \le 1-x\}$.
+
+Primeiramente, determinamos a constante $k$ integrando a densidade conjunta sobre todo o suporte e igualando a 1:
+\begin{eqfit}
+\begin{aligned}
+\int_{0}^{1} \int_{0}^{1-x} kxy \, dy \, dx &= 1 \\
+k \int_{0}^{1} x \left[ \frac{y^2}{2} \right]_{y=0}^{y=1-x} dx &= 1 \\
+\frac{k}{2} \int_{0}^{1} x(1-x)^2 \, dx &= 1 \\
+\frac{k}{2} \left[ \frac{1}{12} \right] &= 1 \implies \frac{k}{24} = 1 \implies k = 24
+\end{aligned}
+\end{eqfit}
+Logo, a função densidade conjunta é $f(x,y) = 24xy$ para $0 \le x \le 1$ e $0 \le y \le 1-x$.
+
+\vspace{0.3cm}
+\textbf{a) Calcular a probabilidade de que os dois tipos de oleaginosas juntos (nozes e amêndoas) representem, no máximo, 50\% da lata.}
+\vspace{0.2cm}
+
+Queremos calcular $P(X + Y \le 0,5)$:
+\begin{eqfit}
+\begin{aligned}
+P(X + Y \le 0,5) &= \int_{0}^{0,5} \int_{0}^{0,5-x} 24xy \, dy \, dx \\
+&= \int_{0}^{0,5} 12x(0,5-x)^2 \, dx \\
+&= 12 \int_{0}^{0,5} (0,25x - x^2 + x^3) \, dx \\
+&= 12 \left[ 0,25\frac{x^2}{2} - \frac{x^3}{3} + \frac{x^4}{4} \right]_{0}^{0,5} \\
+&= 12 \left( \frac{0,0625}{8} - \frac{0,125}{3} + \frac{0,0625}{4} \right) \\
+&= 12 \left( \frac{1}{192} \right) = \frac{12}{192} = \frac{1}{16} = 0,0625 \text{ (ou } 6,25\%)
+\end{aligned}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{b) As variáveis $X$ e $Y$ são independentes?}
+\vspace{0.2cm}
+
+Não, as variáveis $X$ e $Y$ \textbf{não} são independentes. 
+
+Justificativa: O suporte da distribuição conjunta $0 \le x \le 1$ e $0 \le y \le 1-x$ é uma região triangular, o que significa que os limites de variação de $Y$ dependem diretamente do valor de $X$. Como o suporte não é um retângulo cartesiano, a condição necessária para a independência de variáveis aleatórias contínuas não é satisfeita.
+
+\textbf{5. Sejam $X$ e $Y$ variáveis aleatórias que assumem valores em $\{-2,-1,0,1,2\}$. A função que relaciona probabilisticamente ambas as variáveis é proporcional ao valor absoluto da soma dos seus valores.}
+
+\vspace{0.3cm}
+Definição da função de probabilidade conjunta não normalizada: 
+\begin{eqfit}
+P(X=x, Y=y) = c |x + y|
+\end{eqfit}
+para $x, y \in \{-2, -1, 0, 1, 2\}$, onde $c$ é a constante de normalização. 
+
+Para encontrar $c$, somamos $|x+y|$ para todas as $5 \times 5 = 25$ combinações possíveis de $(x,y)$:
+- Quando $x+y = -4$: $(-2,-2) \to |-4| = 4$ (1 combinação)
+- Quando $x+y = -3$: $(-2,-1), (-1,-2) \to 3 \times 2 = 6$
+- Quando $x+y = -2$: $(-2,0), (-1,-1), (0,-2) \to 2 \times 2 + 0 \text{ (redundância evitada somando explicitamente)}$:
+  - $(-2,0) \to 2$
+  - $(-1,-1) \to 2$
+  - $(0,-2) \to 2$ (Total: 6)
+- Quando $x+y = -1$: $(-2,1), (-1,0), (0,-1), (1,-2) \to 1+1+1+1 = 4$
+- Quando $x+y = 0$: $(-2,2), (-1,1), (0,0), (1,-1), (2,-2) \to 0$ (5 combinações com valor 0)
+- Quando $x+y = 1$: $(-2 \text{ n/a}, (-1,2), (0,1), (1,0), (2,-1)) \to 1+1+1+1 = 4$
+- Quando $x+y = 2$: $(0,2), (1,1), (2,0) \to 2+2+2 = 6$
+- Quando $x+y = 3$: $(1,2), (2,1) \to 3+3 = 6$
+- Quando $x+y = 4$: $(2,2) \to 4$
+
+Somatório total dos valores absolutos:
+\begin{eqfit}
+\sum_{x} \sum_{y} |x+y| = 4 + 6 + 6 + 4 + 0 + 4 + 6 + 6 + 4 = 40
+\end{eqfit}
+Logo, $c = \frac{1}{40}$, e a função de probabilidade conjunta é $P(X=x, Y=y) = \frac{|x+y|}{40}$.
+
+\vspace{0.3cm}
+\textbf{a) Determine as distribuições marginais.}
+\vspace{0.2cm}
+
+A distribuição marginal de $X$ é obtida somando a conjunta sobre todos os valores possíveis de $Y$:
+\begin{eqfit}
+P(X=x) = \sum_{y=-2}^{2} \frac{|x+y|}{40}
+\end{eqfit}
+Calculando para cada valor de $X$:
+- Para $X = -2$: $\frac{|-2-2| + |-2-1| + |-2+0| + |-2+1| + |-2+2|}{40} = \frac{4 + 3 + 2 + 1 + 0}{40} = \frac{10}{40} = \frac{1}{4}$
+- Para $X = -1$: $\frac{|-1-2| + |-1-1| + |-1+0| + |-1+1| + |-1+2|}{40} = \frac{3 + 2 + 1 + 0 + 1}{40} = \frac{7}{40}$
+- Para $X = 0$: $\frac{|0-2| + |0-1| + |0+0| + |0+1| + |0+2|}{40} = \frac{2 + 1 + 0 + 1 + 2}{40} = \frac{6}{40} = \frac{3}{20}$
+- Para $X = 1$: $\frac{|1-2| + |1-1| + |1+0| + |1+1| + |1+2|}{40} = \frac{1 + 0 + 1 + 2 + 3}{40} = \frac{7}{40}$
+- Para $X = 2$: $\frac{|2-2| + |2-1| + |2+0| + |2+1| + |2+2|}{40} = \frac{0 + 1 + 2 + 3 + 4}{40} = \frac{10}{40} = \frac{1}{4}$
+
+Por simetria da função conjunta em relação a $X$ e $Y$, a distribuição marginal de $Y$ é idêntica à de $X$:
+\begin{eqfit}
+P(Y=y) = 
+\begin{cases}
+1/4, & y = \pm 2 \\
+7/40, & y = \pm 1 \\
+3/20, & y = 0
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{b) As variáveis $X$ e $Y$ são independentes?}
+\vspace{0.2cm}
+
+Não, as variáveis $X$ e $Y$ \textbf{não} são independentes. 
+
+Justificativa: Para que sejam independentes, devemos ter $P(X=x, Y=y) = P(X=x)P(Y=y)$ para todo par $(x,y)$. 
+Testando para o par $(2,2)$:
+\begin{eqfit}
+\begin{aligned}
+P(X=2, Y=2) &= \frac{|2+2|}{40} = \frac{4}{40} = \frac{1}{10} \\
+P(X=2) \cdot P(Y=2) &= \left(\frac{1}{4}\right) \cdot \left(\frac{1}{4}\right) = \frac{1}{16}
+\end{aligned}
+\end{eqfit}
+Como $\frac{1}{10} \neq \frac{1}{16}$, as variáveis não são independentes.
+
+\vspace{0.3cm}
+\textbf{c) Calcule $P(X < 0, Y \ge 0)$ e $P(|X - Y| \le 1)$.}
+\vspace{0.2cm}
+
+1. Calculando $P(X < 0, Y \ge 0)$ (valores de $X \in \{-2, -1\}$ e $Y \in \{0, 1, 2\}$):
+\begin{eqfit}
+\begin{aligned}
+P(X < 0, Y \ge 0) &= \sum_{x \in \{-2,-1\}} \sum_{y \in \{0,1,2\}} \frac{|x+y|}{40} \\
+&= \frac{1}{40} \Big[ (|-2+0| + |-2+1| + |-2+2|) + (|-1+0| + |-1+1| + |-1+2|) \Big] \\
+&= \frac{1}{40} \Big[ (2 + 1 + 0) + (1 + 0 + 1) \Big] \\
+&= \frac{1}{40} [3 + 2] = \frac{5}{40} = \frac{1}{8} = 0,125
+\end{aligned}
+\end{eqfit}
+
+2. Calculando $P(|X - Y| \le 1)$ (pares onde a diferença absoluta entre $X$ e $Y$ é no máximo 1, ou seja, $Y - 1 \le X \le Y + 1$):
+Os pares que satisfazem essa condição são aqueles onde $X = Y$ (5 pares), $X = Y+1$ (4 pares) e $X = Y-1$ (4 pares), totalizando 13 pares.
+\begin{eqfit}
+\begin{aligned}
+P(|X - Y| \le 1) &= \sum_{|x-y| \le 1} \frac{|x+y|}{40} \\
+&= \frac{1}{40} \Big[ (|(-2)+(-2)| + \dots \text{ para todos os } 13 \text{ pares com } |x-y|\le 1) \Big] \\
+&= \frac{1}{40} \Big[ |-4| + |-3| + |-3| + |-2| + |-2| + |-2| + |0| + |0| + |0| + |2| + |2| + |2| + |3| + |3| + |4| \dots \Big] 
+\end{aligned}
+\end{eqfit}
+Somando explicitamente os termos para $|x-y| \le 1$:
+- $x=y=-2 \implies |-4| = 4$
+- $x=-2, y=-1 \implies |-3| = 3$
+- $x=-1, y=-2 \implies |-3| = 3$
+- $x=-1, y=-1 \implies |-2| = 2$
+- $x=-1, y=0 \implies |-1| = 1$
+- $x=0, y=-1 \implies |-1| = 1$
+- $x=0, y=0 \implies |0| = 0$
+- $x=0, y=1 \implies |1| = 1$
+- $x=1, y=0 \implies |1| = 1$
+- $x=1, y=1 \implies |2| = 2$
+- $x=1, y=2 \implies |3| = 3$
+- $x=2, y=1 \implies |3| = 3$
+- $x=2, y=2 \implies |4| = 4$
+
+Soma = $4 + 3 + 3 + 2 + 1 + 1 + 0 + 1 + 1 + 2 + 3 + 3 + 4 = 28$.
+Portanto:
+\begin{eqfit}
+P(|X - Y| \le 1) = \frac{28}{40} = \frac{7}{10} = 0,70
+\end{eqfit}
+
+\textbf{6. A densidade conjunta de $X$, $Y$ e $Z$ é dada por}
+\begin{eqfit}
+f(x,y,z) = \frac{1}{16}[4(xy + xz + yz) + 4(x + y + z) + 7]; \quad x \in [0,1], y \in [0,1], z \in [0,1].
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{a) As variáveis são independentes?}
+\vspace{0.2cm}
+
+Para verificar se as variáveis $X$, $Y$ e $Z$ são independentes, precisamos determinar as densidades marginais de cada uma e checar se o produto delas é igual à densidade conjunta $f(x,y,z)$.
+
+Calculando a densidade marginal de $X$:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \int_{0}^{1} \int_{0}^{1} f(x,y,z) \, dy \, dz \\
+&= \int_{0}^{1} \int_{0}^{1} \frac{1}{16} [4xy + 4xz + 4yz + 4x + 4y + 4z + 7] \, dy \, dz
+\end{aligned}
+\end{eqfit}
+
+Integrando em relação a $y$ de $0$ a $1$:
+\begin{eqfit}
+\int_{0}^{1} f(x,y,z) \, dy = \frac{1}{16} [2x + 4xz + 2z + 4x + 2 + 4z + 7] = \frac{1}{16} [6x + 6z + 4xz + 9]
+\end{eqfit}
+
+Integrando o resultado em relação a $z$ de $0$ a $1$:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \int_{0}^{1} \frac{1}{16} [6x + 6z + 4xz + 9] \, dz \\
+&= \frac{1}{16} [6x + 3 + 2x + 9] = \frac{1}{16} [8x + 12] = \frac{2x + 3}{4}
+\end{aligned}
+\end{eqfit}
+
+Por simetria, as densidades marginais de $Y$ e $Z$ são:
+\begin{eqfit}
+f_Y(y) = \frac{2y + 3}{4}, \quad f_Z(z) = \frac{2z + 3}{4}
+\end{eqfit}
+
+Testando a condição de independência ($f(x,y,z) = f_X(x) f_Y(y) f_Z(z)$):
+\begin{eqfit}
+f_X(x) f_Y(y) f_Z(z) = \frac{(2x+3)(2y+3)(2z+3)}{64} \neq f(x,y,z)
+\end{eqfit}
+Portanto, as variáveis $X$, $Y$ e $Z$ \textbf{não} são independentes.
+
+\vspace{0.3cm}
+\textbf{b) Calcule $P(X \le 1/2, Y \ge 1/3)$.}
+\vspace{0.2cm}
+
+Primeiro, determinamos a densidade marginal conjunta $f_{X,Y}(x,y)$ integrando a densidade conjunta em relação a $Z$:
+\begin{eqfit}
+\begin{aligned}
+f_{X,Y}(x,y) &= \int_{0}^{1} f(x,y,z) \, dz \\
+&= \int_{0}^{1} \frac{1}{16} [4xy + 4xz + 4yz + 4x + 4y + 4z + 7] \, dz \\
+&= \frac{1}{16} [4xy + 2x + 2y + 4x + 4y + 2 + 7] \\
+&= \frac{1}{16} [4xy + 6x + 6y + 9]
+\end{aligned}
+\end{eqfit}
+
+Agora, calculamos a probabilidade desejada integrando $f_{X,Y}(x,y)$ no domínio especificado ($x \in [0, 1/2]$ e $y \in [1/3, 1]$):
+\begin{eqfit}
+\begin{aligned}
+P\left(X \le \frac{1}{2}, Y \ge \frac{1}{3}\right) &= \int_{1/3}^{1} \int_{0}^{1/2} \frac{1}{16} (4xy + 6x + 6y + 9) \, dx \, dy \\
+&= \frac{1}{16} \int_{1/3}^{1} \left[ 2yx^2 + 3x^2 + 6yx + 9x \right]_{x=0}^{x=1/2} \, dy \\
+&= \frac{1}{16} \int_{1/3}^{1} \left( 2y\left(\frac{1}{4}\right) + 3\left(\frac{1}{4}\right) + 6y\left(\frac{1}{2}\right) + 9\left(\frac{1}{2}\right) \right) dy \\
+&= \frac{1}{16} \int_{1/3}^{1} \left( \frac{7}{2}y + \frac{21}{4} \right) dy \\
+&= \frac{1}{16} \left[ \frac{7}{4}y^2 + \frac{21}{4}y \right]_{1/3}^{1} \\
+&= \frac{1}{16} \left[ \left(\frac{7}{4} + \frac{21}{4}\right) - \left(\frac{7}{36} + \frac{7}{4}\right) \right] \\
+&= \frac{1}{16} \left[ 7 - \frac{35}{18} \right] \\
+&= \frac{1}{16} \left( \frac{126 - 35}{18} \right) = \frac{91}{288} \approx 0,3160
+\end{aligned}
+\end{eqfit}
+
+\textbf{7. Suponha que uma moeda honesta é jogada três vezes. Seja $X$ o número de caras obtidas e seja $Y$ o número de lançamentos até aparecer a primeira cara (se isso não ocorrer, então $Y = 0$).}
+
+\vspace{0.3cm}
+O espaço amostral dos 3 lançamentos possui $2^3 = 8$ resultados equiprováveis, com probabilidade de cada um igual a $\frac{1}{8}$:
+\begin{eqfit}
+S = \{CCC, CCK, CKC, KCC, KKC, KCK, CKK, KKK\}
+\end{eqfit}
+
+Vamos mapear cada elemento do espaço amostral para os valores de $X$ (número de Caras) e $Y$ (lançamento da 1ª Cara, ou 0 se nenhuma):
+- $CCC$: $X = 3$, $Y = 1$ (probabilidade $1/8$)
+- $CCK$: $X = 2$, $Y = 1$ (probabilidade $1/8$)
+- $CKC$: $X = 2$, $Y = 1$ (probabilidade $1/8$)
+- $KCC$: $X = 2$, $Y = 2$ (probabilidade $1/8$)
+- $KKC$: $X = 1$, $Y = 3$ (probabilidade $1/8$)
+- $KCK$: $X = 1$, $Y = 2$ (probabilidade $1/8$)
+- $CKK$: $X = 1$, $Y = 1$ (probabilidade $1/8$)
+- $KKK$: $X = 0$, $Y = 0$ (probabilidade $1/8$)
+
+\vspace{0.3cm}
+\textbf{a) Encontre a distribuição conjunta de $X$ e $Y$.}
+\vspace{0.2cm}
+
+Agrupando os resultados por pares $(x,y)$:
+- $P(X=0, Y=0) = \frac{1}{8}$ (para $KKK$)
+- $P(X=1, Y=1) = \frac{1}{8}$ (para $CKK$)
+- $P(X=1, Y=2) = \frac{1}{8}$ (para $KCK$)
+- $P(X=1, Y=3) = \frac{1}{8}$ (para $KKC$)
+- $P(X=2, Y=1) = \frac{2}{8} = \frac{1}{4}$ (para $CCK, CKC$)
+- $P(X=2, Y=2) = \frac{1}{8}$ (para $KCC$)
+- $P(X=3, Y=1) = \frac{1}{8}$ (para $CCC$)
+Para quaisquer outros pares $(x,y)$, a probabilidade conjunta é $0$.
+
+\vspace{0.3cm}
+\textbf{b) Calcular as distribuições marginais de $X$ e $Y$.}
+\vspace{0.2cm}
+
+Para a marginal de $X$ (somando a conjunta para cada $X$):
+- $P(X=0) = P(X=0, Y=0) = \frac{1}{8}$
+- $P(X=1) = P(X=1, Y=1) + P(X=1, Y=2) + P(X=1, Y=3) = \frac{1}{8} + \frac{1}{8} + \frac{1}{8} = \frac{3}{8}$
+- $P(X=2) = P(X=2, Y=1) + P(X=2, Y=2) = \frac{2}{8} + \frac{1}{8} = \frac{3}{8}$
+- $P(X=3) = P(X=3, Y=1) = \frac{1}{8}$
+
+Para a marginal de $Y$ (somando a conjunta para cada $Y$):
+- $P(Y=0) = P(X=0, Y=0) = \frac{1}{8}$
+- $P(Y=1) = P(X=1, Y=1) + P(X=2, Y=1) + P(X=3, Y=1) = \frac{1}{8} + \frac{2}{8} + \frac{1}{8} = \frac{4}{8} = \frac{1}{2}$
+- $P(Y=2) = P(X=1, Y=2) + P(X=2, Y=2) = \frac{1}{8} + \frac{1}{8} = \frac{2}{8} = \frac{1}{4}$
+- $P(Y=3) = P(X=1, Y=3) = \frac{1}{8}$
+
+\vspace{0.3cm}
+\textbf{c) Calcular $P(X \le 2, Y = 1)$, $P(X \le 2, Y \le 1)$ e $P(X \le 2 \text{ ou } Y \le 1)$.}
+\vspace{0.2cm}
+
+1. Calculando $P(X \le 2, Y = 1)$ (pares com $X \in \{0, 1, 2\}$ e $Y = 1$):
+\begin{eqfit}
+\begin{aligned}
+P(X \le 2, Y = 1) &= P(X=1, Y=1) + P(X=2, Y=1) \\
+&= \frac{1}{8} + \frac{2}{8} = \frac{3}{8} = 0,375
+\end{aligned}
+\end{eqfit}
+
+2. Calculando $P(X \le 2, Y \le 1)$ (pares com $X \le 2$ e $Y \in \{0, 1\}$):
+\begin{eqfit}
+\begin{aligned}
+P(X \le 2, Y \le 1) &= P(X=0, Y=0) + P(X=1, Y=1) + P(X=2, Y=1) \\
+&= \frac{1}{8} + \frac{1}{8} + \frac{2}{8} = \frac{4}{8} = \frac{1}{2} = 0,50
+\end{aligned}
+\end{eqfit}
+
+3. Calculando $P(X \le 2 \text{ ou } Y \le 1)$ (pelo princípio da inclusão-exclusão):
+\begin{eqfit}
+\begin{aligned}
+P(X \le 2 \text{ ou } Y \le 1) &= P(X \le 2) + P(Y \le 1) - P(X \le 2, Y \le 1)
+\end{aligned}
+\end{eqfit}
+Onde $P(X \le 2) = 1 - P(X=3) = 1 - \frac{1}{8} = \frac{7}{8}$, e $P(Y \le 1) = P(Y=0) + P(Y=1) = \frac{1}{8} + \frac{4}{8} = \frac{5}{8}$. Logo:
+\begin{eqfit}
+\begin{aligned}
+P(X \le 2 \text{ ou } Y \le 1) &= \frac{7}{8} + \frac{5}{8} - \frac{4}{8} = \frac{8}{8} = 1
+\end{aligned}
+\end{eqfit}
+
+\textbf{8. Um dado e uma moeda (ambos honestos) são jogados de forma independente. Seja $X$ o valor resultante no dado e seja $Y$ a função indicadora de resultado cara para a moeda. Calcular a FDC de $(X, Y)$.}
+
+\vspace{0.3cm}
+Definição das variáveis aleatórias:
+- $X$: valor no dado, assume valores em $\{1, 2, 3, 4, 5, 6\}$ com probabilidade $P(X=x) = \frac{1}{6}$ para cada $x$.
+- $Y$: função indicadora de cara, assume valores em $\{0, 1\}$, onde $Y=1$ se sair cara e $Y=0$ se sair coroa, com probabilidades $P(Y=0) = \frac{1}{2}$ e $P(Y=1) = \frac{1}{2}$.
+
+Como o dado e a moeda são jogados de forma independente, a função de probabilidade conjunta é dada por:
+\begin{eqfit}
+P(X=x, Y=y) = P(X=x) \cdot P(Y=y) = \frac{1}{6} \cdot \frac{1}{2} = \frac{1}{12}
+\end{eqfit}
+para cada $x \in \{1, 2, 3, 4, 5, 6\}$ e $y \in \{0, 1\}$.
+
+A Função de Distribución Conjunta (FDC) ou Função de Acumulação Conjunta é definida por $F(x,y) = P(X \le x, Y \le y)$. 
+
+Para calcular a FDC em função dos valores contínuos reais $x$ e $y$:
+\begin{eqfit}
+F(x,y) = \sum_{i \le x} \sum_{j \le y} P(X=i, Y=j)
+\end{eqfit}
+
+Determinando por partes conforme os intervalos de $x$ e $y$:
+1. Se $x < 1$ ou $y < 0$:
+\begin{eqfit}
+F(x,y) = 0
+\end{eqfit}
+
+2. Se $k \le x < k+1$ (para $k \in \{1, 2, 3, 4, 5\}$) e $0 \le y < 1$:
+\begin{eqfit}
+F(x,y) = \sum_{i=1}^{\lfloor x \rfloor} P(X=i, Y=0) = \sum_{i=1}^{\lfloor x \rfloor} \frac{1}{12} = \frac{\lfloor x \rfloor}{12}
+\end{eqfit}
+
+3. Se $k \le x < k+1$ (para $k \in \{1, 2, 3, 4, 5\}$) e $y \ge 1$:
+\begin{eqfit}
+F(x,y) = \sum_{i=1}^{\lfloor x \rfloor} \sum_{j=0}^{1} P(X=i, Y=j) = \sum_{i=1}^{\lfloor x \rfloor} \left(\frac{1}{12} + \frac{1}{12}\right) = \sum_{i=1}^{\lfloor x \rfloor} \frac{2}{12} = \frac{2 \lfloor x \rfloor}{12} = \frac{\lfloor x \rfloor}{6}
+\end{eqfit}
+
+4. Se $x \ge 6$ e $0 \le y < 1$:
+\begin{eqfit}
+F(x,y) = \sum_{i=1}^{6} P(X=i, Y=0) = 6 \cdot \frac{1}{12} = \frac{6}{12} = \frac{1}{2}
+\end{eqfit}
+
+5. Se $x \ge 6$ e $y \ge 1$:
+\begin{eqfit}
+F(x,y) = \sum_{i=1}^{6} \sum_{j=0}^{1} P(X=i, Y=j) = 12 \cdot \frac{1}{12} = 1
+\end{eqfit}
+
+\textbf{9. Uma urna contém 1 bola vermelha e 2 brancas. Retira-se uma amostra de tamanho 3 com reposição. Seja a variável aleatória}
+\begin{eqfit}
+X_i = 
+\begin{cases}
+1, & \text{se a } i\text{-ésima bola é vermelha} \\
+0, & \text{se a } i\text{-ésima bola é branca.}
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+Como as extrações são feitas com reposição, cada jogada é independente e a probabilidade de sucesso (obter bola vermelha) é $p = \frac{1}{3}$, enquanto a probabilidade de fracasso (obter bola branca) é $1 - p = \frac{2}{3}$.
+Portanto, para cada $X_i$, temos $X_i \sim \text{Bernoulli}(1/3)$.
+
+\vspace{0.3cm}
+\textbf{a) Encontre a distribuição conjunta de $(X_1, X_2, X_3)$.}
+\vspace{0.2cm}
+
+Pela independência das extrações com reposição, a função de probabilidade conjunta de $(X_1, X_2, X_3)$ para qualquer vetor de realizações $(x_1, x_2, x_3) \in \{0,1\}^3$ é dada por:
+\begin{eqfit}
+\begin{aligned}
+P(X_1 = x_1, X_2 = x_2, X_3 = x_3) &= P(X_1 = x_1) \cdot P(X_2 = x_2) \cdot P(X_3 = x_3) \\
+&= p^{\sum x_i} (1-p)^{3 - \sum x_i} \\
+&= \left(\frac{1}{3}\right)^{\sum_{i=1}^{3} x_i} \left(\frac{2}{3}\right)^{3 - \sum_{i=1}^{3} x_i}
+\end{aligned}
+\end{eqfit}
+onde cada $x_i \in \{0, 1\}$.
+
+\vspace{0.3cm}
+\textbf{b) Determine $P(X_1 + X_2 = X_3)$.}
+\vspace{0.2cm}
+
+Como cada $X_i$ assume apenas valores em $\{0, 1\}$, a soma $X_1 + X_2$ pode assumir os valores $0, 1$ ou $2$, enquanto $X_3$ assume valores $0$ ou $1$.
+Analisamos todas as combinações possíveis de $(x_1, x_2, x_3)$ em $\{0, 1\}^3$ que satisfazem a condição $x_1 + x_2 = x_3$:
+
+1. Se $x_3 = 0$: precisamos que $x_1 + x_2 = 0$, o que implica $x_1 = 0$ e $x_2 = 0$.
+   - O único vetor é $(0, 0, 0)$.
+   - Probabilidade: $\left(\frac{2}{3}\right)^3 = \frac{8}{27}$.
+
+2. Se $x_3 = 1$: precisamos que $x_1 + x_2 = 1$, o que ocorre quando $(x_1=1, x_2=0)$ ou $(x_1=0, x_2=1)$.
+   - Os vetores são $(1, 0, 1)$ e $(0, 1, 1)$.
+   - Probabilidade para cada vetor: $\left(\frac{1}{3}\right)\left(\frac{2}{3}\right)\left(\frac{1}{3}\right) = \frac{2}{27}$.
+   - Somando os dois casos: $\frac{2}{27} + \frac{2}{27} = \frac{4}{27}$.
+
+3. Se $x_3 = 2$: impossível, pois $X_3 \le 1$.
+
+Somando as probabilidades dos casos válidos:
+\begin{eqfit}
+\begin{aligned}
+P(X_1 + X_2 = X_3) &= P(X_1=0, X_2=0, X_3=0) \\
+&\quad + P(X_1=1, X_2=0, X_3=1) \\
+&\quad + P(X_1=0, X_2=1, X_3=1) \\
+&= \frac{8}{27} + \frac{2}{27} + \frac{2}{27} = \frac{12}{27} = \frac{4}{9} \approx 0,4444
+\end{aligned}
+\end{eqfit}
+
+\textbf{10. Cada pneu dianteiro de um veículo deve ser calibrado com uma pressão de 26 psi. Suponha que a pressão real do ar em cada pneu seja uma variável aleatória, digamos $X$ para o pneu direito e $Y$ para o pneu esquerdo, com função de densidade de probabilidade conjunta $f(x,y) = kx^2 + y^2$, se $x \ge 30, y \ge 30$ e $0$ caso contrário.}
+
+\vspace{0.3cm}
+\textbf{a) Qual é o valor de $k$?}
+\vspace{0.2cm}
+
+Para que $f(x,y)$ seja uma função densidade de probabilidade válida, a integral dupla sobre todo o suporte deve ser igual a 1. Nota-se que o enunciado indica o suporte $x \ge 30$ e $y \ge 30$. No entanto, uma integral sobre um suporte infinito para uma função do tipo $kx^2 + y^2$ divergiria, o que indica que há um limite superior finito implícito ou um erro tipográfico clássico de domínio (frequentemente o suporte correto para este tipo de problema em intervalos limitados, ou os valores indicados são cotas inferiores de uma região finita, mas como o enunciado diz $x \ge 30, y \ge 30$, assumimos que há um limite superior $b$ ou que o texto original define um intervalo fechado, por exemplo, $30 \le x \le b$). Vamos expressar em função de um limite geral ou verificar a consistência: se o suporte for infinito, a integral diverge. Assumindo que a questão contenha um erro comum de digitação nos limites superiores (geralmente entre 30 e uma faixa restrita, ou o termo é $kx^2y^2$), resolvemos formalmente indicando a condição de normalização:
+\begin{eqfit}
+\int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f(x,y) \, dx \, dy = 1 \implies \int_{30}^{\infty} \int_{30}^{\infty} (kx^2 + y^2) \, dx \, dy = \infty
+\end{eqfit}
+Como a integral diverge para o infinito, o modelo com $x \ge 30, y \ge 30$ sem teto superior resulta em divergência. Assumindo um limite superior finito $b$ para fins práticos de resolução de prova (ou considerando que a função requer uma faixa finita para ser densidade válida), o valor de $k$ é determinado impondo que $\int \int f(x,y) \,dx\,dy = 1$.
+
+\vspace{0.3cm}
+\textbf{b) Qual é a probabilidade de ambos os pneus estarem com pressão abaixo da recomendada?}
+\vspace{0.2cm}
+
+A pressão recomendada é de 26 psi. Como o suporte inferior da distribuição é $30$ psi ($x \ge 30$ e $y \ge 30$), a pressão de ambos os pneus será sempre superior a 30 psi, logo, estritamente acima da recomendada (26 psi).
+\begin{eqfit}
+P(X < 26, Y < 26) = \int_{-\infty}^{26} \int_{-\infty}^{26} f(x,y) \, dx \, dy = 0
+\end{eqfit}
+A probabilidade é igual a $0$.
+
+\vspace{0.3cm}
+\textbf{c) Qual é a probabilidade de a diferença de pressão entre os dois pneus ser de, no máximo, 2 psi?}
+\vspace{0.2cm}
+
+Queremos calcular $P(|X - Y| \le 2)$, o que equivale a $P(Y - 2 \le X \le Y + 2)$. Utilizando a integral da densidade conjunta na região delimitada por essa condição:
+\begin{eqfit}
+P(|X - Y| \le 2) = \iint_{|x-y| \le 2} f(x,y) \, dx \, dy
+\end{eqfit}
+A integral é calculada integrando a função conjunta $f(x,y) = kx^2 + y^2$ na faixa onde a diferença absoluta das pressões não supera 2 psi.
+
+\vspace{0.3cm}
+\textbf{d) As calibragens para ambos os pneus são probabilisticamente independentes?}
+\vspace{0.2cm}
+
+Não, as calibragens \textbf{não} são necessariamente independentes. Para que fossem independentes, a densidade conjunta deveria poder ser fatorada no produto das marginais ($f(x,y) = f_X(x)f_Y(y)$). Na expressão da função dada $f(x,y) = kx^2 + y^2$, os termos estão somados e não multiplicados, o que impede a fatoração algébrica em funções exclusivas de $x$ vezes funções exclusivas de $y$. Portanto, as variáveis $X$ e $Y$ são dependentes.
+
+\textbf{11. A densidade conjunta de $X$ e $Y$ é dada por:}
+\begin{eqfit}
+f(x,y) = \frac{1}{2\pi^2} e^{-\frac{1}{\pi}\left(\frac{x^2}{4} + y\right)}, \quad x \in \mathbb{R}, y \ge 0.
+\end{eqfit}
+\textbf{As variáveis $X$ e $Y$ são independentes?}
+
+\vspace{0.3cm}
+Sim, as variáveis $X$ e $Y$ são independentes.
+
+Justificativa: 
+Podemos fatorar a função densidade de probabilidade conjunta em um produto de duas funções, sendo uma apenas de $x$ e a outra apenas de $y$, e o suporte é um produto cartesiano ($\mathbb{R} \times [0, \infty)$):
+\begin{eqfit}
+\begin{aligned}
+f(x,y) &= \frac{1}{2\pi^2} e^{-\frac{x^2}{4\pi} - \frac{y}{\pi}} \\
+&= \left( \frac{1}{\sqrt{2}\pi} e^{-\frac{x^2}{4\pi}} \right) \cdot \left( \frac{1}{\sqrt{2}\pi} e^{-\frac{y}{\pi}} \right) \\
+&= g(x) \cdot h(y)
+\end{aligned}
+\end{eqfit}
+Como a densidade conjunta pode ser expressa como o produto de funções marginais individuais e o suporte é retangular (independente entre as variáveis), conclui-se que $X$ e $Y$ são \textbf{independentes}.
+
+\textbf{12. A densidade conjunta de $X$ e $Y$ é dada por:}
+\begin{eqfit}
+f(x,y) = \frac{1}{x}, \quad 0 \le y \le x \le 1.
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{a) Calcule as densidades marginais.}
+\vspace{0.2cm}
+
+Para encontrar a densidade marginal de $X$, integramos a densidade conjunta em relação a $Y$ no suporte $0 \le y \le x$:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \int_{0}^{x} \frac{1}{x} \, dy \\
+&= \frac{1}{x} [y]_{y=0}^{y=x} \\
+&= \frac{1}{x} (x) = 1, \quad \text{para } 0 < x \le 1
+\end{aligned}
+\end{eqfit}
+Logo, $f_X(x) = 1$ para $0 < x \le 1$ (e $0$ caso contrário).
+
+Para encontrar a densidade marginal de $Y$, integramos a densidade conjunta em relação a $X$ no suporte correspondente. Como o suporte global é $0 \le y \le x \le 1$, para um dado $y$ fixo, $x$ varia de $y$ até $1$:
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \int_{y}^{1} \frac{1}{x} \, dx \\
+&= [\ln(x)]_{x=y}^{x=1} \\
+&= \ln(1) - \ln(y) = -\ln(y), \quad \text{para } 0 < y \le 1
+\end{aligned}
+\end{eqfit}
+Logo, $f_Y(y) = -\ln(y)$ para $0 < y \le 1$ (e $0$ caso contrário).
+
+\vspace{0.3cm}
+\textbf{b) Calcule $P(X \le 1/2, Y < 1/2)$.}
+\vspace{0.2cm}
+
+A probabilidade é obtida integrando a densidade conjunta na região onde $x \le 1/2$ e $y < 1/2$, respeitando o suporte original $0 \le y \le x \le 1$. 
+
+Dividimos a região de integração em duas partes ou integramos diretamente:
+O limite de $X$ vai de $y$ até $1/2$, e o limite de $Y$ vai de $0$ até $1/2$:
+\begin{eqfit}
+\begin{aligned}
+P\left(X \le \frac{1}{2}, Y < \frac{1}{2}\right) &= \int_{0}^{1/2} \int_{y}^{1/2} \frac{1}{x} \, dx \, dy \\
+&= \int_{0}^{1/2} [\ln(x)]_{x=y}^{x=1/2} \, dy \\
+&= \int_{0}^{1/2} (\ln(1/2) - \ln(y)) \, dy
+\end{aligned}
+\end{eqfit}
+
+Calculando a integral de $\ln(y)$ (sabendo que $\int \ln(y) \, dy = y\ln(y) - y$):
+\begin{eqfit}
+\begin{aligned}
+&= \left[ y\ln(1/2) - (y\ln(y) - y) \right]_{0}^{1/2} \\
+&= \left( \frac{1}{2}\ln(1/2) - \frac{1}{2}\ln(1/2) + \frac{1}{2} \right) - \lim_{y \to 0^+} \left( y\ln(1/2) - y\ln(y) + y \right) \\
+&= \frac{1}{2} - 0 = \frac{1}{2} = 0,50
+\end{aligned}
+\end{eqfit}
+(utilizando o limite fundamental $\lim_{y \to 0^+} y\ln(y) = 0$).
+
+\textbf{13. Sejam $X$ e $Y$ variáveis aleatórias com densidade conjunta}
+\begin{eqfit}
+f(x,y) = \lambda^2 e^{-\lambda y}, \quad 0 \le x \le y.
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{a) Verifique que as densidades marginais de $X$ e $Y$ seguem modelos Gama.}
+\vspace{0.2cm}
+
+Para encontrar a densidade marginal de $X$, integramos a densidade conjunta em relação a $Y$. Como o suporte é $0 \le x \le y$, para um dado $x \ge 0$, a variável $Y$ varia de $x$ até $+\infty$:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \int_{x}^{\infty} \lambda^2 e^{-\lambda y} \, dy \\
+&= \lambda^2 \left[ -\frac{1}{\lambda} e^{-\lambda y} \right]_{y=x}^{y=\infty} \\
+&= \lambda^2 \left( 0 - \left(-\frac{1}{\lambda} e^{-\lambda x}\right) \right) \\
+&= \lambda e^{-\lambda x}, \quad \text{para } x \ge 0
+\end{aligned}
+\end{eqfit}
+Esta é a função densidade de probabilidade de uma distribuição Exponencial com parâmetro $\lambda$, que é um caso particular da distribuição Gama com parâmetros de forma $r = 1$ e parâmetro de escala $\theta = 1/\lambda$ (ou taxa $\lambda$).
+
+Para encontrar a densidade marginal de $Y$, integramos a densidade conjunta em relação a $X$. Como $0 \le x \le y$, para um dado $y \ge 0$, a variável $X$ varia de $0$ até $y$:
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \int_{0}^{y} \lambda^2 e^{-\lambda y} \, dx \\
+&= \lambda^2 e^{-\lambda y} \int_{0}^{y} dx \\
+&= \lambda^2 e^{-\lambda y} [x]_{x=0}^{x=y} \\
+&= \lambda^2 y e^{-\lambda y}, \quad \text{para } y \ge 0
+\end{aligned}
+\end{eqfit}
+A expressão obtida, $f_Y(y) = \frac{\lambda^2}{\Gamma(2)} y^{2-1} e^{-\lambda y}$, corresponde exatamente à função densidade de probabilidade de uma distribuição Gama com parâmetro de forma $r = 2$ e parâmetro de taxa $\lambda$. Portanto, ambas as marginais seguem modelos Gama.
+
+\vspace{0.3cm}
+\textbf{b) Calcule $F(x,y)$, a FDC.}
+\vspace{0.2cm}
+
+A Função de Distribuição Conjunta (FDC) é dada por $F(x,y) = \int_{-\infty}^{y} \int_{-\infty}^{x} f(u,v) \, du \, dv$. 
+Analisando a região de integração de acordo com as restrições do suporte $0 \le u \le v$:
+
+1. Se $x < 0$ ou $y < 0$ ou $x > y$ (na região onde $x > y$, o acumulado atinge o limite superior da faixa onde a densidade é nula fora do suporte, ou seja, $F(x,y) = F(x,x)$ quando $x \le y$):
+Mais formalmente, calculamos dividindo pelas condições do suporte:
+- Se $x < 0$ ou $y < 0$: $F(x,y) = 0$.
+- Se $0 \le x \le y$:
+\begin{eqfit}
+\begin{aligned}
+F(x,y) &= \int_{0}^{x} \int_{u}^{y} \lambda^2 e^{-\lambda v} \, dv \, du \quad \text{(ou integrando primeiro em } u \text{ de } 0 \text{ a } v \text{ e depois em } v \text{ de } 0 \text{ a } x \text{, somado com a região onde } x < v \le y \text{)}
+\end{aligned}
+\end{eqfit}
+Utilizando a integral dupla na região $0 \le u \le v$ com limites $u \in [0, x]$ e $v \in [u, y]$ para $x \le y$:
+\begin{eqfit}
+\begin{aligned}
+F(x,y) &= \int_{0}^{x} \left( \int_{u}^{y} \lambda^2 e^{-\lambda v} \, dv \right) du \\
+&= \int_{0}^{x} \lambda^2 \left[ -\frac{1}{\lambda} e^{-\lambda v} \right]_{v=u}^{v=y} du \\
+&= \int_{0}^{x} \lambda \left( e^{-\lambda u} - e^{-\lambda y} \right) du \\
+&= \lambda \left[ -\frac{1}{\lambda} e^{-\lambda u} - u e^{-\lambda y} \right]_{u=0}^{u=x} \\
+&= \lambda \left( \left( -\frac{1}{\lambda} e^{-\lambda x} - x e^{-\lambda y} \right) - \left( -\frac{1}{\lambda} - 0 \right) \right) \\
+&= 1 - e^{-\lambda x} - \lambda x e^{-\lambda y}
+\end{aligned}
+\end{eqfit}
+
+- Se $0 \le y < x$: neste caso, como $u \le v$, a integral acumula até $v = y$ e $u = y$:
+\begin{eqfit}
+F(x,y) = F(y,y) = 1 - e^{-\lambda y} - \lambda y e^{-\lambda y}
+\end{eqfit}
+
+Resumindo a FDC:
+\begin{eqfit}
+F(x,y) =
+\begin{cases}
+0, & x < 0 \text{ ou } y < 0 \\
+1 - e^{-\lambda x} - \lambda x e^{-\lambda y}, & 0 \le x \le y \\
+1 - e^{-\lambda y} - \lambda y e^{-\lambda y}, & 0 \le y < x
+\end{cases}
+\end{eqfit}
+
+\textbf{Sejam $X$ e $Y$ variáveis aleatórias iid $\text{Geo}(p)$ sobre $\{0, 1, 2, \dots\}$. Calcule $P(X = Y)$ e $P(X < Y)$.}
+
+\vspace{0.3cm}
+Definição da distribuição geométrica para $k \in \{0, 1, 2, \dots\}$:
+\begin{eqfit}
+P(X = k) = (1-p)^k p, \quad \text{onde } 0 < p < 1.
+\end{eqfit}
+
+Como $X$ e $Y$ são independentes, a probabilidade conjunta é:
+\begin{eqfit}
+P(X = x, Y = y) = P(X = x) P(Y = y) = (1-p)^x p \cdot (1-p)^y p
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{1. Cálculo de $P(X = Y)$:}
+\begin{eqfit}
+\begin{aligned}
+P(X = Y) &= \sum_{k=0}^{\infty} P(X = k, Y = k) \\
+&= \sum_{k=0}^{\infty} \left[ (1-p)^k p \right]^2 \\
+&= p^2 \sum_{k=0}^{\infty} \left( (1-p)^2 \right)^k
+\end{aligned}
+\end{eqfit}
+
+Como a série é geométrica de razão $r = (1-p)^2 < 1$:
+\begin{eqfit}
+\begin{aligned}
+P(X = Y) &= p^2 \cdot \frac{1}{1 - (1-p)^2} \\
+&= \frac{p^2}{1 - (1 - 2p + p^2)} \\
+&= \frac{p^2}{2p - p^2} = \frac{p^2}{p(2-p)} = \frac{p}{2-p}
+\end{aligned}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{2. Cálculo de $P(X < Y)$:}
+\begin{eqfit}
+\begin{aligned}
+P(X < Y) &= \sum_{k=0}^{\infty} \sum_{j=k+1}^{\infty} P(X = k) P(Y = j) \\
+&= \sum_{k=0}^{\infty} (1-p)^k p \left[ \sum_{j=k+1}^{\infty} (1-p)^j p \right]
+\end{aligned}
+\end{eqfit}
+
+Calculando a soma interna (série geométrica com primeiro termo $(1-p)^{k+1}p$):
+\begin{eqfit}
+\sum_{j=k+1}^{\infty} (1-p)^j p = \frac{(1-p)^{k+1}p}{1 - (1-p)} = (1-p)^{k+1}
+\end{eqfit}
+
+Substituindo na expressão principal:
+\begin{eqfit}
+\begin{aligned}
+P(X < Y) &= \sum_{k=0}^{\infty} (1-p)^k p \cdot (1-p)^{k+1} \\
+&= p(1-p) \sum_{k=0}^{\infty} \left( (1-p)^2 \right)^k \\
+&= p(1-p) \cdot \frac{1}{1 - (1-p)^2} \\
+&= \frac{p(1-p)}{2p - p^2} = \frac{p(1-p)}{p(2-p)} = \frac{1-p}{2-p}
+\end{aligned}
+\end{eqfit}
+
+\textbf{15. Considere um círculo de raio $r$ e centro na origem, e suponha que um ponto é aleatoriamente selecionado no círculo. Sejam $X$ e $Y$ as coordenadas do ponto escolhido.}
+
+\vspace{0.3cm}
+Como o ponto é selecionado aleatoriamente e de forma uniforme no interior do círculo de raio $r$, a função densidade de probabilidade conjunta de $(X,Y)$ é constante e igual à recíproca da área do círculo:
+\begin{eqfit}
+f(x,y) = \frac{1}{\pi r^2}, \quad \text{se } x^2 + y^2 \le r^2
+\end{eqfit}
+e $0$ caso contrário.
+
+\vspace{0.3cm}
+\textbf{a) Encontre as densidades marginais de $X$ e de $Y$;}
+\vspace{0.2cm}
+
+Para encontrar a densidade marginal de $X$, integramos a densidade conjunta em relação a $Y$. Como o suporte é dado por $-\sqrt{r^2 - x^2} \le y \le \sqrt{r^2 - x^2}$:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \int_{-\sqrt{r^2 - x^2}}^{\sqrt{r^2 - x^2}} \frac{1}{\pi r^2} \, dy \\
+&= \frac{1}{\pi r^2} [y]_{y=-\sqrt{r^2 - x^2}}^{y=\sqrt{r^2 - x^2}} \\
+&= \frac{1}{\pi r^2} \left( \sqrt{r^2 - x^2} - (-\sqrt{r^2 - x^2}) \right) \\
+&= \frac{2\sqrt{r^2 - x^2}}{\pi r^2}, \quad \text{para } -r \le x \le r
+\end{aligned}
+\end{eqfit}
+
+Por simetria circular, a densidade marginal de $Y$ possui exatamente a mesma forma funcional:
+\begin{eqfit}
+f_Y(y) = \frac{2\sqrt{r^2 - y^2}}{\pi r^2}, \quad \text{para } -r \le y \le r
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{b) Encontre a probabilidade de que a distância da origem ao ponto selecionado não seja maior do que $a$ ($a > 0$).}
+\vspace{0.2cm}
+
+A distância da origem ao ponto $(X,Y)$ é dada por $R = \sqrt{X^2 + Y^2}$. Queremos calcular a probabilidade $P(\sqrt{X^2 + Y^2} \le a)$, onde assumimos $0 < a \le r$.
+
+Como a distribuição é uniformemente distribuída na área do círculo, a probabilidade de o ponto cair em uma sub-região é a razão entre a área dessa sub-região e a área total do círculo:
+\begin{eqfit}
+\begin{aligned}
+P(\sqrt{X^2 + Y^2} \le a) &= \frac{\text{Área do círculo de raio } a}{\text{Área do círculo de raio } r} \\
+&= \frac{\pi a^2}{\pi r^2} = \frac{a^2}{r^2}
+\end{aligned}
+\end{eqfit}
+para $0 < a \le r$ (sendo $1$ se $a > r$, e $0$ se $a \le 0$).
+
+\textbf{16. Suponha que a densidade do vetor $(X,Y)$ seja:}
+\begin{eqfit}
+f(x,y) =
+\begin{cases}
+k(x^2 + y), & 0 \le y \le 1 - x^2 \\
+0, & \text{caso contrário.}
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+Definição do suporte: Como $0 \le y \le 1 - x^2$, temos que $-1 \le x \le 1$. A região de integração é simétrica em relação ao eixo $y$.
+
+\vspace{0.3cm}
+\textbf{a) O valor da constante $k$;}
+\vspace{0.2cm}
+
+Impondo a condição de normalização da densidade conjunta:
+\begin{eqfit}
+\int_{-1}^{1} \int_{0}^{1-x^2} k(x^2 + y) \, dy \, dx = 1
+\end{eqfit}
+
+Calculando a integral interna em relação a $y$:
+\begin{eqfit}
+\begin{aligned}
+\int_{0}^{1-x^2} (x^2 + y) \, dy &= \left[ x^2 y + \frac{y^2}{2} \right]_{y=0}^{y=1-x^2} \\
+&= x^2(1-x^2) + \frac{(1-x^2)^2}{2} \\
+&= x^2 - x^4 + \frac{1 - 2x^2 + x^4}{2} \\
+&= \frac{2x^2 - 2x^4 + 1 - 2x^2 + x^4}{2} = \frac{1 - x^4}{2}
+\end{aligned}
+\end{eqfit}
+
+Agora, integramos em relação a $x$ de $-1$ a $1$ (aproveitando a simetria):
+\begin{eqfit}
+\begin{aligned}
+k \int_{-1}^{1} \frac{1 - x^4}{2} \, dx &= 2 \cdot \frac{k}{2} \int_{0}^{1} (1 - x^4) \, dx \\
+&= k \left[ x - \frac{x^5}{5} \right]_{0}^{1} \\
+&= k \left( 1 - \frac{1}{5} \right) = \frac{4k}{5}
+\end{aligned}
+\end{eqfit}
+
+Igualando a 1:
+\begin{eqfit}
+\frac{4k}{5} = 1 \implies k = \frac{5}{4}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{b) As densidades marginais de $X$ e $Y$;}
+\vspace{0.2cm}
+
+Para a densidade marginal de $X$, integramos $f(x,y)$ em relação a $y$ no suporte $0 \le y \le 1-x^2$:
+\begin{eqfit}
+\begin{aligned}
+f_X(x) &= \int_{0}^{1-x^2} \frac{5}{4}(x^2 + y) \, dy \\
+&= \frac{5}{4} \left( \frac{1 - x^4}{2} \right) = \frac{5(1 - x^4)}{8}, \quad \text{para } -1 \le x \le 1
+\end{aligned}
+\end{eqfit}
+
+Para a densidade marginal de $Y$, como $0 \le y \le 1 - x^2 \implies x^2 \le 1 - y \implies -\sqrt{1-y} \le x \le \sqrt{1-y}$ (para $0 \le y \le 1$):
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \int_{-\sqrt{1-y}}^{\sqrt{1-y}} \frac{5}{4}(x^2 + y) \, dx \\
+&= \frac{5}{4} \left[ \frac{x^3}{3} + yx \right]_{x=-\sqrt{1-y}}^{x=\sqrt{1-y}} \\
+&= \frac{5}{4} \cdot 2 \left( \frac{(1-y)^{3/2}}{3} + y\sqrt{1-y} \right) \\
+&= \frac{5}{2} \sqrt{1-y} \left( \frac{1-y}{3} + y \right) \\
+&= \frac{5}{2} \sqrt{1-y} \left( \frac{1 - y + 3y}{3} \right) \\
+&= \frac{5}{6} (1 + 2y) \sqrt{1-y}, \quad \text{para } 0 \le y \le 1
+\end{aligned}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{c) O gráfico aproximado das marginais;}
+\vspace{0.2cm}
+
+- $f_X(x) = \frac{5}{8}(1-x^4)$ é uma função par, simétrica em relação a $x=0$, com valor máximo em $x=0$ igual a $\frac{5}{8}$ e decaindo suavemente até zero nos extremos $x = -1$ e $x = 1$.
+- $f_Y(y) = \frac{5}{6}(1+2y)\sqrt{1-y}$ tem valor em $y=0$ igual a $\frac{5}{6}$ e vai decaindo monotonicamente até chegar a zero em $y = 1$.
+
+\vspace{0.3cm}
+\textbf{d) $P(Y < X)$;}
+\vspace{0.2cm}
+
+Como o suporte abrange valores onde $x$ pode ser negativo e $y$ é sempre não negativo ($0 \le y \le 1-x^2$), a condição $Y < X$ exige que $X > 0$ (já que $Y \ge 0$). Assim, integramos a densidade conjunta na região onde $0 \le x \le 1$ e $0 \le y \le x$:
+\begin{eqfit}
+\begin{aligned}
+P(Y < X) &= \int_{0}^{1} \int_{0}^{x} \frac{5}{4}(x^2 + y) \, dy \, dx \\
+&= \frac{5}{4} \int_{0}^{1} \left[ x^2 y + \frac{y^2}{2} \right]_{y=0}^{y=x} dx \\
+&= \frac{5}{4} \int_{0}^{1} \left( x^3 + \frac{x^2}{2} \right) dx \\
+&= \frac{5}{4} \left[ \frac{x^4}{4} + \frac{x^3}{6} \right]_{0}^{1} \\
+&= \frac{5}{4} \left( \frac{1}{4} + \frac{1}{6} \right) = \frac{5}{4} \left( \frac{5}{12} \right) = \frac{25}{48} \approx 0,5208
+\end{aligned}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{e) $P(0 \le X < 1/2)$;}
+\vspace{0.2cm}
+
+Calculamos integrando a densidade marginal de $X$ no intervalo especificado:
+\begin{eqfit}
+\begin{aligned}
+P\left(0 \le X < \frac{1}{2}\right) &= \int_{0}^{1/2} \frac{5}{8}(1 - x^4) \, dx \\
+&= \frac{5}{8} \left[ x - \frac{x^5}{5} \right]_{0}^{1/2} \\
+&= \frac{5}{8} \left( \frac{1}{2} - \frac{1}{160} \right) \\
+&= \frac{5}{8} \left( \frac{80 - 1}{160} \right) = \frac{5 \cdot 79}{8 \cdot 160} = \frac{395}{1280} = \frac{79}{256} \approx 0,3086
+\end{aligned}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{f) A expressão geral da função distribuição.}
+\vspace{0.2cm}
+
+A Função de Distribuição Acumulada Conjunta é dada por $F(x,y) = \int_{-\infty}^{y} \int_{-\infty}^{x} f(u,v) \, du \, dv$. 
+Dependendo da posição do ponto $(x,y)$ em relação à parábola limite $y = 1 - x^2$:
+- Se $x < -1$ ou $y < 0$: $F(x,y) = 0$.
+- Se $x \ge 1$ e $y \ge 1$: $F(x,y) = 1$.
+- Na região geral do suporte ($0 \le y \le 1-x^2$):
+\begin{eqfit}
+F(x,y) = \int_{0}^{\max(0, y)} \int_{-\sqrt{1-v}}^{\min(x, \sqrt{1-v})} \frac{5}{4}(u^2 + v) \, du \, dv
+\end{eqfit}
+cuja forma analítica exata é obtida integrando por partes as faixas delimitadas pelas restrições do suporte parabólico.
+
+\textbf{17. Se $X$ e $Y$ são variáveis aleatórias contínuas, independentes e distribuídas uniformemente no intervalo $(0,60)$, encontre $P(|X - Y| < 10)$.}
+
+\vspace{0.3cm}
+Definição das variáveis aleatórias:
+\begin{eqfit}
+X \sim U(0, 60), \quad Y \sim U(0, 60)
+\end{eqfit}
+
+Como $X$ e $Y$ são independentes, a função densidade de probabilidade conjunta é o produto das densidades marginais:
+\begin{eqfit}
+f(x,y) = f_X(x) \cdot f_Y(y) = \left(\frac{1}{60}\right) \cdot \left(\frac{1}{60}\right) = \frac{1}{3600}, \quad \text{para } 0 < x < 60, \, 0 < y < 60
+\end{eqfit}
+e $0$ caso contrário. A área total do suporte quadrado é $60 \times 60 = 3600$.
+
+Queremos calcular a probabilidade $P(|X - Y| < 10)$, que equivale a:
+\begin{eqfit}
+P(-10 < X - Y < 10) \implies P(Y - 10 < X < Y + 10)
+\end{eqfit}
+
+Geometricamente, podemos resolver calculando a área da região do quadrado de lado $60$ que satisfaz a condição $|X - Y| < 10$, e dividindo pela área total do quadrado ($3600$).
+
+A região total do quadrado tem área $3600$. As retas $X - Y = 10$ e $X - Y = -10$ cortam o quadrado, deixando de fora dois pequenos triângulos retângulos isósceles nos cantos opostos superior esquerdo e inferior direito.
+- O cateto de cada um dos triângulos excluídos mede $60 - 10 = 50$.
+- A área de um triângulo retângulo excluído é:
+\begin{eqfit}
+\text{Área}_{\text{triângulo}} = \frac{50 \times 50}{2} = \frac{2500}{2} = 1250
+\end{eqfit}
+- Como são dois triângulos nos cantos, a área total excluída é $2 \times 1250 = 2500$.
+
+A área da região favorável (onde $|X - Y| < 10$) é a área total menos a área excluída:
+\begin{eqfit}
+\text{Área}_{\text{favorável}} = 3600 - 2500 = 1100
+\end{eqfit}
+
+Portanto, a probabilidade é a razão entre a área favorável e a área total:
+\begin{eqfit}
+P(|X - Y| < 10) = \frac{1100}{3600} = \frac{11}{36} \approx 0,3056 \text{ (ou } 30,56\%)
+\end{eqfit}
+
+\textbf{18. Suponha que $X$ e $Y$ são variáveis aleatórias independentes com distribuição exponencial de parâmetros $\lambda_1$ e $\lambda_2$ ($\lambda_1 > 0, \lambda_2 > 0$) respectivamente. Mostre que, para $k > 0$, $P(X - kY > 0) = \lambda_2 / (k\lambda_1 + \lambda_2)$.}
+
+\vspace{0.3cm}
+Definição das distribuições marginais (com parâmetros de taxa $\lambda_1$ e $\lambda_2$):
+\begin{eqfit}
+f_X(x) = \lambda_1 e^{-\lambda_1 x}, \quad x > 0 \quad (\text{e } 0 \text{ para } x \le 0)
+\end{eqfit}
+\begin{eqfit}
+f_Y(y) = \lambda_2 e^{-\lambda_2 y}, \quad y > 0 \quad (\text{e } 0 \text{ para } y \le 0)
+\end{eqfit}
+
+Como $X$ e $Y$ são independentes, a função densidade de probabilidade conjunta é:
+\begin{eqfit}
+f(x,y) = f_X(x) f_Y(y) = \lambda_1 \lambda_2 e^{-\lambda_1 x - \lambda_2 y}, \quad x > 0, \, y > 0
+\end{eqfit}
+
+Queremos calcular a probabilidade $P(X - kY > 0)$, que é equivalente a $P(X > kY)$. 
+Integrando a densidade conjunta na região onde $x > ky$ (com $y > 0$ e $x > 0$):
+\begin{eqfit}
+P(X > kY) = \int_{0}^{\infty} \int_{ky}^{\infty} \lambda_1 \lambda_2 e^{-\lambda_1 x - \lambda_2 y} \, dx \, dy
+\end{eqfit}
+
+Calculando a integral interna em relação a $x$:
+\begin{eqfit}
+\begin{aligned}
+\int_{ky}^{\infty} \lambda_1 e^{-\lambda_1 x} \, dx &= \left[ -e^{-\lambda_1 x} \right]_{x=ky}^{x=\infty} \\
+&= 0 - (-e^{-\lambda_1 k y}) = e^{-k \lambda_1 y}
+\end{aligned}
+\end{eqfit}
+
+Substituindo o resultado na integral externa em relação a $y$:
+\begin{eqfit}
+\begin{aligned}
+P(X > kY) &= \int_{0}^{\infty} \lambda_2 e^{-\lambda_2 y} \cdot e^{-k \lambda_1 y} \, dy \\
+&= \lambda_2 \int_{0}^{\infty} e^{-(\lambda_2 + k \lambda_1) y} \, dy
+\end{aligned}
+\end{eqfit}
+
+Resolvendo a integral exponencial restante:
+\begin{eqfit}
+\begin{aligned}
+P(X > kY) &= \lambda_2 \left[ \frac{-1}{\lambda_2 + k\lambda_1} e^{-(\lambda_2 + k \lambda_1) y} \right]_{y=0}^{y=\infty} \\
+&= \lambda_2 \left( 0 - \left( -\frac{1}{\lambda_2 + k\lambda_1} \cdot 1 \right) \right) \\
+&= \frac{\lambda_2}{k\lambda_1 + \lambda_2}
+\end{aligned}
+\end{eqfit}
+
+Portanto, demonstrou-se que $P(X - kY > 0) = \frac{\lambda_2}{k\lambda_1 + \lambda_2}$.
+
+\textbf{19. Suponha que $X$ e $Y$ são variáveis aleatórias independentes e identicamente distribuídas, assumindo os valores -1 e 1 com a mesma probabilidade. Sejam as variáveis aleatórias $U$ e $V$ definidas por: $U = X$ e $V = XY$.}
+
+\vspace{0.3cm}
+Definição das distribuições marginais de $X$ e $Y$:
+\begin{eqfit}
+P(X = -1) = \frac{1}{2}, \quad P(X = 1) = \frac{1}{2}
+\end{eqfit}
+\begin{eqfit}
+P(Y = -1) = \frac{1}{2}, \quad P(Y = 1) = \frac{1}{2}
+\end{eqfit}
+Como $X$ e $Y$ são independentes, a distribuição conjunta é dada por $P(X=x, Y=y) = \frac{1}{4}$ para cada um dos 4 pares possíveis de $(x,y) \in \{-1, 1\}^2$.
+
+\vspace{0.3cm}
+\textbf{a) Podem $U$ e $V$ serem independentes, dado que ambas dependem de $X$? Verifique.}
+\vspace{0.2cm}
+
+Sim, duas variáveis aleatórias podem ser independentes mesmo que ambas dependam de uma mesma variável comum de entrada. Vamos verificar formalmente construindo a distribuição conjunta de $(U,V)$:
+Os pares possíveis para $(U,V) = (X, XY)$ são:
+- Se $X = -1, Y = -1 \implies U = -1, V = (-1)(-1) = 1$ (Probabilidade $1/4$)
+- Se $X = -1, Y = 1 \implies U = -1, V = (-1)(1) = -1$ (Probabilidade $1/4$)
+- Se $X = 1, Y = -1 \implies U = 1, V = (1)(-1) = -1$ (Probabilidade $1/4$)
+- Se $X = 1, Y = 1 \implies U = 1, V = (1)(1) = 1$ (Probabilidade $1/4$)
+
+Portanto, as probabilidades conjuntas de $(U,V)$ são:
+- $P(U = -1, V = -1) = 1/4$
+- $P(U = -1, V = 1) = 1/4$
+- $P(U = 1, V = -1) = 1/4$
+- $P(U = 1, V = 1) = 1/4$
+
+Calculando as marginais de $U$ e $V$:
+- $P(U = -1) = P(U=-1, V=-1) + P(U=-1, V=1) = 1/4 + 1/4 = 1/2$
+- $P(U = 1) = P(U=1, V=-1) + P(U=1, V=1) = 1/4 + 1/4 = 1/2$
+- $P(V = -1) = P(U=-1, V=-1) \text{ n/a} \dots$ somando por coluna: $P(U=-1, V=-1) + P(U=1, V=-1) = 1/4 + 1/4 = 1/2$
+- $P(V = 1) = 1/4 + 1/4 = 1/2$
+
+Testando a independência ($P(U=u, V=v) = P(U=u)P(V=v)$) para o par $(1,1)$:
+\begin{eqfit}
+P(U = 1, V = 1) = \frac{1}{4} \quad \text{e} \quad P(U = 1)P(V = 1) = \left(\frac{1}{2}\right) \left(\frac{1}{2}\right) = \frac{1}{4}
+\end{eqfit}
+Como a igualdade é válida para todos os pares possíveis, conclui-se que \textbf{sim}, $U$ e $V$ são independentes neste caso específico.
+
+\vspace{0.3cm}
+\textbf{b) Encontre a função $F_{U,V}(u, v)$.}
+\vspace{0.2cm}
+
+A Função de Distribuição Acumulada Conjunta é $F_{U,V}(u,v) = P(U \le u, V \le v)$. Como $U$ e $V$ assumem apenas os valores $-1$ e $1$, avaliamos por regiões nos reais:
+- Se $u < -1$ ou $v < -1$: $F_{U,V}(u,v) = 0$
+- Se $-1 \le u < 1$ e $-1 \le v < 1$: 
+  $F_{U,V}(u,v) = P(U = -1, V = -1) = \frac{1}{4}$
+- Se $-1 \le u < 1$ e $v \ge 1$: 
+  $F_{U,V}(u,v) = P(U = -1, V = -1) + P(U = -1, V = 1) = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}$
+- Se $u \ge 1$ e $-1 \le v < 1$: 
+  $F_{U,V}(u,v) = P(U = -1, V = -1) + P(U = 1, V = -1) = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}$
+- Se $u \ge 1$ e $v \ge 1$: 
+  $F_{U,V}(u,v) = 1$
+
+\vspace{0.3cm}
+\textbf{c) Quanto vale $P(U \le 1/2, V > 1/2)$?}
+\vspace{0.2cm}
+
+Analisando a condição pedida para os valores discretos de $U$ e $V$:
+- $U \le 1/2 \implies U = -1$ (pois $U$ só assume $-1$ ou $1$).
+- $V > 1/2 \implies V = 1$ (pois $V$ só assume $-1$ ou $1$).
+
+Portanto, queremos calcular $P(U = -1, V = 1)$:
+\begin{eqfit}
+P\left(U \le \frac{1}{2}, V > \frac{1}{2}\right) = P(U = -1, V = 1) = \frac{1}{4} = 0,25
+\end{eqfit}
+
+\textbf{20. Se $X \sim \text{exp}(1/2)$, encontre a densidade de $Y = X^{1/2}$ (Weibull de parâmetros 2 e $1/2$).}
+
+\vspace{0.3cm}
+Definição da distribuição da variável original $X$:
+Como $X \sim \text{exp}(1/\theta)$ com média $\theta = 2$ (ou taxa $\lambda = 1/2$), a função densidade de probabilidade de $X$ é:
+\begin{eqfit}
+f_X(x) = \frac{1}{2} e^{-x/2}, \quad x > 0
+\end{eqfit}
+
+Utilizamos o método da transformação (método de mudança de variáveis / função de distribuição acumulada) para encontrar a densidade de $Y = g(X) = X^{1/2} = \sqrt{X}$.
+
+1. Função de Distribuição Acumulada (FDA) de $Y$:
+\begin{eqfit}
+\begin{aligned}
+F_Y(y) &= P(Y \le y) = P(X^{1/2} \le y) \\
+&= P(X \le y^2) = F_X(y^2)
+\end{aligned}
+\end{eqfit}
+para $y > 0$.
+
+2. Função Densidade de Probabilidade (FDP) de $Y$:
+Derivamos $F_Y(y)$ em relação a $y$ usando a regra da cadeia:
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \frac{d}{dy} F_Y(y) = \frac{d}{dy} F_X(y^2) \\
+&= f_X(y^2) \cdot \frac{d}{dy}(y^2) \\
+&= f_X(y^2) \cdot (2y)
+\end{aligned}
+\end{eqfit}
+
+Substituindo $f_X(y^2)$ na expressão:
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \left( \frac{1}{2} e^{-(y^2)/2} \right) \cdot (2y) \\
+&= y e^{-y^2 / 2}, \quad \text{para } y > 0
+\end{aligned}
+\end{eqfit}
+
+Esta é exatamente a função densidade de probabilidade de uma distribuição \textbf{Weibull} com parâmetro de forma $\alpha = 2$ e parâmetro de escala $\beta = \sqrt{2}$ (ou parâmetro $\theta = 1/2$ dependendo da parametrização adotada), confirmando o resultado solicitado.
+
+\textbf{21. Seja $X \sim N(0,1)$, encontre a densidade de $Y = e^X$. Tal distribuição é chamada Lognormal de parâmetros 0 e 1.}
+
+\vspace{0.3cm}
+Definição da distribuição da variável original $X$:
+Como $X \sim N(0,1)$, a função densidade de probabilidade de $X$ é:
+\begin{eqfit}
+f_X(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2 / 2}, \quad -\infty < x < \infty
+\end{eqfit}
+
+Utilizamos o método da transformação (método de mudança de variáveis / função de distribuição acumulada) para encontrar a densidade de $Y = g(X) = e^X$. Como a função exponencial é estritamente crescente e $Y > 0$, temos:
+
+1. Função de Distribuição Acumulada (FDA) de $Y$:
+\begin{eqfit}
+\begin{aligned}
+F_Y(y) &= P(Y \le y) = P(e^X \le y) \\
+&= P(X \le \ln(y)) = F_X(\ln(y))
+\end{aligned}
+\end{eqfit}
+para $y > 0$ (e $0$ para $y \le 0$).
+
+2. Função Densidade de Probabilidade (FDP) de $Y$:
+Derivamos $F_Y(y)$ em relação a $y$ usando a regra da cadeia:
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \frac{d}{dy} F_Y(y) = \frac{d}{dy} F_X(\ln(y)) \\
+&= f_X(\ln(y)) \cdot \frac{d}{dy}(\ln(y)) \\
+&= f_X(\ln(y)) \cdot \frac{1}{y}
+\end{aligned}
+\end{eqfit}
+
+Substituindo $f_X(\ln(y))$ na expressão:
+\begin{eqfit}
+\begin{aligned}
+f_Y(y) &= \left( \frac{1}{\sqrt{2\pi}} e^{-(\ln(y))^2 / 2} \right) \cdot \frac{1}{y} \\
+&= \frac{1}{y \sqrt{2\pi}} e^{-(\ln(y))^2 / 2}, \quad \text{para } y > 0
+\end{aligned}          % <-- inserir esta linha
+\end{eqfit}
+
+Esta é exatamente a função densidade de probabilidade da distribuição \textbf{Lognormal} com parâmetros $\mu = 0$ e $\sigma^2 = 1$.
+
+\textbf{22. Suponha que $X$ e $Y$ sejam variáveis aleatórias independentes e identicamente distribuídas $\text{exp}(\theta)$. Prove que $X + Y$ e $X/Y$ são independentes.}
+
+\vspace{0.3cm}
+Definição das distribuições individuais (com parâmetro de taxa $\lambda = 1/\theta$, ou seja, densidade $f(t) = \lambda e^{-\lambda t}$ para $t > 0$):
+\begin{eqfit}
+f(x,y) = \lambda^2 e^{-\lambda(x+y)}, \quad x > 0, \, y > 0
+\end{eqfit}
+
+Utilizamos o método do Jacobiano para a transformação de variáveis. Sejam:
+\begin{eqfit}
+U = X + Y \quad \text{e} \quad V = \frac{X}{Y}
+\end{eqfit}
+
+Invertendo o sistema para expressar $X$ e $Y$ em função de $U$ e $V$:
+\begin{eqfit}
+X = \frac{UV}{V+1} \quad \text{e} \quad Y = \frac{U}{V+1}
+\end{eqfit}
+com $U > 0$ e $V > 0$.
+
+Calculamos o determinante do Jacobiano da transformação ($J = \frac{\partial(X,Y)}{\partial(U,V)}$):
+\begin{eqfit}
+J = \begin{vmatrix}
+\frac{\partial X}{\partial U} & \frac{\partial X}{\partial V} \\
+\frac{\partial Y}{\partial U} & \frac{\partial Y}{\partial V}
+\end{vmatrix}
+= \begin{vmatrix}
+\frac{V}{V+1} & \frac{U}{(V+1)^2} \\
+\frac{1}{V+1} & -\frac{U}{(V+1)^2}
+\end{vmatrix}
+\end{eqfit}
+
+Calculando o determinante:
+\begin{eqfit}
+\det(J) = \left( \frac{V}{V+1} \right)\left( -\frac{U}{(V+1)^2} \right) - \left( \frac{U}{(V+1)^2} \right)\left( \frac{1}{V+1} \right) = -\frac{UV + U}{(V+1)^3} = -\frac{U(V+1)}{(V+1)^3} = -\frac{U}{(V+1)^2}
+\end{eqfit}
+
+O valor absoluto do Jacobiano é $|J| = \frac{U}{(V+1)^2}$.
+
+A densidade conjunta transformada de $(U,V)$ é dada por:
+\begin{eqfit}
+f_{U,V}(u,v) = f_{X,Y}\left(\frac{uv}{v+1}, \frac{u}{v+1}\right) \cdot |J|
+\end{eqfit}
+
+Substituindo $X + Y = U$ e o Jacobiano:
+\begin{eqfit}
+\begin{aligned}
+f_{U,V}(u,v) &= \left( \lambda^2 e^{-\lambda \left(\frac{uv}{v+1} + \frac{u}{v+1}\right)} \right) \cdot \frac{u}{(v+1)^2} \\
+&= \left( \lambda^2 e^{-\lambda u \frac{v+1}{v+1}} \right) \cdot \frac{u}{(v+1)^2} \\
+&= \left( \lambda^2 u e^{-\lambda u} \right) \cdot \left( \frac{1}{(v+1)^2} \right)
+\end{aligned}
+\end{eqfit}
+
+Como a função densidade conjunta $f_{U,V}(u,v)$ pôde ser fatorada estritamente em uma função que depende apenas de $u$ multiplicada por uma função que depende apenas de $v$ (e o suporte é um produto cartesiano para $u>0, v>0$), conclui-se pelo Teorema da Fatoração que $U = X + Y$ e $V = X/Y$ são \textbf{independentes}.
+
+\textbf{23. Se $X$ e $Y$ são variáveis aleatórias independentes e identicamente distribuídas $U(0,1)$, encontre as densidades de $X + Y$, $X - Y$ e $X/Y$.}
+
+\vspace{0.3cm}
+Definição das distribuições marginais:
+\begin{eqfit}
+f_X(x) = 1, \quad 0 < x < 1 \quad (\text{e } 0 \text{ caso contrário})
+\end{eqfit}
+\begin{eqfit}
+f_Y(y) = 1, \quad 0 < y < 1 \quad (\text{e } 0 \text{ caso contrário})
+\end{eqfit}
+Densidade conjunta: $f(x,y) = 1$ para $0 < x < 1, 0 < y < 1$.
+
+\vspace{0.3cm}
+\textbf{1. Densidade de $U = X + Y$ (Convolução):}
+Utilizando a fórmula de convolução para a soma de duas variáveis independentes:
+\begin{eqfit}
+f_U(u) = \int_{-\infty}^{\infty} f_X(u - y) f_Y(y) \, dy
+\end{eqfit}
+Analisando os intervalos de variação de $u = x + y$ ($0 < u < 2$):
+- Para $0 < u \le 1$:
+\begin{eqfit}
+f_U(u) = \int_{0}^{u} 1 \cdot 1 \, dy = u
+\end{eqfit}
+- Para $1 < u < 2$:
+\begin{eqfit}
+f_U(u) = \int_{u-1}^{1} 1 \cdot 1 \, dy = 1 - (u - 1) = 2 - u
+\end{eqfit}
+Logo, $U = X + Y$ possui uma distribuição triangular:
+\begin{eqfit}
+f_U(u) = 
+\begin{cases}
+u, & 0 < u \le 1 \\
+2 - u, & 1 < u < 2 \\
+0, & \text{caso contrário}
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{2. Densidade de $V = X - Y$:}
+Utilizando o método de transformação para a diferença de variáveis independentes ($V = X - Y \implies X = V + Y$), com $-1 < v < 1$:
+- Para $-1 < v \le 0$:
+\begin{eqfit}
+f_V(v) = \int_{0}^{1+v} 1 \cdot 1 \, dy = 1 + v
+\end{eqfit}
+- Para $0 < v < 1$:
+\begin{eqfit}
+f_V(v) = \int_{v}^{1} 1 \cdot 1 \, dy = 1 - v
+\end{eqfit}
+Logo, a densidade de $V = X - Y$ é:
+\begin{eqfit}
+f_V(v) = 
+\begin{cases}
+1 + v, & -1 < v \le 0 \\
+1 - v, & 0 < v < 1 \\
+0, & \text{caso contrário}
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{3. Densidade de $W = X/Y$:}
+Sejam $W = X/Y$ e $Y = Y$. O Jacobiano da transformação inversa $X = WY$ e $Y = Y$ é $|J| = |Y| = y$ (pois $y > 0$).
+Substituindo na conjunta:
+\begin{eqfit}
+f_{W,Y}(w,y) = f_{X,Y}(wy, y) \cdot |y| = 1 \cdot y = y, \quad \text{com } 0 < y < 1 \text{ e } 0 < wy < 1 \implies 0 < y < \min(1, 1/w)
+\end{eqfit}
+Integrando em relação a $y$ para encontrar a marginal de $W$:
+- Se $0 < w \le 1$:
+\begin{eqfit}
+f_W(w) = \int_{0}^{1} y \, dy = \left[ \frac{y^2}{2} \right]_{0}^{1} = \frac{1}{2}
+\end{eqfit}
+- Se $w > 1$:
+\begin{eqfit}
+f_W(w) = \int_{0}^{1/w} y \, dy = \left[ \frac{y^2}{2} \right]_{0}^{1/w} = \frac{1}{2w^2}
+\end{eqfit}
+Logo, a densidade de $W = X/Y$ é:
+\begin{eqfit}
+f_W(w) = 
+\begin{cases}
+1/2, & 0 < w \le 1 \\
+1/(2w^2), & w > 1 \\
+0, & \text{caso contrário}
+\end{cases}
+\end{eqfit}
+
+\textbf{24. Sejam $X$ e $Y$ variáveis aleatórias independentes e identicamente distribuídas $\text{exp}(\lambda)$. Provar que $Z = \frac{X}{X+Y}$ possui distribuição $U[0,1]$.}
+
+\vspace{0.3cm}
+Definição das distribuições individuais (taxa $\lambda$):
+\begin{eqfit}
+f(x,y) = \lambda^2 e^{-\lambda(x+y)}, \quad x > 0, \, y > 0
+\end{eqfit}
+
+Utilizamos o método da transformação de variáveis. Definimos um sistema bidimensional introduzindo uma variável auxiliar conveniente, por exemplo, $U = X + Y$ e $Z = \frac{X}{X+Y}$.
+
+Invertendo o sistema para expressar $X$ e $Y$ em função de $U$ e $Z$:
+\begin{eqfit}
+X = UZ \quad \text{e} \quad Y = U(1-Z)
+\end{eqfit}
+com $U > 0$ e $0 < Z < 1$.
+
+Calculamos o determinante do Jacobiano da transformação inversa ($J = \frac{\partial(X,Y)}{\partial(U,Z)}$):
+\begin{eqfit}
+J = \begin{vmatrix}
+\frac{\partial X}{\partial U} & \frac{\partial X}{\partial Z} \\
+\frac{\partial Y}{\partial U} & \frac{\partial Y}{\partial Z}
+\end{vmatrix}
+= \begin{vmatrix}
+Z & U \\
+1-Z & -U
+\end{vmatrix}
+\end{eqfit}
+
+Calculando o determinante:
+\begin{eqfit}
+\det(J) = Z(-U) - U(1-Z) = -UZ - U + UZ = -U
+\end{eqfit}
+
+O valor absoluto do Jacobiano é $|J| = U$.
+
+A densidade conjunta transformada de $(U,Z)$ é dada por:
+\begin{eqfit}
+f_{U,Z}(u,z) = f_{X,Y}(uz, u(1-z)) \cdot |J|
+\end{eqfit}
+
+Substituindo $X + Y = U$ e o Jacobiano na densidade conjunta:
+\begin{eqfit}
+\begin{aligned}
+f_{U,Z}(u,z) &= \left( \lambda^2 e^{-\lambda (uz + u - uz)} \right) \cdot U \\
+&= \left( \lambda^2 e^{-\lambda u} \right) \cdot U, \quad \text{para } u > 0, \, 0 < z < 1
+\end{aligned}
+\end{eqfit}
+
+Para encontrar a densidade marginal de $Z$, integramos a densidade conjunta $f_{U,Z}(u,z)$ em relação a $U$ no seu suporte ($0$ a $\infty$):
+\begin{eqfit}
+\begin{aligned}
+f_Z(z) &= \int_{0}^{\infty} \lambda^2 U e^{-\lambda u} \, du \\
+&= \lambda^2 \int_{0}^{\infty} u e^{-\lambda u} \, du
+\end{aligned}
+\end{eqfit}
+
+A integral restante $\int_{0}^{\infty} u e^{-\lambda u} \, du$ é o primeiro momento de uma distribuição exponencial com taxa $\lambda$, cujo valor é $\frac{1}{\lambda^2}$ (ou resolvendo por partes):
+\begin{eqfit}
+f_Z(z) = \lambda^2 \left( \frac{1}{\lambda^2} \right) = 1, \quad \text{para } 0 < z < 1
+\end{eqfit}
+
+Como a densidade marginal de $Z$ é constante e igual a $1$ no intervalo $(0,1)$ e $0$ fora dele, provou-se que $Z = \frac{X}{X+Y}$ possui distribuição \textbf{Uniforme no intervalo $[0,1]$} ($Z \sim U[0,1]$).
+
+\textbf{25. Sejam $X$ e $Y$ variáveis aleatórias independentes e identicamente distribuídas $N(0,1)$. Prove que $Z = X^2 + Y^2$ e $W = X/Y$ são independentes e achar suas distribuições.}
+
+\vspace{0.3cm}
+Definição das distribuições marginais:
+\begin{eqfit}
+f(x,y) = \frac{1}{2\pi} e^{-\frac{x^2 + y^2}{2}}, \quad -\infty < x < \infty, \, -\infty < y < \infty
+\end{eqfit}
+
+Utilizamos o método do Jacobiano para a transformação de coordenadas cartesianas para polares (relacionadas a $Z$ e $W$). 
+Sejam $Z = X^2 + Y^2$ (quadrado do raio $R^2$) e $W = X/Y$ (cotangente do ângulo ou razão). 
+Para facilitar a inversão, podemos usar coordenadas polares $X = \sqrt{Z} \cos(\theta)$ e $Y = \sqrt{Z} \sin(\theta)$, onde $W = \cot(\theta)$ ou analisar diretamente a transformação inversa:
+\begin{eqfit}
+X = \sqrt{\frac{ZW^2}{W^2+1}} \quad \text{e} \quad Y = \sqrt{\frac{Z}{W^2+1}}
+\end{eqfit}
+com $Z > 0$ e $-\infty < W < \infty$.
+
+Calculamos o determinante do Jacobiano da transformação inversa ($J = \frac{\partial(X,Y)}{\partial(Z,W)}$):
+\begin{eqfit}
+J = \begin{vmatrix}
+\frac{\partial X}{\partial Z} & \frac{\partial X}{\partial W} \\
+\frac{\partial Y}{\partial Z} & \frac{\partial Y}{\partial W}
+\end{vmatrix}
+= -\frac{1}{2(W^2+1)\sqrt{Z}}
+\end{eqfit}
+
+O valor absoluto do Jacobiano é $|J| = \frac{1}{2(W^2+1)\sqrt{Z}}$.
+
+A densidade conjunta transformada de $(Z,W)$ é dada por:
+\begin{eqfit}
+f_{Z,W}(z,w) = f_{X,Y}(x,y) \cdot |J|
+\end{eqfit}
+
+Substituindo $X^2 + Y^2 = Z$ e o Jacobiano:
+\begin{eqfit}
+\begin{aligned}
+f_{Z,W}(z,w) &= \left( \frac{1}{2\pi} e^{-z/2} \right) \cdot \frac{1}{2(W^2+1)\sqrt{Z}} \\
+&= \left( \frac{1}{2} z^{1/2 - 1} e^{-z/2} \right) \cdot \left( \frac{1}{\pi (1 + w^2)} \right)
+\end{aligned}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{Conclusão e Distribuições:}
+1. Como a densidade conjunta $f_{Z,W}(z,w)$ se fatora estritamente no produto de uma função exclusiva de $Z$ por uma função exclusiva de $W$, conclui-se que $Z = X^2 + Y^2$ e $W = X/Y$ são \textbf{independentes}.
+2. A distribuição de $Z = X^2 + Y^2$ é uma \textbf{Qui-quadrado com 2 graus de liberdade} ($\chi^2_2$), que é equivalente a uma distribuição $\text{Gama}(r = 1, \theta = 2)$ (ou exponencial com média 2):
+\begin{eqfit}
+f_Z(z) = \frac{1}{2} e^{-z/2}, \quad z > 0
+\end{eqfit}
+3. A distribuição de $W = X/Y$ é uma \textbf{Cauchy padrão} com parâmetros de locação 0 e escala 1:
+\begin{eqfit}
+f_W(w) = \frac{1}{\pi (1 + w^2)}, \quad -\infty < w < \infty
+\end{eqfit}
+
+\textbf{26. Considere três componentes idênticos com tempos de vida independentes $X_1, X_2$ e $X_3$, cada um com distribuição exponencial de parâmetro $\lambda$. Se o primeiro componente for utilizado até falhar, será substituído pelo segundo (que permanece em operação até falhar) e, finalmente, o terceiro componente será utilizado até a falha. Então, o tempo de vida total desses componentes será $X_1 + X_2 + X_3$. Encontrar a distribuição do tempo de vida total utilizando: a) A FGM; b) O método do Jacobiano.}
+
+\vspace{0.3cm}
+Seja $T = X_1 + X_2 + X_3$ o tempo de vida total do sistema em standby, onde $X_i \sim \text{exp}(\lambda)$ são independentes com densidade $f(x) = \lambda e^{-\lambda x}$ para $x > 0$.
+
+\vspace{0.3cm}
+\textbf{a) Utilizando a Função Geradora de Momentos (FGM):}
+
+A FGM de uma variável aleatória exponencial com parâmetro $\lambda$ é dada por:
+\begin{eqfit}
+M_X(t) = E(e^{tX}) = \frac{\lambda}{\lambda - t}, \quad \text{para } t < \lambda
+\end{eqfit}
+
+Como $T$ é a soma de três variáveis aleatórias independentes ($X_1, X_2, X_3$), a FGM da soma é o produto das FGMs individuais:
+\begin{eqfit}
+M_T(t) = M_{X_1}(t) \cdot M_{X_2}(t) \cdot M_{X_3}(t) = \left( \frac{\lambda}{\lambda - t} \right)^3
+\end{eqfit}
+
+A expressão obtida, $\left( \frac{\lambda}{\lambda - t} \right)^3$, corresponde exatamente à FGM de uma distribuição \textbf{Gama} com parâmetros de forma $r = 3$ e taxa $\lambda$ (ou seja, $\text{Gama}(3, \lambda)$). Portanto, a distribuição do tempo de vida total $T$ é uma distribuição Gama de parâmetros 3 e $\lambda$, cuja função densidade de probabilidade é:
+\begin{eqfit}
+f_T(t) = \frac{\lambda^3}{\Gamma(3)} t^{3-1} e^{-\lambda t} = \frac{\lambda^3}{2} t^2 e^{-\lambda t}, \quad \text{para } t > 0
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{b) Utilizando o método do Jacobiano:}
+
+Para aplicar o método de transformação para múltiplas variáveis (uma vez que $T = X_1 + X_2 + X_3$ é uma soma de três variáveis), definimos um sistema de três variáveis introduzindo variáveis auxiliares convenientes, por exemplo:
+\begin{eqfit}
+U_1 = X_1 + X_2 + X_3, \quad U_2 = X_2 + X_3, \quad U_3 = X_3
+\end{eqfit}
+
+Invertendo o sistema para expressar $X_1, X_2, X_3$ em função de $U_1, U_2, U_3$:
+\begin{eqfit}
+X_1 = U_1 - U_2, \quad X_2 = U_2 - U_3, \quad X_3 = U_3
+\end{eqfit}
+
+Calculamos o determinante do Jacobiano da transformação inversa ($J = \frac{\partial(X_1, X_2, X_3)}{\partial(U_1, U_2, U_3)}$):
+\begin{eqfit}
+J = \begin{vmatrix}
+1 & -1 & 0 \\
+0 & 1 & -1 \\
+0 & 0 & 1
+\end{vmatrix} = 1
+\end{eqfit}
+
+A densidade conjunta transformada para $(U_1, U_2, U_3)$ é obtida substituindo as variáveis e multiplicando pelo módulo do Jacobiano ($|J| = 1$):
+\begin{eqfit}
+f_{U_1, U_2, U_3}(u_1, u_2, u_3) = \lambda^3 e^{-\lambda(u_1 - u_2 + u_2 - u_3 + u_3)} \cdot 1 = \lambda^3 e^{-\lambda u_1}
+\end{eqfit}
+com as restrições do suporte $0 < u_3 < u_2 < u_1$.
+
+Para encontrar a densidade marginal de $T = U_1$, integramos a densidade conjunta em relação a $U_2$ e $U_3$:
+\begin{eqfit}
+f_T(t) = \int_{0}^{t} \int_{0}^{u_2} \lambda^3 e^{-\lambda t} \, du_3 \, du_2
+\end{eqfit}
+
+Calculando a integral interna em relação a $u_3$ de $0$ a $u_2$:
+\begin{eqfit}
+\int_{0}^{u_2} \lambda^3 e^{-\lambda t} \, du_3 = \lambda^3 e^{-\lambda t} u_2
+\end{eqfit}
+
+Integrando o resultado em relação a $u_2$ de $0$ a $t$:
+\begin{eqfit}
+\begin{aligned}
+f_T(t) &= \int_{0}^{t} \lambda^3 e^{-\lambda t} u_2 \, du_2 \\
+&= \lambda^3 e^{-\lambda t} \left[ \frac{u_2^2}{2} \right]_{u_2=0}^{u_2=t} \\
+&= \frac{\lambda^3}{2} t^2 e^{-\lambda t}, \quad \text{para } t > 0
+\end{aligned}
+\end{eqfit}
+
+O método do Jacobiano confirma que o tempo de vida total $T = X_1 + X_2 + X_3$ segue uma distribuição \textbf{Gama$(3, \lambda)$}.
+
+\textbf{Exercício: Sejam $X$ e $Y$ independentes tais que $X \sim U(0,1)$, $Y \sim U(0,2)$. Encontrar a distribuição de $Z = X+Y$. a) Usando $F_Z(z)$ b) Usando a fórmula direta p/ $f_Z(z)$ (Convolução) c) Usando o método do Jacobiano.}
+
+\vspace{0.3cm}
+Definição das densidades marginais:
+\begin{eqfit}
+f_X(x) = 1, \quad 0 < x < 1 \quad (\text{e } 0 \text{ caso contrário})
+\end{eqfit}
+\begin{eqfit}
+f_Y(y) = \frac{1}{2}, \quad 0 < y < 2 \quad (\text{e } 0 \text{ caso contrário})
+\end{eqfit}
+Densidade conjunta: $f(x,y) = \frac{1}{2}$ para $0 < x < 1$ e $0 < y < 2$. O suporte de $Z = X+Y$ varia entre $0$ e $3$.
+
+\vspace{0.3cm}
+\textbf{a) Usando $F_Z(z)$ (Função de Distribuição Acumulada):}
+\begin{eqfit}
+F_Z(z) = P(X + Y \le z) = \iint_{x+y \le z} f(x,y) \, dx \, dy
+\end{eqfit}
+Analisando as faixas de valores de $z$ ($0 \le z \le 3$):
+- Se $z \le 0$: $F_Z(z) = 0$.
+- Se $0 < z \le 1$: a área de integração é um triângulo de vértices $(0,0), (z,0), (0,z)$:
+\begin{eqfit}
+F_Z(z) = \int_{0}^{z} \int_{0}^{z-x} \frac{1}{2} \, dy \, dx = \int_{0}^{z} \frac{z-x}{2} \, dx = \left[ \frac{zx - x^2/2}{2} \right]_{0}^{z} = \frac{z^2}{4}
+\end{eqfit}
+- Se $1 < z \le 2$: a região é um trapézio:
+\begin{eqfit}
+F_Z(z) = \int_{0}^{1} \int_{0}^{z-x} \frac{1}{2} \, dy \, dx = \int_{0}^{1} \frac{z-x}{2} \, dx = \frac{2z - 1}{4}
+\end{eqfit}
+- Se $2 < z < 3$: subtraímos a área superior excedente:
+\begin{eqfit}
+F_Z(z) = 1 - \int_{z-2}^{1} \int_{z-x}^{2} \frac{1}{2} \, dy \, dx = 1 - \frac{(3-z)^2}{4}
+\end{eqfit}
+Derivando $F_Z(z)$ em relação a $z$, obtemos a densidade $f_Z(z)$:
+\begin{eqfit}
+f_Z(z) = 
+\begin{cases}
+z/2, & 0 < z \le 1 \\
+1/2, & 1 < z \le 2 \\
+(3-z)/2, & 2 < z < 3 \\
+0, & \text{caso contrário}
+\end{cases}
+\end{eqfit}
+
+\vspace{0.3cm}
+\textbf{b) Usando a fórmula direta p/ $f_Z(z)$ (Convolução):}
+\begin{eqfit}
+f_Z(z) = \int_{-\infty}^{\infty} f_X(z-y) f_Y(y) \, dy = \int_{-\infty}^{\infty} f_X(x) f_Y(z-x) \, dx
+\end{eqfit}
+Aplicando os limites de integração sobrepostos das duas uniformes ($0 < x < 1$ e $0 < z-x < 2 \implies z-2 < x < z$):
+- Para $0 < z \le 1$: $\int_{0}^{z} 1 \cdot \frac{1}{2} \, dx = \frac{z}{2}$
+- Para $1 < z \le 2$: $\int_{0}^{1} 1 \cdot \frac{1}{2} \, dx = \frac{1}{2}$
+- Para $2 < z < 3$: $\int_{z-2}^{1} 1 \cdot \frac{1}{2} \, dx = \frac{3-z}{2}$
+Obtendo exatamente a mesma distribuição trapezoidal calculada no item anterior.
+
+\vspace{0.3cm}
+\textbf{c) Usando o método do Jacobiano:}
+Definimos a transformação com uma variável auxiliar, por exemplo, $U = X + Y$ e $V = X$. 
+O sistema inverso é $X = V$ e $Y = U - V$. 
+O determinante do Jacobiano é $J = \begin{vmatrix} 0 & 1 \\ 1 & -1 \end{vmatrix} = -1$, logo $|J| = 1$.
+Substituindo na conjunta:
+\begin{eqfit}
+f_{U,V}(u,v) = f_{X,Y}(v, u-v) \cdot |J| = \frac{1}{2} \cdot 1 = \frac{1}{2}
+\end{eqfit}
+com $0 < v < 1$ e $0 < u-v < 2 \implies v < u < v+2$.
+Integrando a densidade conjunta em relação a $v$ para obter a marginal de $U = Z$:
+- Para $0 < z \le 1$: $\int_{0}^{z} \frac{1}{2} \, dv = \frac{z}{2}$
+- Para $1 < z \le 2$: $\int_{0}^{1} \frac{1}{2} \, dv = \frac{1}{2}$
+- Para $2 < z < 3$: $\int_{z-2}^{1} \frac{1}{2} \, dv = \frac{3-z}{2}$
+Confirmando o resultado pelos três métodos.
+
+\end{multicols}
+\end{document}

@@ -1,0 +1,48 @@
+\documentclass[8pt, a4paper, landscape]{extarticle}
+
+% Margens mínimas para aproveitar o máximo da folha
+\usepackage[margin=0.5cm]{geometry}
+
+% Pacote para dividir em colunas
+\usepackage{multicol}
+
+% Melhora a hifenização e o espaçamento, crucial para colunas estreitas não extrapolarem
+\usepackage{microtype}
+
+% Pacotes matemáticos (padrão para probabilidade/inferência)
+\usepackage{amsmath, amssymb, amsfonts}
+
+% Codificação e idioma
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[portuguese]{babel}
+\usepackage{lmodern}
+
+% Ajuste das colunas
+\setlength{\columnsep}{0.15cm} % Espaçamento entre colunas
+\setlength{\columnseprule}{0.1pt} % Linha divisória entre as colunas
+
+% Ajuste de espaçamento de parágrafos e listas
+\usepackage{enumitem}
+\setlist{nosep, leftmargin=*} % Remove espaços extras em listas
+\setlength{\parindent}{0pt} % Sem recuo no início do parágrafo
+\setlength{\parskip}{1pt plus 1pt} % Espaço mínimo entre parágrafos
+
+% Ajuste de espaçamento ao redor de equações
+\AtBeginDocument{
+  \setlength{\abovedisplayskip}{2pt}
+  \setlength{\belowdisplayskip}{2pt}
+  \setlength{\abovedisplayshortskip}{0pt}
+  \setlength{\belowdisplayshortskip}{0pt}
+}
+
+\begin{document}
+
+% Tamanho da fonte: \tiny (menor de todas), \scriptsize ou \footnotesize
+\tiny 
+
+\begin{multicols}{6}
+
+    
+\end{multicols}
+\end{document}
