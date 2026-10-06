@@ -1,0 +1,212 @@
+\documentclass[8pt]{extarticle}
+\usepackage[a4paper,landscape,margin=0.5cm]{geometry}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\setlength{\columnsep}{6pt}
+\setlength{\columnseprule}{0.3pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt}
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayshortskip}{1pt}
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.15}
+\pagestyle{empty}
+\newcommand{\secao}[1]{\par\vspace{2pt}\hrule\vspace{1pt}{\bfseries\small #1}\par\vspace{1pt}}
+\newcommand{\sub}[1]{\par{\bfseries\underline{#1}}\par}
+\newcommand{\bul}{\par\hspace{2pt}$\bullet$\ }
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\V}{\mathrm{Var}}
+\newcommand{\iid}{\overset{iid}{\sim}}
+\newcommand{\ybar}{\bar{Y}}
+\newcommand{\sumi}{\sum_{i=1}^n}
+\newcommand{\prodi}{\prod_{i=1}^n}
+\begin{document}
+\footnotesize
+\begin{multicols*}{4}
+\begin{center}{\bfseries\normalsize CE309 -- Inferência: Cheatsheet}\\{\scriptsize Propriedades, Momentos, EMV}\end{center}
+
+\secao{1. Potências e frações}
+\bul $a^m a^n=a^{m+n}$;\ $a^m/a^n=a^{m-n}$;\ $(a^m)^n=a^{mn}$
+\bul $a^{-n}=1/a^n$;\ $a^{1/n}=\sqrt[n]{a}$;\ $a^0=1$;\ $(ab)^n=a^nb^n$
+\bul $\frac{a}{b}+\frac{c}{d}=\frac{ad+bc}{bd}$;\ $\frac{a/b}{c/d}=\frac{ad}{bc}$
+\bul $(a\pm b)^2=a^2\pm2ab+b^2$;\ $a^2-b^2=(a-b)(a+b)$
+\bul $\frac{1}{n}-\frac{1}{n-1}=\frac{-1}{n(n-1)}$;\ $\frac{n-1}{n}=1-\frac1n$
+
+\secao{2. Logaritmos e exponencial}
+\bul $\ln(ab)=\ln a+\ln b$;\ $\ln(a/b)=\ln a-\ln b$
+\bul $\ln(a^k)=k\ln a$;\ $\ln e^x=x$;\ $e^{\ln x}=x$;\ $\ln 1=0$
+\bul $e^{a}e^{b}=e^{a+b}$;\ $\prodi e^{a_i}=e^{\sumi a_i}$
+\bul $\ln\prodi a_i=\sumi\ln a_i$;\ $\prodi a_i^{k}=\big(\prodi a_i\big)^k$
+\bul $\prodi c=c^n$;\ $\prodi c\,a_i=c^n\prodi a_i$
+\bul $\ln$ é estritamente crescente: $\arg\max L=\arg\max\ln L$
+
+\secao{3. Somatórios}
+\bul $\sumi c=nc$;\ $\sumi c\,a_i=c\sumi a_i$;\ $\sumi(a_i+b_i)=\sum a_i+\sum b_i$
+\bul $\sumi Y_i=n\ybar$;\ $\sumi(Y_i-\ybar)=0$
+\bul $\sumi(Y_i-\ybar)^2=\sumi Y_i^2-n\ybar^2$
+\bul $\sumi(Y_i-\mu)^2=\sumi(Y_i-\ybar)^2+n(\ybar-\mu)^2$
+
+\secao{4. Derivadas}
+\begin{tabular}{@{}l|l@{}}
+$f(x)$ & $f'(x)$\\\hline
+$c$ & $0$\\
+$x^k$ & $kx^{k-1}$\\
+$1/x$ & $-1/x^2$\\
+$e^{x}$;\ $e^{g(x)}$ & $e^x$;\ $g'(x)e^{g(x)}$\\
+$a^x$ & $a^x\ln a$\\
+$\ln x$;\ $\ln g(x)$ & $1/x$;\ $g'(x)/g(x)$\\
+$\ln\Gamma(x)$ & $\psi(x)$ (digama)\\
+$x^k$ em $k$ & $x^k\ln x$\\
+\end{tabular}
+\bul Cadeia: $[f(g(x))]'=f'(g(x))\,g'(x)$
+\bul Produto: $(uv)'=u'v+uv'$;\ Quociente: $(u/v)'=\frac{u'v-uv'}{v^2}$
+\bul Ex.: $\frac{d}{d\theta}[-n\ln(2\theta+1)]=-\frac{2n}{2\theta+1}$
+
+\secao{5. Integrais}
+\bul $\int x^k dx=\frac{x^{k+1}}{k+1}$ $(k\neq-1)$;\ $\int\frac1x dx=\ln|x|$
+\bul $\int e^{ax}dx=\frac1a e^{ax}$;\ partes: $\int u\,dv=uv-\int v\,du$
+\bul \textbf{Gama:} $\Gamma(\alpha)=\int_0^\infty y^{\alpha-1}e^{-y}dy$
+\bul $\Gamma(\alpha+1)=\alpha\Gamma(\alpha)$;\ $\Gamma(n)=(n-1)!$;\ $\Gamma(\tfrac12)=\sqrt\pi$
+\bul \textbf{Chave:} $\int_0^\infty y^{\alpha-1}e^{-\beta y}dy=\frac{\Gamma(\alpha)}{\beta^\alpha}$
+\bul $\int_0^\infty y^k e^{-\theta y}dy=\frac{k!}{\theta^{k+1}}$
+\bul Densidade integra 1: use para "completar" o núcleo.
+
+\secao{6. Esperança e Variância}
+\bul $\E(aY+b)=a\E Y+b$;\ $\E\sumi a_iY_i=\sumi a_i\E Y_i$
+\bul $\V(aY+b)=a^2\V(Y)$;\ $\V(Y)=\E(Y^2)-[\E Y]^2$
+\bul Indep.: $\V(\sumi a_iY_i)=\sumi a_i^2\V(Y_i)$
+\bul iid: $\E\ybar=\mu$;\ $\V(\ybar)=\sigma^2/n$
+\bul $\E(Y^2)=\V(Y)+\mu^2$;\ $\E(\ybar^2)=\sigma^2/n+\mu^2$
+\bul $\E g(Y)=\int g(y)f(y)dy$ ou $\sum g(y)p(y)$
+\bul Jensen: $g$ convexa $\Rightarrow \E g(Y)\ge g(\E Y)$ (ex.: $\E[1/\ybar]\ge1/\E\ybar$)
+\bul $\E\sumi(Y_i-\ybar)^2=(n-1)\sigma^2$
+
+\secao{7. Distribuições}
+{\scriptsize
+\begin{tabular}{@{}l|l|l|l@{}}
+Dist. & $f(y)$ & $\E Y$ & $\V Y$\\\hline
+$\mathrm{Ber}(p)$ & $p^y(1-p)^{1-y}$ & $p$ & $p(1-p)$\\
+$\mathrm{Bin}(n,p)$ & $\binom ny p^y(1-p)^{n-y}$ & $np$ & $np(1-p)$\\
+$\mathrm{Poi}(\lambda)$ & $\frac{e^{-\lambda}\lambda^y}{y!}$ & $\lambda$ & $\lambda$\\
+$\mathrm{Exp}(\lambda)$ & $\lambda e^{-\lambda y}$ & $1/\lambda$ & $1/\lambda^2$\\
+$\mathrm{Gama}(\alpha,\beta)$ & $\frac{\beta^\alpha}{\Gamma(\alpha)}y^{\alpha-1}e^{-\beta y}$ & $\alpha/\beta$ & $\alpha/\beta^2$\\
+$N(\mu,\sigma^2)$ & $\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(y-\mu)^2}{2\sigma^2}}$ & $\mu$ & $\sigma^2$\\
+$U(a,b)$ & $\frac{1}{b-a}$ & $\frac{a+b}2$ & $\frac{(b-a)^2}{12}$\\
+\end{tabular}}
+\bul \textbf{BN$(\mu,\phi)$:} $f=\frac{\Gamma(y+\phi)}{\Gamma(\phi)y!}\big(\frac{\phi}{\mu+\phi}\big)^\phi\big(\frac{\mu}{\mu+\phi}\big)^y$;\ $\E=\mu$;\ $\V=\mu+\frac{\mu^2}{\phi}$
+\bul \textbf{LogN$(\mu,\sigma^2)$:} $f=\frac{1}{y\sqrt{2\pi\sigma^2}}e^{-\frac{(\ln y-\mu)^2}{2\sigma^2}}$;\ $\ln Y\sim N(\mu,\sigma^2)$;\ $\E=e^{\mu+\sigma^2/2}$
+\bul \textbf{Weibull:} $f=\theta k y^{k-1}e^{-\theta y^k}$;\ $Y^k\sim\mathrm{Exp}(\theta)$
+\bul $f=2\theta y e^{-\theta y^2}$ é Weibull com $k=2$: $Y^2\sim\mathrm{Exp}(\theta)$
+\bul $f=\theta^2ye^{-\theta y}$ é $\mathrm{Gama}(2,\theta)$:\ $\E Y=2/\theta$
+\bul $U(-\theta,\theta)$: $\E Y=0$,\ $\E Y^2=\theta^2/3$
+\bul \textbf{Somas:} $\sum\mathrm{Ber}(p)\sim\mathrm{Bin}(n,p)$;\ $\sum\mathrm{Poi}(\lambda)\sim\mathrm{Poi}(n\lambda)$;\ $\sum\mathrm{Exp}(\lambda)\sim\mathrm{Gama}(n,\lambda)$
+\bul $T\sim\mathrm{Gama}(n,\lambda)$:\ $\E(1/T)=\frac{\lambda}{n-1}$,\ $\E(1/T^2)=\frac{\lambda^2}{(n-1)(n-2)}$
+\bul Normal: $\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}$;\ $\E\chi^2_k=k$,\ $\V\chi^2_k=2k$
+
+\secao{8. Estatísticas de ordem}
+\bul $Y_{(1)}=\min Y_i$;\ $Y_{(n)}=\max Y_i$
+\bul $F_{Y_{(n)}}(y)=[F(y)]^n$;\ $f_{Y_{(n)}}(y)=n[F(y)]^{n-1}f(y)$
+\bul $F_{Y_{(1)}}(y)=1-[1-F(y)]^n$
+\bul $U(0,\theta)$: $f_{Y_{(n)}}=\frac{ny^{n-1}}{\theta^n}$,\ $0<y<\theta$
+\bul $\E Y_{(n)}=\frac{n\theta}{n+1}$;\ $\E Y_{(n)}^2=\frac{n\theta^2}{n+2}$;\ $\V Y_{(n)}=\frac{n\theta^2}{(n+1)^2(n+2)}$
+\bul $\prodi I(y_i\le c)=I(y_{(n)}\le c)$;\ $\prodi I(y_i\ge c)=I(y_{(1)}\ge c)$
+
+\secao{9. Propriedades de estimadores}
+\bul \textbf{Vício:} $B(\hat\theta)=\E\hat\theta-\theta$;\ não viciado se $B=0\ \forall\theta$
+\bul Assint. não viciado: $\lim_{n\to\infty}\E\hat\theta=\theta$
+\bul \textbf{EQM:} $\E(\hat\theta-\theta)^2=\V(\hat\theta)+[B(\hat\theta)]^2$
+\bul \textbf{Cons. médio quadrática:} $\lim_{n\to\infty}\mathrm{EQM}(\hat\theta)=0$\\
+$\iff \lim\V(\hat\theta)=0$ e $\lim B(\hat\theta)=0$
+\bul \textbf{Cons. em probabilidade:} $\forall\varepsilon>0$,\ $\lim_{n\to\infty}P(|\hat\theta-\theta|>\varepsilon)=0$
+\bul \textbf{Chebyshev/Markov:} $P(|\hat\theta-\theta|>\varepsilon)\le\frac{\E(\hat\theta-\theta)^2}{\varepsilon^2}=\frac{\mathrm{EQM}}{\varepsilon^2}$\\
+$\Rightarrow$ cons. MQ implica cons. em prob.
+\bul \textbf{LGN:} $\ybar\xrightarrow{P}\mu$;\ $g$ contínua: $g(\hat\theta)\xrightarrow{P}g(\theta)$
+\bul \textbf{Eficiência relativa:} prefere-se menor EQM; $\frac{\mathrm{EQM}(\hat\theta_1)}{\mathrm{EQM}(\hat\theta_2)}$
+\bul \textbf{Comb. linear} $\sumi a_iY_i$ não viciada p/ $\E Y\iff\sumi a_i=1$
+\bul Ex.: $\frac{Y_1+Y_2}{2}$: $\E=\mu$,\ $\V=\sigma^2/2\not\to0$ $\Rightarrow$ não consistente
+
+\sub{Roteiro (vício, var, EQM, consist.)}
+1) $\E\hat\theta$ por linearidade. 2) $\V\hat\theta$ (indep.). 3) $\mathrm{EQM}=\V+B^2$. 4) $\lim_n\mathrm{EQM}=0$. 5) Chebyshev $\Rightarrow$ cons. em prob.
+
+\sub{Resultados para conferência}
+\bul $\hat p=\ybar$ (Ber): $\V=\frac{p(1-p)}{n}=\mathrm{EQM}$
+\bul $\hat\mu=\ybar$ (Normal): $\V=\frac{\sigma^2}{n}=\mathrm{EQM}$
+\bul $\hat\sigma_2^2=S^2$: $\E=\sigma^2$,\ $\V=\frac{2\sigma^4}{n-1}$
+\bul $\hat\sigma_1^2=\frac{n-1}{n}S^2$: $\E=\frac{n-1}{n}\sigma^2$,\ $B=-\frac{\sigma^2}{n}$,\ $\V=\frac{2(n-1)\sigma^4}{n^2}$,\ $\mathrm{EQM}=\frac{(2n-1)\sigma^4}{n^2}<\frac{2\sigma^4}{n-1}$
+\bul $T_1=Y/n$: $\mathrm{EQM}=\frac{p(1-p)}{n}$
+\bul $T_2=\frac{Y+1}{n+2}$: $B=\frac{1-2p}{n+2}$,\ $\mathrm{EQM}=\frac{np(1-p)+(1-2p)^2}{(n+2)^2}$\\
+nenhum domina em todo $p$ (compare em $p$ perto de $1/2$ vs extremos)
+\bul $U(0,\theta)$, $Y_{(n)}$: $B=-\frac{\theta}{n+1}$,\ $\mathrm{EQM}=\frac{2\theta^2}{(n+1)(n+2)}$
+\bul $U(0,\theta)$, $2\ybar$: $B=0$,\ $\mathrm{EQM}=\frac{\theta^2}{3n}$\ ($Y_{(n)}$ melhor p/ $n>2$)
+
+\secao{10. Método dos Momentos}
+\bul Momento pop.: $\mu_k=\E(Y^k)$;\ amostral: $m_k=\frac1n\sumi Y_i^k$
+\bul \textbf{Passos:} 1) calcule $\E(Y^k)$ em função de $\theta$; 2) iguale $\mu_k(\theta)=m_k$ ($k=1,\dots,$ nº de parâmetros); 3) isole $\theta$.
+\bul Se $\E Y$ não depende de $\theta$ (ex.: $\E Y=0$), use $\E Y^2$.
+\bul $\mathrm{Gama}(2,\theta)$: $\frac2\theta=\ybar\Rightarrow\tilde\theta=\frac{2}{\ybar}$
+\bul $U(0,\theta)$: $\frac\theta2=\ybar\Rightarrow\tilde\theta=2\ybar$
+\bul $U(-\theta,\theta)$: $\frac{\theta^2}{3}=m_2\Rightarrow\tilde\theta=\sqrt{\frac3n\sumi Y_i^2}$
+
+\secao{11. Suficiência}
+\bul \textbf{Fatoração (Neyman):} $T$ é suficiente $\iff$\\
+$L(\theta;\mathbf y)=g(T(\mathbf y);\theta)\,h(\mathbf y)$, $h$ sem $\theta$
+\bul Ex.: $f=2\theta ye^{-\theta y^2}$:\ $L=(2\theta)^n\big(\prodi y_i\big)e^{-\theta\sum y_i^2}$\\
+$g=\theta^ne^{-\theta\sum y_i^2}$,\ $h=2^n\prod y_i$ $\Rightarrow T=\sumi Y_i^2$
+\bul Família exponencial $f=h(y)c(\theta)e^{w(\theta)t(y)}$: $\sumi t(Y_i)$ suficiente
+
+\secao{12. Máxima Verossimilhança}
+\bul $L(\theta)=\prodi f(y_i;\theta)$;\quad $\ell(\theta)=\ln L(\theta)=\sumi\ln f(y_i;\theta)$
+\bul \textbf{Escore:} $U(\theta)=\frac{d\ell(\theta)}{d\theta}$;\ EMV resolve $U(\hat\theta)=0$
+\bul \textbf{Inf. observada:} $I_o(\theta)=-\frac{d^2\ell(\theta)}{d\theta^2}$;\ máximo se $I_o(\hat\theta)>0$
+\bul \textbf{Inf. esperada:} $I_e(\theta)=\E[I_o(\theta)]=\E[U(\theta)^2]$;\ $\E U(\theta)=0$
+\bul iid: $I_e(\theta)=n\,i_1(\theta)$
+
+\sub{Roteiro EMV (regular)}
+1) $L(\theta)$ (agrupe: $c^n$, $\prod$, $e^{\sum}$). 2) $\ell(\theta)$ (log transforma $\prod\to\sum$). 3) $U(\theta)$. 4) $U(\hat\theta)=0$, isole $\hat\theta$. 5) $I_o(\hat\theta)>0$. 6) Troque $y_i$ por $Y_i$ (estimador).
+
+\sub{Suporte depende de $\theta$}
+Escreva $f$ com indicadora; reduza $\prod I$ a $Y_{(1)}$, $Y_{(n)}$. Se $\ell$ é monótona onde $L>0$, o máximo é na \textbf{fronteira}. Não iguale $U=0$.
+\bul $U(0,\theta)$: $\hat\theta=Y_{(n)}$
+\bul $U(0,2\theta+1)$: $\hat\theta=\frac{Y_{(n)}-1}{2}$
+\bul $U(-\theta,\theta)$: $\hat\theta=\max|Y_i|=\max\{-Y_{(1)},Y_{(n)}\}$
+\bul $f=\frac12$, $\theta-1\le x\le\theta+1$: $L=2^{-n}$ constante em $[x_{(n)}-1,\,x_{(1)}+1]$ $\Rightarrow$ EMV \textbf{não único}
+
+\sub{Propriedades do EMV}
+\bul \textbf{Invariância:} EMV de $g(\theta)$ é $g(\hat\theta)$
+\bul Função de estatística suficiente; pode ser viciado em $n$ finito
+\bul Sob regularidade: consistente, assint. não viciado, assint. eficiente
+\bul $\hat\theta\overset{a}{\sim}N\big(\theta,\,I_e(\theta)^{-1}\big)$
+\bul \textbf{Cramér--Rao:} $\hat\theta$ não viciado $\Rightarrow\V(\hat\theta)\ge\frac{1}{I_e(\theta)}$;\ igualdade: eficiente (UMVU)
+\bul Regularidade falha se suporte depende de $\theta$
+
+\sub{EMVs das listas (conferência)}
+{\scriptsize
+\begin{tabular}{@{}l|l|l@{}}
+Modelo & $\hat\theta$ & $I_e$ / obs.\\\hline
+Poi$(\lambda)$ & $\ybar$ & $n/\lambda$; NV, efic.\\
+Ber$(p)$ & $\ybar$ & $\frac{n}{p(1-p)}$; NV, efic.\\
+Exp$(\lambda)$ & $1/\ybar$ & $n/\lambda^2$; $\E=\frac{n\lambda}{n-1}$\\
+Gama, $\alpha$ conh. & $\hat\beta=\alpha/\ybar$ & $n\alpha/\beta^2$\\
+Gama, $\beta$ conh. & $\psi(\hat\alpha)=\ln\beta+\overline{\ln Y}$ & numérico\\
+BN, $\phi$ conh. & $\hat\mu=\ybar$ & $\frac{n\phi}{\mu(\mu+\phi)}$\\
+LogN & $\hat\mu=\overline{\ln Y}$ & NV\\
+ & $\hat\sigma^2=\frac1n\sum(\ln Y_i-\hat\mu)^2$ & viciado\\
+$2\theta ye^{-\theta y^2}$ & $n/\sum Y_i^2$ & $n/\theta^2$\\
+Weibull, $k$ conh. & $n/\sum Y_i^k$ & $n/\theta^2$\\
+$(\theta+1)x^\theta$ & $-\frac{n}{\sum\ln X_i}-1$ & $n/(\theta+1)^2$\\
+\end{tabular}}
+\bul Sem forma fechada ($\psi$, $k$ da Weibull): resolver $U=0$ numericamente
+
+\secao{13. Métodos numéricos}
+\bul \textbf{Newton--Raphson:} $\theta^{(r+1)}=\theta^{(r)}+\frac{U(\theta^{(r)})}{I_o(\theta^{(r)})}$
+\bul \textbf{Escore de Fisher:} troque $I_o$ por $I_e$
+\bul Parada: $|\theta^{(r+1)}-\theta^{(r)}|<\epsilon$; chute inicial: est. de momentos
+\bul \textbf{Weibull, $k$ desconhecido (perfil):} com $\hat\theta(k)=n/\sum y_i^k$,
+$$U(k)=\frac nk+\sumi\ln y_i-\frac{n\sum y_i^k\ln y_i}{\sum y_i^k}=0$$
+\bul $U'(k)$ para N--R: derive cada termo; $\frac{d}{dk}y^k=y^k\ln y$
+\bul Suporte em $\theta$ (ex. 10): não usar N--R; $L$ descontínua, máximo na fronteira
+\end{multicols*}
+\end{document}
