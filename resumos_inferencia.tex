@@ -1,0 +1,554 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2cm]{geometry}
+\usepackage{enumitem}
+
+\newcommand{\vt}[1]{\underset{\sim}{#1}}      % vetor (til embaixo, como no manuscrito)
+\newcommand{\ind}{\perp\!\!\!\perp}
+\setlist[itemize]{label=--}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+% ================================================================
+% PÁGINA 1
+% ================================================================
+\section*{\underline{Inferência Estatística}}
+Resumo 1
+
+\subsection*{\underline{Distribuições Amostrais e Afins}}
+
+\subsubsection*{$\bullet$ \underline{Média amostral ($\sigma^2$ conhecido):}}
+\begin{itemize}
+  \item População: inacessível
+  \item V.a. e distribuição de probabilidade: $Y \sim N(\mu,\sigma^2)$
+  \item Parâmetros de interesse: $\mu$
+  \item A.a.: $Y_1,\ldots,Y_n$, $Y_i \sim N(\mu,\sigma^2)$
+  \item Estimador: $\displaystyle \bar{Y} = \sum_{i=1}^{n}\frac{Y_i}{n}$
+  \item Distribuição amostral: $\displaystyle \bar{Y} = \frac{1}{n}\sum_{i=1}^{n} Y_i \sim N\!\left(\mu,\frac{\sigma^2}{n}\right)$
+  \item Dados: $y_1,\ldots,y_n$, $i$ é $i$-ésima obs.
+  \item Estimativa pontual: $\displaystyle \bar{y} = \frac{1}{n}\sum_{i=1}^{n} y_i$
+  \item Estimativa intervalar:
+\end{itemize}
+\[ IC[\mu,1-\alpha] = \left[\bar{y} - z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\,;\, \bar{y} + z_{\alpha/2}\frac{\sigma}{\sqrt{n}}\right] \]
+\[ e = z_{\alpha/2}\frac{\sigma}{\sqrt{n}} \]
+\[ P\left(z_{LI} < \frac{\bar{y}-\mu}{\sigma/\sqrt{n}} < z_{LS}\right) = 1-\alpha \]
+
+\subsubsection*{$\bullet$ \underline{Proporção amostral}}
+\begin{itemize}
+  \item População: inacessível
+  \item V.a. e dist. de prob.: $Y \sim Ber(p)$
+  \item Parâmetros de interesse: $p$
+  \item A.a.: $Y_1,\ldots,Y_n$, $Y_i \sim Ber(p)$
+  \item Estimador: $\displaystyle \hat{p} = \frac{1}{n}\sum_{i=1}^{n} Y_i$
+  \item Distribuição amostral: $\displaystyle P = \frac{1}{n}\sum_{i=1}^{n} Y_i \sim N\!\left(p,\frac{p(1-p)}{n}\right)$
+  \item Dados: $y_1,\ldots,y_n$ $i$ é $i$-ésimo obs.
+  \item Estimativa pontual: $\displaystyle \hat{p} = \frac{1}{n}\sum_{i=1}^{n} y_i$
+  \item Estimativa intervalar:
+\end{itemize}
+\[ P\left(\hat{p} - z_{\alpha/2}\sqrt{\frac{p(1-p)}{n}} < p < \hat{p} + z_{\alpha/2}\sqrt{\frac{p(1-p)}{n}}\right) = 1-\alpha \]
+\[ IC[p,1-\alpha] = \left[\hat{p} - z_{\alpha/2}\sqrt{\frac{p(1-p)}{n}}\,;\, \hat{p} + z_{\alpha/2}\sqrt{\frac{p(1-p)}{n}}\right] \]
+Intervalo otimista: $p = \hat{p}$\\
+Intervalo conservador: $p = 0.5$
+
+\subsubsection*{$\bullet$ \underline{Variância Amostral}}
+\begin{itemize}
+  \item Pop.: inacessível
+  \item v.a. e dist. prob.: $Y \sim (\mu,\sigma^2)$
+  \item Parâmetro de interesse: $\sigma^2$
+  \item A.a.: $Y_1,\ldots,Y_n$, $Y_i \sim N(\mu,\sigma^2)$
+  \item Estimador: $\displaystyle S^2 = \frac{1}{n-1}\sum_{i=1}^{n}(Y_i-\bar{Y})^2$
+  \item Distribuição Amostral: $\displaystyle \frac{(n-1)}{\sigma^2}S^2 \sim \chi^2_{n-1}$
+  \item Dados: $y_1,\ldots,y_n$, $i$ é a $i$-ésima obs.
+  \item Estimativa pontual: $\displaystyle s^2 = \frac{1}{n-1}\sum_{i=1}^{n}(y_i-\bar{y})^2$
+  \item Estimativa intervalar:
+\end{itemize}
+\[ P\left(\frac{(n-1)s^2}{\chi^2_{(\alpha/2,\,n-1)}} < \sigma^2 < \frac{(n-1)s^2}{\chi^2_{(1-\alpha/2,\,n-1)}}\right) = 1-\alpha \]
+\[ IC[\sigma^2,1-\alpha] = \left[\frac{(n-1)s^2}{\chi^2_{(\alpha/2,\,n-1)}}\,;\,\frac{(n-1)s^2}{\chi^2_{(1-\alpha/2,\,n-1)}}\right] \]
+$e = \;?$ (Como se calcula o erro da estimativa intervalar da variância amostral?)
+
+\subsubsection*{$\bullet$ \underline{Média amostral ($\sigma^2$ desconhecido)}}
+\begin{itemize}
+  \item Pop.: inacessível
+  \item v.a. e dist. prob.: $Y \sim N(\mu,\sigma^2)$
+  \item Parâmetro de interesse: $\mu$
+  \item A.a.: $Y_1,\ldots,Y_n$, $Y_i \sim N(\mu,\sigma^2)$
+  \item Estimador: $\displaystyle \bar{Y} = \frac{1}{n}\sum_{i=1}^{n} Y_i$
+  \item Distribuição amostral: $\displaystyle T = \frac{\bar{Y}-\mu}{S/\sqrt{n}} \sim t_{n-1}$
+  \item Dados: $y_1,\ldots,y_n$, $i$ é $i$-ésima obs.
+  \item Estimativa pontual: $\displaystyle \bar{y} = \frac{1}{n}\sum_{i=1}^{n} y_i$, \quad $\displaystyle t = \frac{\bar{y}-\mu}{s/\sqrt{n}}$, \quad $\displaystyle s = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}(y_i-\bar{y})^2}$
+  \item Estimativa intervalar:
+\end{itemize}
+\[ P\left(t_{\alpha/2,n-1} < \frac{\bar{y}-\mu}{s/\sqrt{n}} < t_{\alpha/2,n-1}\right) = 1-\alpha \]
+\[ P\left(\bar{y} - t_{\alpha/2,n-1}\frac{s}{\sqrt{n}} < \mu < \bar{y} + t_{\alpha/2,n-1}\frac{s}{\sqrt{n}}\right) = 1-\alpha \]
+\[ IC[\mu,1-\alpha] = \left[\bar{y} - t_{\alpha/2,n-1}\frac{s}{\sqrt{n}}\,;\,\bar{y} + t_{\alpha/2,n-1}\frac{s}{\sqrt{n}}\right] \]
+\[ e = t_{\alpha/2,n-1}\cdot s/\sqrt{n} \]
+
+% ================================================================
+% PÁGINA 2
+% ================================================================
+\subsubsection*{$\bullet$ \underline{Razão entre duas variâncias}}
+\begin{itemize}
+  \item População: inacessível
+  \item V.a. e dist. prob.:
+  \begin{itemize}[label=$\cdot$]
+    \item $X \sim N(\mu_1,\sigma_1^2)$
+    \item $Y \sim N(\mu_2,\sigma_2^2)$
+    \item $X \ind Y$
+  \end{itemize}
+  \item Parâmetros de interesse: $\dfrac{\sigma_1^2}{\sigma_2^2}$
+  \item A.a.:
+  \begin{itemize}[label=$\cdot$]
+    \item $X_1,\ldots,X_m$, $X_i \sim N(\mu_1,\sigma_1^2)$
+    \item $Y_1,\ldots,Y_n$, $Y_i \sim N(\mu_2,\sigma_2^2)$
+  \end{itemize}
+  \item Estimador:
+  \begin{itemize}[label=$\cdot$]
+    \item $\displaystyle S_1^2 = \frac{1}{m-1}\sum_{i=1}^{m}(X-\bar{X})^2$
+    \item $\displaystyle S_2^2 = \frac{1}{n-1}\sum_{i=1}^{n}(Y-\bar{Y})^2$
+    \item $\displaystyle F_0 = \frac{S_1^2}{S_2^2}\cdot\frac{\sigma_2^2}{\sigma_1^2}$
+  \end{itemize}
+  \item Distribuição amostral:
+  \begin{itemize}[label=$\cdot$]
+    \item $S_1^2 \sim \chi^2_{m-1}$, \quad $S_2^2 \sim \chi^2_{n-1}$
+    \item $\displaystyle F_0 = \frac{S_1^2}{S_2^2}\,\frac{\sigma_2^2}{\sigma_1^2} \sim F_{m-1,\,n-1}$
+  \end{itemize}
+  \item Dados: $x_1,\ldots,x_m$, $m$-ésimo obs.; \; $y_1,\ldots,y_n$, $n$-ésimo obs.
+  \item Estimativa pontual:
+  \begin{itemize}[label=$\cdot$]
+    \item $\displaystyle f = \frac{s_1^2}{s_2^2}\cdot\frac{\sigma_2^2}{\sigma_1^2}$
+    \item $\displaystyle s_1^2 = \frac{1}{m-1}\sum_{i=1}^{m}(x-\bar{x})^2$
+    \item $\displaystyle s_2^2 = \frac{1}{n-1}\sum_{i=1}^{n}(y-\bar{y})^2$
+  \end{itemize}
+  \item Estimativa intervalar:
+\end{itemize}
+\[ P\left(\frac{s_1^2}{s_2^2}\cdot\frac{1}{F_{\alpha/2,\,m-1,\,n-1}} < \frac{\sigma_1^2}{\sigma_2^2} < \frac{s_1^2}{s_2^2}\,\frac{1}{F_{\alpha/2,\,m-1,\,m-1}}\right) = 1-\alpha \]
+\[ IC\left[\frac{\sigma_1^2}{\sigma_2^2};1-\alpha\right] = \left[\frac{s_1^2}{s_2^2}\,F_{\alpha/2;\,n-1,\,m-1}\,;\,\frac{s_1^2}{s_2^2}\,F_{1-\alpha/2;\,n-1,\,m-1}\right] \]
+\[ e = \;? \]
+
+\subsubsection*{$\bullet$ \underline{Diferença de Médias ($\sigma_1^2$ e $\sigma_2^2$ conhecidos)}}
+\begin{itemize}
+  \item Pop.: inacessível
+  \item V.a. e dist. prob.:
+  \begin{itemize}[label=$\cdot$]
+    \item $X \sim N(\mu_1,\sigma_1^2)$
+    \item $Y \sim N(\mu_2,\sigma_2^2)$
+  \end{itemize}
+  \item Parâmetros de interesse: $\mu_1-\mu_2$
+  \item A.a.:
+  \begin{itemize}[label=$\cdot$]
+    \item $X_1,\ldots,X_m$, $X_i \sim N(\mu_1,\sigma_1^2)$
+    \item $Y_1,\ldots,Y_n$, $Y_i \sim N(\mu_2,\sigma_2^2)$
+  \end{itemize}
+  \item Estimador: $\displaystyle \bar{X}-\bar{Y} = \frac{1}{m}\sum_{i=1}^{m}X_i - \frac{1}{n}\sum_{i=1}^{n}Y_i$
+  \item Distribuição amostral: $\displaystyle \bar{X}-\bar{Y} \sim N\!\left(\mu_1-\mu_2,\frac{\sigma^2}{m}+\frac{\sigma^2}{n}\right)$
+  \item Dados: $x_1,\ldots,x_m$, $y_1,\ldots,y_n$.
+  \item Estimativa pontual: $\displaystyle \bar{x}-\bar{y} = \frac{1}{m}\sum_{i=1}^{m}x_i - \frac{1}{n}\sum_{i=1}^{n}y_i$
+  \item Estimativa intervalar:
+\end{itemize}
+\[ IC[\mu_1-\mu_2,1-\alpha] = \left[(\bar{x}-\bar{y}) - z_{\alpha/2}\cdot s_{\bar{x}-\bar{y}}\,,\,(\bar{x}-\bar{y}) + z_{\alpha/2}\,s_{\bar{x}-\bar{y}}\right] \]
+\[ s_{\bar{x}-\bar{y}} = \sqrt{\frac{\sigma_1^2}{m}+\frac{\sigma_2^2}{n}} \]
+
+\subsubsection*{$\bullet$ \underline{Diferença de Médias ($\sigma_1^2$ e $\sigma_2^2$ desconhecidos e iguais)}}
+\begin{itemize}
+  \item Pop.: inacessível
+  \item V.a. e dist. prob.: $X \sim N(\mu_1,\sigma^2)$, \; $Y \sim N(\mu_2,\sigma^2)$
+  \item Parâmetros de interesse: $\mu_1-\mu_2$
+  \item A.a.: $X_1,\ldots,X_m$ $X_i \sim N(\mu_1,\sigma^2)$; \; $Y_1,\ldots,Y_n$ $Y_i \sim N(\mu_2,\sigma^2)$
+  \item Estimador:
+\end{itemize}
+\[ T = \frac{(\bar{X}-\bar{Y})-(\mu_1-\mu_2)}{\sqrt{\left(\frac{1}{m}+\frac{1}{n}\right)\frac{(m-1)S_1^2+(n-1)S_2^2}{m+n-2}}} \sim t_{m+n-2} \]
+\[ S_p^2 = \frac{(m-1)S_1^2+(n-1)S_2^2}{m+n-2}; \]
+é a média das variâncias amostrais ponderada pelos tamanhos de amostra.
+\begin{itemize}
+  \item Dist. amostral: $T \sim t_{m+n-2}$
+  \item Dados: $x_1,\ldots,x_m$; $y_1,\ldots,y_n$.
+  \item Estimativa pontual: $\displaystyle (\bar{x}-\bar{y}) = \frac{1}{m}\sum_{i=1}^{m}x_i - \frac{1}{n}\sum_{i=1}^{n}y_i$
+  \item Estimativa intervalar:
+\end{itemize}
+\[ IC[\mu_1-\mu_2;1-\alpha] = \left[(\bar{x}-\bar{y}) - t_{\alpha/2,\,m+n-2}\,s_{\bar{x}-\bar{y}}\,;\,(\bar{x}-\bar{y}) + t_{\alpha/2,\,m+n-2}\,s_{\bar{x}-\bar{y}}\right] \]
+\[ s_{\bar{x}-\bar{y}} = \sqrt{s_p\left(\frac{1}{m}+\frac{1}{n}\right)}, \]
+\[ s_p^2 = \frac{(m-1)s_1^2+(n-1)s_2^2}{m+n-2}, \]
+\[ s_1^2 = \frac{1}{m}\sum_{i=1}^{m}x_i \quad\text{e}\quad s_2^2 = \frac{1}{n}\sum_{i=1}^{n}y_i. \]
+\[ e = t_{\alpha/2,\,m+n-2}\cdot s_{\bar{x}-\bar{y}} \]
+
+\subsubsection*{$\bullet$ \underline{Diferença de Médias ($\sigma_1^2$ e $\sigma_2^2$ desconhecidos e diferentes)}}
+\begin{itemize}
+  \item Estimador:
+\end{itemize}
+\[ T = \frac{(\bar{X}-\bar{Y})-(\mu_1-\mu_2)}{\sqrt{\frac{S_1^2}{m}+\frac{S_2^2}{n}}} \]
+\begin{itemize}
+  \item Dist. amostral: $T \sim t_\nu$
+\end{itemize}
+\[ \nu = \frac{\frac{S_1^2}{m}+\frac{S_2^2}{n}}{\frac{\left(\frac{S_1^2}{m}\right)}{m-1}+\frac{\left(\frac{S_2^2}{n}\right)}{n-1}} \]
+\begin{itemize}
+  \item Estimativa intervalar:
+\end{itemize}
+\[ IC[\mu_1-\mu_2,1-\alpha] = \left[(\bar{x}-\bar{y}) - t_{\alpha/2,\nu}\cdot s_{\bar{x}-\bar{y}}\,;\,(\bar{x}-\bar{y}) + t_{\alpha/2}\cdot s_{\bar{x}-\bar{y}}\right] \]
+
+% ================================================================
+% PÁGINA 3
+% ================================================================
+\section*{\underline{Inferência Estatística} -- Resumo 1}
+
+\subsection*{\underline{Sequência de V.a's:}}
+Sejam $X_1,\ldots,X_n$ v.a.'s. Para uma função $g(\cdot)$, define-se uma sequência de v.a.'s como:
+\[ Y_1 = g(X_1),\ldots,\; Y_n = g(X_1,\ldots,X_n) \]
+
+\subsection*{\underline{Convergência em Probabilidade}}
+Sejam $Y_1,\ldots,Y_n$ uma sequência de v.a.'s. $Y_n$ converge em probabilidade para $Y$ se $\forall\,\varepsilon>0$, tem-se:
+\[ \lim_{n\to\infty} P(|Y_n-Y|>\varepsilon) = 0 \iff Y_n \xrightarrow{\;P\;} Y \]
+
+\subsection*{\underline{Desigualdade de Markov}}
+$Y$ é v.a. não-negativa com $E[Y]=\mu$ e seja $\varepsilon>0$. Então
+\[ P(Y\geq\varepsilon) \leq \frac{E[Y]}{\varepsilon} \]
+Dem.:
+\[ E[Y] = \int_0^\infty y f_Y(y)\,dy \geq \underbrace{\int_\varepsilon^\infty \varepsilon f_Y(y)\,dy}_{\varepsilon P(Y\geq\varepsilon)} \]
+\[ \Rightarrow E[Y] \geq \varepsilon P(Y\geq\varepsilon) \;\blacksquare \]
+
+\subsection*{\underline{Desigualdade de Tchebychev}}
+$Y$ é v.a. com $E[Y]=\mu$ e $var[Y]=\sigma^2$ finitos. $\forall\,\varepsilon>0$, tem-se
+\[ P(|Y-\mu|\geq\varepsilon) \leq \frac{var[Y]}{\varepsilon^2} = \frac{\sigma^2}{\varepsilon^2} \]
+Dem.:
+\[ P(|Y-\mu|>\varepsilon) = P((Y-\mu)^2>\varepsilon^2) \leq \frac{E[(Y-\mu)^2]}{\varepsilon^2} = \frac{var[Y]}{\varepsilon^2} = \frac{\sigma^2}{\varepsilon^2} \]
+
+\subsection*{\underline{Leis dos Grandes Números}}
+$Y_1,\ldots,Y_n$ v.a.'s i.i.d. com $E[Y_i]=\mu$ e $var[Y_i]=\sigma^2$.
+\[ \bar{Y} = \frac{1}{n}\sum_{i=1}^{n}Y_i \xrightarrow[n\to\infty]{P} E[Y_i] = \mu \]
+\[ \lim_{n\to\infty} P(|\bar{Y}_n-\mu|>\varepsilon) = 0 \Rightarrow \bar{Y} \xrightarrow[n\to\infty]{P} \mu \]
+
+\subsection*{\underline{Convergência em Distribuição}}
+$Y_1,\ldots,Y_n$ uma sequência de v.a.'s. $Y_n$ converge em distribuição para $Y$ com f.d.a. $F_Y(\cdot)$ se
+\[ F_{Y_n}(y) = P(Y_n\leq y) \to F_Y(y) = P(Y\leq y) \]
+\[ Y_n \xrightarrow[n\to\infty]{D} Y \]
+
+\subsection*{\underline{Teorema Central do Limite}}
+$Y_1,\ldots,Y_n$ v.a.'s i.i.d. com $E[Y_i]=\mu$ e $var[Y_i]=\sigma^2$. Então:
+\[ \frac{\bar{Y}-\mu}{\sigma/\sqrt{n}} \xrightarrow{\;D\;} Z \sim N(0,1) \]
+\[ \iff \bar{Y} \overset{A}{\sim} N\!\left(\mu,\frac{\sigma^2}{n}\right) \]
+$\hookrightarrow$ [$n\to\infty$ e $Y\sim N(\mu,\sigma^2)$
+
+``A v.a. das médias de v.a.'s i.n.d. distribui-se normalmente com $E[\cdot]=\mu$ e $var[\cdot]=\sigma^2/n$.
+
+Estatísticas amostrais são v.a.'s i.n.d.''
+
+\subsection*{\underline{Distribuição Amostral}}
+A distribuição amostral de uma estatística $h(\mathbf{Y})$ é a distribuição de probabilidades da v.a. $H(\mathbf{Y})$.
+
+\subsection*{\underline{Procedimento de Inferência Estatística}}
+\begin{enumerate}[label=\arabic*.]
+  \item \underline{População}: inacessível;
+  \item \underline{V.a. populacional}: descreve a população;
+  \item \underline{Distribuição de probabilidade}: descreve a v.a. populacional;
+  \item \underline{Parâmetro populacional}: característica de interesse;
+  \item \underline{Amostra aleatória}: população acessível. \\ $X_1,\ldots,X_n$ i.i.d.;
+  \item \underline{Estimador}: sequência de v.a.'s sobre uma a.a. \\ $T(X_1,\ldots,X_n)$;
+  \item \underline{Distribuição amostral}: distribuição de probabilidades do estimador;
+  \item \underline{Dados}: coleção limitada de fatos sobre a população, originando uma amostra aleatória;
+  \item \underline{Estimativa pontual}: resultado da estatística;
+  \item \underline{Estimativa intervalar}: erro do resultado da estatística.
+  \item \underline{Interpretação de resultados}
+\end{enumerate}
+
+\subsection*{\underline{Distribuições Amostrais Estudadas}}
+\begin{itemize}[label=$\cdot$]
+  \item Média amostral ($\sigma^2$ conhecido)
+  \item Proporção amostral
+  \item Média amostral ($\sigma^2$ desconhecido)
+  \item Variância amostral
+  \item Diferença de médias:
+  \begin{itemize}[label=--]
+    \item $\sigma_1^2$ e $\sigma_2^2$ conhecidos
+    \item $\sigma_1^2$ e $\sigma_2^2$ desconhecidos
+    \begin{itemize}[label=$\cdot$]
+      \item $\sigma_1^2=\sigma_2^2$
+      \item $\sigma_1^2\neq\sigma_2^2$
+    \end{itemize}
+  \end{itemize}
+  \item Razão entre duas variâncias
+\end{itemize}
+
+% ================================================================
+% PÁGINA 4
+% ================================================================
+\section*{\underline{Inferência Estatística} -- Resumo 2}
+
+\subsection*{\underline{Estimação de Parâmetros}}
+
+\subsubsection*{$\cdot$ \underline{Estimadores (não) viesados.}}
+\[ E[\hat{\theta}] = \theta \quad (\hat{\theta} \text{ é não-viesado}) \]
+
+\subsubsection*{$\cdot$ \underline{Viés}}
+\[ B[\hat{\theta}] = E[\hat{\theta}-\theta] = E[\hat{\theta}]-\theta. \]
+\[ B[\hat{\theta}] = 0 \quad (\hat{\theta} \text{ é não-viciado}) \]
+
+\subsubsection*{$\cdot$ \underline{Assintoticamente não-viciado}}
+\[ E[\hat{\theta}] \xrightarrow[n\to\infty]{A} \theta \]
+
+\subsubsection*{$\cdot$ \underline{Variância de um estimador}}
+
+\subsubsection*{$\cdot$ \underline{Erro Quadrático Médio de um Estimador: Comparar estimadores.}}
+\[ EQM[\hat{\theta}] = var[\hat{\theta}] + B^2[\hat{\theta}] = E[(\hat{\theta}-\theta)^2]. \]
+
+\subsubsection*{$\cdot$ \underline{Eficiência relativa}}
+\[ Ef_r[\hat{\theta}_1,\hat{\theta}_2] = \frac{EQM[\hat{\theta}_1]}{EQM[\hat{\theta}_2]} \]
+
+\subsubsection*{$\cdot$ \underline{Consistência de um estimador}}
+\[ E[\hat{\theta}] \xrightarrow[n\to\infty]{A} \theta \quad (\hat{\theta} \text{ não viesado assintoticamente}) \]
+\begin{center} e \end{center}
+\[ EQM[\hat{\theta}] \xrightarrow[n\to\infty]{} 0 \quad (\hat{\theta} \text{ é quadrático médio consistente}) \]
+\[ P(|\hat{\theta}-\theta|>\varepsilon) \xrightarrow[n\to\infty]{} 0 \quad (\hat{\theta} \text{ consistente em probabilidade}) \]
+
+\subsubsection*{$\cdot$ \underline{Método dos Momentos}}
+Seja uma a.a. $Y_1,\ldots,Y_n$ de uma v.a. $Y$.
+\begin{itemize}
+  \item $r$-ésimo momento amostral da a.a. $Y_1,\ldots,Y_n$:
+  \[ m_r = \frac{1}{n}\sum_{i=1}^{n} Y_i^r,\quad r\geq 1 \]
+  \item $r$-ésimo momento populacional da v.a. $Y$:
+  \[ \mu_r = E[Y^r],\quad r\geq 1 \]
+  \item O método dos momentos consiste na obtenção de estimadores para $\vt{\theta} = (\theta_1,\ldots,\theta_p)^T$ resolvendo o seguinte sistema de eq.:
+\end{itemize}
+\[ m_r = \mu_r,\quad r=1,\ldots,p \iff
+\begin{bmatrix} m_1 \\ \vdots \\ m_p \end{bmatrix} =
+\begin{bmatrix} \mu_1 \\ \vdots \\ \mu_p \end{bmatrix} \]
+$p$ é o $p$-ésimo parâmetro.
+
+\subsubsection*{$\cdot$ \underline{Método da Quantidade Pivotal}}
+\begin{itemize}
+  \item A v.a. $Q(\mathbf{y};\theta)$ é quantidade pivotal para $\theta$ (desconhecido) se sua distribuição não depender de $\theta$.
+\end{itemize}
+
+\medskip
+$\ast$ Sintetiza o não viesamento assintótico e a média quadrática consistência !!!
+\[ P(|\hat{\theta}-\theta|>\varepsilon) \leq \frac{var[\hat{\theta}]}{\varepsilon^2} \]
+
+\medskip
+$\ast$ Obter o valor máximo de $\theta$ que maximiza a probabilidade de ter gerado a amostra observada!
+
+\subsubsection*{$\cdot$ \underline{Método da Máxima Verossimilhança}}
+\begin{itemize}
+  \item Seja $Y_1,\ldots,Y_n$ uma a.a. da v.a. $Y$ com f.p. ou f.d.p. $f(y;\vt{\theta})$, em que $\vt{\theta}\in\vt{\Theta}$, \\
+  $\vt{\theta} = (\theta_1,\ldots,\theta_p)^T$ é o vetor de parâmetros desconhecidos.
+  \item A a.a. é i.i.d. A sua distribuição conjunta é
+  \[ f_{a.a.}(y;\vt{\theta}) = \prod_{i=1}^{n} f(y_i;\vt{\theta}) \]
+  \item Função de Verossimilhança:
+  \[ L(\vt{\theta}\,|\,y) = \prod_{i=1}^{n} f(y_i\,|\,\vt{\theta}) \]
+  \item Log-Verossimilhança:
+  \[ \ell(\vt{\theta}\,|\,y) = \ln L(\vt{\theta},y) \]
+  \item Vetor escore ($1\times p$)
+  \[ U(\vt{\theta}\,|\,y) = \frac{\partial}{\partial\vt{\theta}}\,\ell(\vt{\theta}\,|\,y) = \nabla_{\vt{\theta}}\,\ell(\vt{\theta},y) \]
+  \item Informação Esperada ($p\times p$)
+  \[ I_E(\vt{\theta}) = var[U(\vt{\theta}\,|\,\vt{Y})] = E[U(\vt{\theta}\,|\,\vt{Y})\,U^T(\vt{\theta}\,|\,\vt{Y})] \]
+  \[ I_{jk}(\vt{\theta}) = cov[U_j(\vt{\theta}\,|\,\vt{Y}),U_k(\vt{\theta}\,|\,\vt{Y})] = E[U_j(\vt{\theta}\,|\,\vt{Y})\,U_k(\vt{\theta}\,|\,\vt{Y})] \]
+  \item Informação Observada ($p\times p$)
+  \[ I_O(\vt{\theta}) = -H(\vt{\theta}) = -\frac{\partial^2\ell(\vt{\theta}\,|\,y)}{\partial\vt{\theta}\,\partial\vt{\theta}^T} \]
+  \[ I_E(\vt{\theta}) = E[I_O(\vt{\theta})] \]
+\end{itemize}
+
+% ================================================================
+% PÁGINA 5
+% ================================================================
+\subsubsection*{$\bullet$ \underline{Método da Máxima Verossimilhança (continuação)}}
+\begin{itemize}
+  \item Igualdade de Bartlett \\
+  Sob as condições de regularidade, vale:
+  \begin{itemize}[label=$\cdot$]
+    \item $E[U(\vt{\theta}\,|\,\mathbf{Y})] = \vt{0}$
+    \item $I_E[\vt{\theta}] = var[U(\theta\,|\,\mathbf{Y})] = E[U^2(\theta\,|\,\mathbf{Y})]$
+  \end{itemize}
+  \item Desigualdade de Cramer-Rao
+  \begin{itemize}[label=$\cdot$]
+    \item Se $T = T(Y_1,\ldots,Y_n)$ é estimador não-viesado para $\theta$, então $var[T]\geq I_E^{-1}[\theta]$, onde $I_E^{-1}[\theta]$ é o limite inferior de Cramer-Rao (LICR).
+    \item Se $T$ possui $var[T] = I_E^{-1}[\theta]$, então $T$ é \underline{eficiente}.
+  \end{itemize}
+  \item Ortogonalidade Paramétrica
+  \begin{itemize}[label=$\cdot$]
+    \item Se um modelo é parametrizado por $\vt{\theta} = (\theta_1,\theta_2)^T$ e $I_E^{-1}[\vt{\theta}]$ for diagonal, então $\hat{\theta}_1$ e $\hat{\theta}_2$ são \underline{ortogonais} e \underline{assintoticamente independentes}
+  \end{itemize}
+  \item \underline{Método Delta}
+  \[ \widehat{g(\theta)} = g(\hat{\theta}) \overset{A}{\sim} N\!\left(g(\theta),[g'(\theta)]^2 I_E^{-1}(\theta)\right) \]
+  \[ LICR(g(\theta)) = [g'(\theta)]^2\cdot I_E^{-1}(\theta) \]
+  \item Métodos iterativos para Estimação por Máxima Verossimilhança
+  \begin{itemize}[label=$\cdot$]
+    \item Método de Newton-Raphson
+    \begin{itemize}
+      \item Não existe solução analítica
+      \item $\displaystyle \theta^{j+1} = \theta^j - \frac{U(\theta^j)}{U'(\theta^j)}$
+      \item $\theta_0$ é o chute inicial obtido pelo Método dos Momentos
+      \item Critério de parada:
+      \[ |\theta^{j+1}-\theta^j| < \varepsilon \text{ (arbitrário)} \]
+      \[ \left(\theta^{j+1} = \theta^j - H^{-1}(\vt{\theta}^j)\,U(\vt{\theta}^j)\right) \]
+    \end{itemize}
+    \item Método Escore de Fischer
+    \begin{itemize}
+      \item $\vt{\theta}^{j+1} = \vt{\theta}^j + I_E^{-1}(\vt{\theta}^j)\,U(\vt{\theta}^j)$
+      \item optim(.) no R programming language.
+    \end{itemize}
+  \end{itemize}
+  \item Estatística Suficiente
+  \[ f(y;\theta) = g(y)\,h(T(y);\theta) \]
+  em que $h$ depende de $y$ apenas via $T(y)$ e $g$ não depende de $\theta$. \\
+  (Fatoração de Neyman) \\
+  Todo EMV é função de uma estatística suficiente.
+  \item Invariância \\
+  $Y_1,\ldots,Y_n$ é a.a. da v.a. $Y\sim(\cdot) \Rightarrow f_Y(y;\theta) = f(\cdot)$ \\
+  Se $\hat{\theta}$ é EMV de $\theta$, então $g(\hat{\theta})$ é EMV $g(\theta)$.
+  \item Propriedades Assintóticas da Função Escore
+  \[ U(\theta\,|\,\mathbf{Y}) \overset{A}{\sim} N(0,I_E(\theta)) \]
+  \[ \underset{TCL}{\Rightarrow}\; \frac{U(\theta\,|\,\mathbf{Y}) - E[U(\theta\,|\,\mathbf{Y})]}{\sqrt{var[U(\theta\,|\,\mathbf{Y})]}} \overset{A}{\sim} N(0,1) \]
+  \item Propriedades assintóticas do EMV de $\theta$
+  \begin{itemize}[label=$\cdot$]
+    \item $\hat{\theta}$ é constante:
+    \[ \hat{\theta} \xrightarrow{\;P\;} \theta \Rightarrow P(|\hat{\theta}-\theta|\geq\varepsilon) \xrightarrow{\;A\;} 0 \]
+    \item $\hat{\theta}$ é assintoticamente normal
+    \[ \hat{\theta} \sim N(\theta,I_E^{-1}(\theta)) \]
+    \item $\hat{\theta}$ é o melhor estimador para $\theta$ quando $n$ é grande (eficiência)
+  \end{itemize}
+\end{itemize}
+
+% ================================================================
+% PÁGINA 6
+% ================================================================
+\section*{\underline{Inferência Estatística} -- Resumo 3}
+
+\subsection*{\underline{Estimação Intervalar}}
+
+\subsubsection*{$\cdot$ \underline{Baseada na Distribuição Amostral (Frequentista)}}
+i) Se conhecemos a distribuição de probabilidade de $\hat{\theta}$, então basta encontrarmos a sua quantidade pivotal e tomá-la como distribuição amostral
+
+ii) Se a distribuição de probabilidade para $\hat{\theta}$ é desconhecida:
+\[ \hat{\theta} \overset{A}{\sim} N(\theta,I_E^{-1}(\theta)) \iff Z = \underbrace{\frac{\hat{\theta}-\theta}{\sqrt{I_E^{-1}(\theta)}}}_{\text{qtd. pivotal}} \overset{A}{\sim} N(0,1) \]
+Intervalo de Wald
+\[ IC[\hat{\theta};1-\alpha] = \hat{\theta} \pm z_{\alpha/2}\sqrt{I_E^{-1}(\hat{\theta})} \]
+\[ g(\hat{\theta}) \overset{A}{\sim} N\!\left(g(\theta),\frac{[g'(\theta)]^2}{I_E(\theta)}\right) \iff Z = \frac{g(\hat{\theta})-g(\theta)}{\sqrt{\frac{[g'(\hat{\theta})]^2}{I_E(\hat{\theta})}}} \sim N(0,1) \]
+Intervalo de Wald
+\[ IC[g(\theta);1-\alpha] = g(\hat{\theta}) \pm z_{\alpha/2}\sqrt{\frac{[g'(\hat{\theta})]^2}{I_E(\hat{\theta})}} \]
+Caso Multiparamétrico
+\begin{itemize}[label=$\cdot$]
+  \item $\hat{\vt{\theta}} \overset{A}{\sim} N_p(\vt{\theta};I_E^{-1}(\vt{\theta}))$
+  \item $J = I_E^{-1}(\theta)$
+\end{itemize}
+\[ (\hat{\vt{\theta}}-\vt{\theta})^T\,\vt{J}^{-1}(\hat{\vt{\theta}}-\theta) \sim \chi^2_p \]
+\[ \vt{J}_{ij} = cov[\theta_i,\theta_j]. \]
+Se $\hat{\theta}_i$ são independentes,
+\[ \vt{J}_{ij} = cov[\theta_i,\theta_j] = 0 \Rightarrow \]
+$\Rightarrow \vt{J}$ é uma matriz diagonal \\
+Podemos, então, usar:
+\[ \hat{\theta}_i \overset{A}{\sim} N(\theta_i,J_{ii}) \]
+\[ Z = (\hat{\theta}_i-\theta_i)\,J_{ii}^{-1/2} = \frac{(\hat{\theta}_i-\theta_i)}{J_{ii}^{1/2}} \]
+\[ IC[\theta_i;1-\alpha] = \hat{\theta}_i \pm z_{\alpha/2}\,J^{1/2} \]
+se $\theta_i$'s independentes
+
+\subsubsection*{$\cdot$ \underline{Baseada na Verossimilhança}}
+\underline{Deviance Exata}:
+\[ \theta : L(\theta)\geq r L(\hat{\theta}) \iff \]
+\[ \iff \theta : D(\theta)\leq c^* \quad (c^* = -2\ln r) \]
+Dificilmente obtido analiticamente
+
+\underline{Deviance Aproximada}: (por expansão das Séries de Taylor)
+\[ D(\theta) \cong \frac{(\hat{\theta}-\theta)^2}{\sqrt{1/I_O(\hat{\theta})}} \overset{A}{\sim} \chi^2_1 \]
+\[ \theta : D(\theta)\leq c^* = \chi^2_1 \]
+\underline{Intervalo Deviance}:
+\[ \theta : \hat{\theta} \pm \sqrt{\frac{\chi^2_{1,\alpha}}{I_O(\hat{\theta})}} \]
+\[ D(\theta)\leq c^* = \chi^2_{1,\alpha} \Rightarrow \]
+\[ \Rightarrow \frac{L(\theta)}{L(\hat{\theta})} \geq r = e^{-c^*/2} \]
+
+\subsubsection*{$\cdot$ \underline{Baseada na Verossimilhança Relativa}}
+\[ LR(\theta)\geq r \Rightarrow \frac{L(\theta)}{L(\hat{\theta})}\geq r \]
+\[ \iff \ln L(\theta) - \ln L(\hat{\theta}) \geq \ln r \iff \]
+\[ \iff 2(\ell(\theta)-\ell(\hat{\theta})) \geq 2\ln r \iff \]
+\[ \iff -2(\ell(\theta)-\ell(\hat{\theta})) < -2\ln r \iff \]
+\[ \iff D(\theta) \leq -2\ln r = c^* = \chi^2_{1,1-\alpha} \]
+\[ \Rightarrow r = e^{-\chi^2_{1,1-\alpha}/2} \]
+\[ LR: L(\theta)\geq r L(\hat{\theta}) \]
+(daqui se chega no intervalo baseado na deviance)
+
+\subsection*{\underline{Testes de Hipótese}}
+\subsubsection*{$\cdot$ \underline{Procedimentos Gerais}}
+\begin{enumerate}[label=\arabic*)]
+  \item Definição das hipóteses nula e alternativa;
+  \item Definir o nível de significância ($\alpha$);
+  \item Definir o tipo de teste com base em $H_1$;
+  \item Calcular a estatística de teste com base na distribuição amostral do estimado do parâmetro sob teste;
+  \item Determinar a região crítica (região de rejeição de $H_0$) baseado em $\alpha$
+  \item Concluir o teste
+\end{enumerate}
+
+% ================================================================
+% PÁGINA 7
+% ================================================================
+\section*{\underline{Testes de Hipótese}}
+
+\subsection*{1) \underline{Definição das hipóteses}}
+\begin{itemize}[label=$\cdot$]
+  \item Bilateral: \\
+  $H_0: \theta=\theta_0 \;\times\; H_1: \theta\neq\theta_0$
+  \item Unilateral à direita \\
+  $H_0: \theta=\theta_0 \;\times\; H_1: \theta>\theta_0$
+  \item Unilateral à esquerda \\
+  $H_0: \theta=\theta_0 \;\times\; H_1: \theta<\theta_0$
+\end{itemize}
+
+\subsection*{2) \underline{Nível de Significância}}
+\begin{center}
+\begin{tabular}{l|l|l}
+ & $H_0$ Verdadeiro & $H_0$ Falso \\ \hline
+Rejeitar $H_0$ & erro tipo I & OK \\ \hline
+Não rejeitar $H_0$ & OK & erro tipo II
+\end{tabular}
+\end{center}
+\[ \alpha = P(\text{erro tipo I}) = P(\text{rejeitar } H_0 \,|\, H_0 \text{ Verdadeiro}) \]
+\[ \beta = P(\text{erro tipo II}) = P(\text{não rejeitar } H_0 \,|\, H_0 \text{ falso}) \]
+\begin{itemize}[label=$\cdot$]
+  \item Valor-p:
+  \[ \text{valor-p} = \alpha^* = P(\hat{\theta} > t), \]
+  $t$ é a estatística do teste de hipóteses
+\end{itemize}
+
+\subsection*{3) \underline{Tipo do Teste}}
+\begin{itemize}[label=$\cdot$]
+  \item bilateral,
+  \item unilateral à direita
+  \item unilateral à esquerda
+\end{itemize}
+$\ast$ Depende do contexto do problema!
+
+\subsection*{4) \underline{Estatísticas de teste e definição da região crítica da distribuição amostral do estimador}}
+
+\subsubsection*{$\cdot$ \underline{Baseado na Verossimilhança (Teste da Razão de Verossimilhança -- TRV)}}
+\begin{itemize}
+  \item Estatística do teste:
+  \[ \lambda(y) = \frac{\sup_{\Theta_0} L(\theta\,|\,y)}{\sup_{\Theta} L(\theta\,|\,y)} = \frac{L(\theta_0)}{L(\hat{\theta})} \]
+  \[ -2\ln[\lambda(\mathbf{Y})] \xrightarrow{\;D\;} \chi^2_1 \]
+  \item Região crítica:
+  \[ \{y : \lambda(y)\leq r,\; 0\leq r\leq 1\} \]
+  \[ \{y : -2\ln[\lambda(y)] > c^*\} \]
+\end{itemize}
+
+\subsubsection*{$\cdot$ \underline{Teste de Wald}}
+\begin{itemize}
+  \item Estatística do teste:
+  \[ z_w = \frac{\hat{\theta}-\theta_0}{\sqrt{var[\hat{\theta}_0]}}, \quad Z_w \overset{A}{\sim} N(0,1) \]
+  \item Região crítica:
+  \[ \{z : z > z_{\alpha/2} \vee z < -z_{\alpha/2}\} \]
+\end{itemize}
+
+\subsubsection*{$\cdot$ \underline{Teste de Escore}}
+\begin{itemize}
+  \item Estatística do teste:
+  \[ z_s = \frac{U(\theta_0)}{\sqrt{I_E(\theta_0)}}, \quad Z_s \overset{A}{\sim} N(0,1) \]
+  \item Região crítica:
+  \[ \{z : z > z_{\alpha/2} \vee z < -z_{\alpha/2}\} \]
+\end{itemize}
+
+\medskip
+$\ast$ O que é a estatística do teste propriamente dita?
+
+$\ast$ O resultado da estatística do teste estará no espaço amostral da distribuição amostral
+
+\subsection*{5) \underline{Conclusão do teste}}
+Se $t\in RC$, então rejeita-se $H_0$.
+
+\end{document}

@@ -1,0 +1,862 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=NavyBlue,urlcolor=NavyBlue}
+
+% ---------------- Ambientes ----------------
+\theoremstyle{definition}
+\newtheorem{definicao}{Definição}[section]
+\newtheorem{exemplo}{Exemplo}[section]
+\newtheorem{observacao}{Observação}[section]
+\theoremstyle{plain}
+\newtheorem{teorema}{Teorema}[section]
+\newtheorem{lema}[teorema]{Lema}
+\newtheorem{corolario}[teorema]{Corolário}
+\newtheorem{proposicao}[teorema]{Proposição}
+
+\surroundwithmdframed[linecolor=NavyBlue,linewidth=0.8pt,backgroundcolor=NavyBlue!3]{definicao}
+\surroundwithmdframed[linecolor=BrickRed,linewidth=0.8pt,backgroundcolor=BrickRed!3]{teorema}
+\surroundwithmdframed[linecolor=ForestGreen,linewidth=0.8pt,backgroundcolor=ForestGreen!3]{exemplo}
+
+% ---------------- Notação ----------------
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\EQM}{\operatorname{EQM}}
+\newcommand{\B}{\operatorname{B}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+\newcommand{\convP}{\xrightarrow{\;\Prob\;}}
+\newcommand{\convMQ}{\xrightarrow{\;\text{MQ}\;}}
+\newcommand{\bY}{\bar{Y}}
+
+\title{\textbf{CE309 -- Inferência Estatística}\\[4pt]
+\large Guia de Estudos: Propriedades de Estimadores e Método dos Momentos}
+\author{Material de apoio para a Lista 6}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section{Preliminares: o problema de estimação}
+%=====================================================================
+
+\begin{definicao}[Modelo estatístico e amostra aleatória]
+Seja $Y$ uma variável aleatória com função de densidade (ou de probabilidade) $f(y;\theta)$, em que $\theta \in \Theta \subseteq \R^p$ é um parâmetro \emph{desconhecido} e $\Theta$ é o \emph{espaço paramétrico}. Dizemos que $Y_1,\dots,Y_n$ é uma \emph{amostra aleatória} (a.a.) de $Y$ se as $Y_i$ são independentes e identicamente distribuídas (i.i.d.) com a mesma distribuição de $Y$. A densidade conjunta é
+\[
+f(y_1,\dots,y_n;\theta) = \prod_{i=1}^n f(y_i;\theta).
+\]
+\end{definicao}
+
+\begin{definicao}[Estatística, estimador e estimativa]
+Uma \emph{estatística} é qualquer função $T = T(Y_1,\dots,Y_n)$ da amostra que \textbf{não depende} de $\theta$. Um \emph{estimador} de $\theta$ (ou de uma função $\tau(\theta)$) é uma estatística usada para aproximar $\theta$. O valor numérico $t = T(y_1,\dots,y_n)$ obtido com os dados observados é a \emph{estimativa}.
+\end{definicao}
+
+\begin{observacao}
+O estimador é uma \textbf{variável aleatória}; a estimativa é um \textbf{número}. Todas as propriedades deste guia (viés, variância, EQM, consistência) são propriedades da \emph{distribuição amostral} do estimador, isto é, de como ele se comportaria em repetidas amostras. Por isso calculamos $\E_\theta(T)$, $\Var_\theta(T)$ etc., sempre sob o valor verdadeiro $\theta$. O índice $\theta$ em $\E_\theta$ lembra que a esperança é calculada usando $f(\cdot\,;\theta)$.
+\end{observacao}
+
+Notações usadas ao longo do texto:
+\[
+\bY = \frac{1}{n}\sum_{i=1}^n Y_i, \qquad
+\mu = \E(Y), \qquad \sigma^2 = \Var(Y), \qquad
+Y_{(1)} = \min_i Y_i, \qquad Y_{(n)} = \max_i Y_i .
+\]
+
+%=====================================================================
+\section{Ferramentas de esperança e variância}
+%=====================================================================
+
+Quase tudo nesta lista se reduz a calcular esperanças e variâncias de somas. Revisamos as regras \emph{com demonstração}.
+
+\begin{teorema}[Linearidade da esperança]
+Para constantes $a_1,\dots,a_n,b$ e variáveis aleatórias $Y_1,\dots,Y_n$ com esperança finita (\textbf{não é preciso independência}):
+\[
+\E\Big(b + \sum_{i=1}^n a_i Y_i\Big) = b + \sum_{i=1}^n a_i \E(Y_i).
+\]
+\end{teorema}
+\begin{proof}
+Segue da linearidade da integral (ou da soma, no caso discreto): $\E(aX+bW) = \int\!\!\int (ax+bw)f(x,w)\,dx\,dw = a\E(X)+b\E(W)$; o caso geral sai por indução.
+\end{proof}
+
+\begin{teorema}[Variância de combinação linear]
+\[
+\Var\Big(\sum_{i=1}^n a_iY_i\Big) = \sum_{i=1}^n a_i^2\Var(Y_i) + 2\sum_{i<j} a_ia_j\Cov(Y_i,Y_j).
+\]
+Se as $Y_i$ são independentes, $\Cov(Y_i,Y_j)=0$ para $i\neq j$ e
+\[
+\Var\Big(\sum_{i=1}^n a_iY_i\Big) = \sum_{i=1}^n a_i^2\Var(Y_i).
+\]
+\end{teorema}
+\begin{proof}
+Seja $S=\sum_i a_iY_i$, com $\E(S)=\sum_i a_i\mu_i$. Então $S-\E(S)=\sum_i a_i(Y_i-\mu_i)$ e
+\[
+\Var(S)=\E\Big[\Big(\sum_i a_i(Y_i-\mu_i)\Big)^2\Big]
+=\E\Big[\sum_i\sum_j a_ia_j(Y_i-\mu_i)(Y_j-\mu_j)\Big]
+=\sum_i\sum_j a_ia_j\Cov(Y_i,Y_j).
+\]
+Separando os termos $i=j$ (que dão $a_i^2\Var(Y_i)$) dos termos $i\neq j$ (que aparecem em pares) obtemos a fórmula. Independência implica $\E(Y_iY_j)=\E(Y_i)\E(Y_j)$, logo $\Cov(Y_i,Y_j)=0$.
+\end{proof}
+
+\begin{observacao}[Duas fórmulas usadas o tempo todo]
+\[
+\Var(Y)=\E(Y^2)-[\E(Y)]^2
+\qquad\Longleftrightarrow\qquad
+\E(Y^2)=\Var(Y)+[\E(Y)]^2 .
+\]
+\[
+\Var(aY+b)=a^2\Var(Y).
+\]
+\end{observacao}
+
+\begin{teorema}[Média amostral]\label{teo:media}
+Se $Y_1,\dots,Y_n$ é a.a. de $Y$ com $\E(Y)=\mu$ e $\Var(Y)=\sigma^2<\infty$ (\textbf{qualquer distribuição}), então
+\[
+\E(\bY)=\mu, \qquad \Var(\bY)=\frac{\sigma^2}{n}.
+\]
+\end{teorema}
+\begin{proof}
+Tomando $a_i=1/n$ nos dois teoremas anteriores:
+\[
+\E(\bY)=\sum_{i=1}^n\frac1n\,\mu=\frac{n\mu}{n}=\mu,
+\qquad
+\Var(\bY)=\sum_{i=1}^n\frac1{n^2}\,\sigma^2=\frac{n\sigma^2}{n^2}=\frac{\sigma^2}{n}.
+\]
+\end{proof}
+
+\begin{lema}[Identidade da soma de quadrados]\label{lema:sq}
+\[
+\sum_{i=1}^n (Y_i-\bY)^2 = \sum_{i=1}^n Y_i^2 - n\bY^2.
+\]
+\end{lema}
+\begin{proof}
+Expandindo o quadrado e usando $\sum_i Y_i = n\bY$:
+\[
+\sum_{i=1}^n (Y_i^2 - 2Y_i\bY + \bY^2)
+= \sum_{i=1}^n Y_i^2 - 2\bY\sum_{i=1}^n Y_i + n\bY^2
+= \sum_{i=1}^n Y_i^2 - 2n\bY^2 + n\bY^2
+= \sum_{i=1}^n Y_i^2 - n\bY^2 .
+\]
+\end{proof}
+
+\begin{teorema}[Esperança da soma de quadrados centrada]\label{teo:sq}
+Sob as hipóteses do Teorema~\ref{teo:media} (qualquer distribuição com variância finita),
+\[
+\E\Big[\sum_{i=1}^n (Y_i-\bY)^2\Big] = (n-1)\sigma^2 .
+\]
+\end{teorema}
+\begin{proof}
+Pelo Lema~\ref{lema:sq} e linearidade,
+$\E\big[\sum_i (Y_i-\bY)^2\big] = \sum_i \E(Y_i^2) - n\E(\bY^2)$.
+Pela Observação acima:
+\[
+\E(Y_i^2)=\sigma^2+\mu^2,
+\qquad
+\E(\bY^2)=\Var(\bY)+[\E(\bY)]^2=\frac{\sigma^2}{n}+\mu^2 .
+\]
+Logo
+\[
+\E\Big[\sum_{i=1}^n (Y_i-\bY)^2\Big]
+= n(\sigma^2+\mu^2) - n\Big(\frac{\sigma^2}{n}+\mu^2\Big)
+= n\sigma^2 + n\mu^2 - \sigma^2 - n\mu^2
+= (n-1)\sigma^2 .
+\]
+\end{proof}
+
+\begin{observacao}[Por que $n-1$?]
+Ao trocar $\mu$ (desconhecido) por $\bY$, a soma $\sum(Y_i-\bY)^2$ fica \emph{sistematicamente menor} que $\sum(Y_i-\mu)^2$, pois $\bY$ é o valor de $c$ que minimiza $\sum(Y_i-c)^2$. Os desvios $Y_i-\bY$ satisfazem a restrição $\sum_i(Y_i-\bY)=0$: só $n-1$ deles são ``livres'' (graus de liberdade).
+\end{observacao}
+
+\subsection{Resultados sob normalidade}
+
+\begin{teorema}[Teorema de Fisher / Cochran -- enunciado]\label{teo:fisher}
+Se $Y_1,\dots,Y_n \iid N(\mu,\sigma^2)$, então:
+\begin{enumerate}[label=(\roman*)]
+\item $\bY \sim N(\mu,\sigma^2/n)$;
+\item $\displaystyle \frac{\sum_{i=1}^n (Y_i-\bY)^2}{\sigma^2} \sim \chi^2_{n-1}$;
+\item $\bY$ e $\sum_{i=1}^n (Y_i-\bY)^2$ são independentes.
+\end{enumerate}
+\end{teorema}
+
+\begin{proposicao}[Momentos da qui-quadrado]\label{prop:chi}
+Se $W\sim\chi^2_k$, então $\E(W)=k$ e $\Var(W)=2k$.
+\end{proposicao}
+\begin{proof}
+Use a representação $W=\sum_{j=1}^k Z_j^2$ com $Z_j\iid N(0,1)$. Basta calcular $\E(Z^2)$ e $\Var(Z^2)$.
+
+\textit{Passo 1.} $\E(Z^2)=\Var(Z)+[\E(Z)]^2 = 1+0 = 1$.
+
+\textit{Passo 2.} $\E(Z^4)$ por integração por partes, com $\phi(z)=\frac{1}{\sqrt{2\pi}}e^{-z^2/2}$ e $\phi'(z)=-z\phi(z)$:
+\[
+\E(Z^4)=\int_{-\infty}^{\infty} z^3\cdot z\phi(z)\,dz
+=\Big[-z^3\phi(z)\Big]_{-\infty}^{\infty}+\int_{-\infty}^{\infty} 3z^2\phi(z)\,dz
+=0+3\E(Z^2)=3 .
+\]
+
+\textit{Passo 3.} $\Var(Z^2)=\E(Z^4)-[\E(Z^2)]^2=3-1=2$.
+
+\textit{Passo 4.} Por linearidade e independência:
+$\E(W)=\sum_{j=1}^k 1 = k$ e $\Var(W)=\sum_{j=1}^k 2=2k$.
+\end{proof}
+
+\begin{observacao}[Como usar]
+Se você sabe que $W = cT \sim \chi^2_k$ para uma constante $c>0$, então $T=W/c$ e
+\[
+\E(T)=\frac{k}{c}, \qquad \Var(T)=\frac{2k}{c^2}.
+\]
+Essa é a técnica padrão para obter esperança e variância de estimadores de $\sigma^2$ sob normalidade.
+\end{observacao}
+
+\subsection{Estatísticas de ordem: máximo e mínimo}
+
+\begin{teorema}[Distribuição do máximo e do mínimo]\label{teo:ordem}
+Seja $Y_1,\dots,Y_n$ a.a. de $Y$ com f.d.a. $F$ e densidade $f$. Então
+\[
+F_{Y_{(n)}}(y)=[F(y)]^n, \qquad f_{Y_{(n)}}(y)=n[F(y)]^{n-1}f(y);
+\]
+\[
+F_{Y_{(1)}}(y)=1-[1-F(y)]^n, \qquad f_{Y_{(1)}}(y)=n[1-F(y)]^{n-1}f(y).
+\]
+\end{teorema}
+\begin{proof}
+O máximo é $\le y$ se, e somente se, \emph{todas} as observações são $\le y$. Por independência:
+\[
+\Prob(Y_{(n)}\le y)=\Prob(Y_1\le y,\dots,Y_n\le y)=\prod_{i=1}^n\Prob(Y_i\le y)=[F(y)]^n .
+\]
+O mínimo é $>y$ se, e somente se, todas são $>y$:
+\[
+\Prob(Y_{(1)}>y)=\prod_{i=1}^n\Prob(Y_i>y)=[1-F(y)]^n .
+\]
+As densidades saem derivando em $y$ (regra da cadeia).
+\end{proof}
+
+%=====================================================================
+\section{Viés e não-vício}
+%=====================================================================
+
+\begin{definicao}[Viés]
+O \emph{viés} (ou vício) de um estimador $T$ de $\theta$ é
+\[
+\B_\theta(T)=\E_\theta(T)-\theta .
+\]
+$T$ é \emph{não-viciado} (não-viesado) para $\theta$ se $\B_\theta(T)=0$, isto é, $\E_\theta(T)=\theta$, \textbf{para todo} $\theta\in\Theta$. Analogamente, $T$ é não-viciado para $\tau(\theta)$ se $\E_\theta(T)=\tau(\theta)$ para todo $\theta$.
+\end{definicao}
+
+\begin{definicao}[Assintoticamente não-viciado]
+Uma sequência de estimadores $T_n$ é \emph{assintoticamente não-viciada} se $\lim_{n\to\infty}\B_\theta(T_n)=0$ para todo $\theta\in\Theta$.
+\end{definicao}
+
+\begin{observacao}[Armadilhas frequentes]
+\begin{enumerate}[label=(\alph*)]
+\item ``Para todo $\theta$'' é essencial: um estimador constante $T\equiv 5$ tem viés zero quando $\theta=5$, mas não é não-viciado.
+\item Não-vício \textbf{não} é preservado por funções não lineares: se $\E(T)=\theta$, em geral $\E[g(T)]\neq g(\theta)$. Exemplo: se $\E(T)=\theta$, então $\E(T^2)=\Var(T)+\theta^2>\theta^2$ sempre que $\Var(T)>0$. Pela desigualdade de Jensen, para $g$ convexa, $\E[g(T)]\ge g(\E T)$.
+\item Não-vício é uma propriedade ``em média'': diz que o estimador acerta o alvo na média de infinitas amostras, mas nada diz sobre o quanto ele se espalha. Por isso precisamos também da variância.
+\end{enumerate}
+\end{observacao}
+
+\begin{proposicao}[Combinações lineares]\label{prop:comblin}
+Se $\E(Y_i)=\mu$ para todo $i$, então $\E\big(\sum_i a_iY_i\big)=\mu\sum_i a_i$.
+\end{proposicao}
+\begin{proof}
+Linearidade: $\E\big(\sum_i a_iY_i\big)=\sum_i a_i\E(Y_i)=\sum_i a_i\mu=\mu\sum_i a_i$.
+\end{proof}
+
+%=====================================================================
+\section{Erro quadrático médio}
+%=====================================================================
+
+\begin{definicao}[EQM]
+O \emph{erro quadrático médio} de $T$ como estimador de $\theta$ é
+\[
+\EQM_\theta(T)=\E_\theta\big[(T-\theta)^2\big].
+\]
+\end{definicao}
+
+\begin{teorema}[Decomposição viés--variância]\label{teo:decomp}
+\[
+\EQM_\theta(T)=\Var_\theta(T)+[\B_\theta(T)]^2 .
+\]
+\end{teorema}
+\begin{proof}
+Somamos e subtraímos $\E_\theta(T)$ dentro do quadrado:
+\[
+(T-\theta)^2=\big[(T-\E T)+(\E T-\theta)\big]^2
+=(T-\E T)^2+2(T-\E T)(\E T-\theta)+(\E T-\theta)^2 .
+\]
+Tomando esperança: o primeiro termo dá $\Var(T)$; o último é constante e dá $[\B(T)]^2$; o termo cruzado é
+\[
+2(\E T-\theta)\,\E(T-\E T)=2(\E T-\theta)(\E T-\E T)=0 .
+\]
+\end{proof}
+
+\begin{corolario}
+Se $T$ é não-viciado, $\EQM_\theta(T)=\Var_\theta(T)$.
+\end{corolario}
+
+\begin{observacao}[Interpretação]
+O EQM mede a distância quadrática média entre o estimador e o alvo. O viés mede erro \emph{sistemático} (acurácia); a variância mede \emph{dispersão} (precisão). O EQM penaliza ambos. Um estimador levemente viciado mas com variância bem menor pode ter EQM menor que um não-viciado (Exemplo~\ref{ex:shrink}).
+\end{observacao}
+
+\subsection{Comparação de estimadores}
+
+\begin{definicao}[Comparação via EQM e eficiência relativa]
+Sejam $T_1$ e $T_2$ estimadores de $\theta$.
+\begin{enumerate}[label=(\roman*)]
+\item $T_1$ é \emph{melhor} (uniformemente) que $T_2$ se $\EQM_\theta(T_1)\le\EQM_\theta(T_2)$ para todo $\theta\in\Theta$, com desigualdade estrita para algum $\theta$.
+\item A \emph{eficiência relativa} de $T_1$ em relação a $T_2$ é
+\[
+\operatorname{ef}_\theta(T_1,T_2)=\frac{\EQM_\theta(T_2)}{\EQM_\theta(T_1)} .
+\]
+Se $\operatorname{ef}>1$, $T_1$ é mais eficiente naquele $\theta$.
+\end{enumerate}
+\end{definicao}
+
+\begin{observacao}[As curvas podem se cruzar]
+Muitas vezes $\EQM_\theta(T_1)<\EQM_\theta(T_2)$ para alguns valores de $\theta$ e o contrário para outros. Nesse caso \textbf{nenhum dos dois é uniformemente melhor}, e a resposta correta numa prova é: ``depende do valor de $\theta$'', identificando a região onde cada um vence. Para encontrá-la, resolva a desigualdade $\EQM(T_1)<\EQM(T_2)$ em $\theta$.
+\end{observacao}
+
+\subsection{Limite inferior de Cramér--Rao (ponte para verossimilhança)}
+
+Esta seção dá um padrão de comparação: a menor variância possível para estimadores não-viciados (sob regularidade).
+
+\begin{definicao}[Verossimilhança, escore e informação]
+Para uma a.a. com densidade $f(y;\theta)$, $\theta\in\R$:
+\[
+L(\theta)=\prod_{i=1}^n f(y_i;\theta),\qquad
+\ell(\theta)=\log L(\theta)=\sum_{i=1}^n\log f(y_i;\theta),
+\]
+\[
+U(\theta)=\frac{\partial \ell(\theta)}{\partial\theta}\quad\text{(função escore)},\qquad
+I_o(\theta)=-\frac{\partial^2 \ell(\theta)}{\partial\theta^2}\quad\text{(informação observada)},
+\]
+\[
+I_e(\theta)=\E_\theta\big[U(\theta)^2\big]=\E_\theta\big[I_o(\theta)\big]\quad\text{(informação esperada de Fisher)}.
+\]
+\end{definicao}
+
+\begin{teorema}[Desigualdade de Cramér--Rao]
+Sob condições de regularidade (em particular, o \textbf{suporte de $f$ não depende de $\theta$} e é permitido derivar sob o sinal de integral), se $T$ é não-viciado para $\tau(\theta)$, então
+\[
+\Var_\theta(T)\ \ge\ \frac{[\tau'(\theta)]^2}{I_e(\theta)} .
+\]
+\end{teorema}
+\begin{proof}[Esboço]
+(i) $\E_\theta[U(\theta)]=\int \frac{\partial}{\partial\theta}f\,dy=\frac{\partial}{\partial\theta}\int f\,dy=0$, logo $\Var(U)=I_e(\theta)$.
+(ii) $\Cov(T,U)=\E(TU)=\int T\,\frac{\partial f}{\partial\theta}\,dy=\frac{\partial}{\partial\theta}\E(T)=\tau'(\theta)$.
+(iii) Pela desigualdade de Cauchy--Schwarz, $[\Cov(T,U)]^2\le\Var(T)\Var(U)$, isto é, $[\tau'(\theta)]^2\le\Var(T)\,I_e(\theta)$.
+\end{proof}
+
+\begin{observacao}
+Um estimador não-viciado cuja variância atinge o limite é chamado \emph{eficiente}. Em modelos como $U(0,\theta)$ o suporte depende de $\theta$, a regularidade falha e o limite \textbf{não se aplica} (estimadores podem ter variância de ordem $1/n^2$, menor que a ``usual'' $1/n$).
+\end{observacao}
+
+%=====================================================================
+\section{Consistência}
+%=====================================================================
+
+Agora olhamos para uma \emph{sequência} de estimadores $T_n=T_n(Y_1,\dots,Y_n)$, $n=1,2,\dots$, e perguntamos: com mais dados, $T_n$ se aproxima de $\theta$?
+
+\begin{definicao}[Consistência em média quadrática]
+$T_n$ é \emph{médio quadrático consistente} (consistente em MQ) para $\theta$ se
+\[
+\lim_{n\to\infty}\EQM_\theta(T_n)=\lim_{n\to\infty}\E_\theta\big[(T_n-\theta)^2\big]=0,\qquad\forall\,\theta\in\Theta .
+\]
+Notação: $T_n\convMQ\theta$.
+\end{definicao}
+
+\begin{definicao}[Consistência em probabilidade (fraca)]
+$T_n$ é \emph{consistente} (em probabilidade) para $\theta$ se, para todo $\varepsilon>0$,
+\[
+\lim_{n\to\infty}\Prob_\theta\big(|T_n-\theta|\ge\varepsilon\big)=0
+\quad\Longleftrightarrow\quad
+\lim_{n\to\infty}\Prob_\theta\big(|T_n-\theta|<\varepsilon\big)=1,
+\qquad\forall\,\theta\in\Theta .
+\]
+Notação: $T_n\convP\theta$.
+\end{definicao}
+
+\begin{observacao}[Leitura da definição]
+Fixe uma ``margem de erro'' $\varepsilon$ tão pequena quanto quiser. Consistência diz que a probabilidade de o estimador errar por mais que $\varepsilon$ vai a zero quando $n$ cresce. Repare que é uma afirmação sobre \textbf{probabilidades}, não sobre cada realização.
+\end{observacao}
+
+\subsection{As desigualdades que fazem o trabalho}
+
+\begin{teorema}[Desigualdade de Markov]
+Se $X\ge 0$ e $a>0$, então $\Prob(X\ge a)\le \dfrac{\E(X)}{a}$.
+\end{teorema}
+\begin{proof}
+Como $X\ge 0$, vale pontualmente $X\ge a\,\ind\{X\ge a\}$ (se $X\ge a$, o lado direito é $a\le X$; caso contrário é $0\le X$). Tomando esperança: $\E(X)\ge a\,\E[\ind\{X\ge a\}]=a\,\Prob(X\ge a)$.
+\end{proof}
+
+\begin{corolario}[Chebyshev generalizada]\label{cor:cheb}
+Para qualquer $c\in\R$ e $\varepsilon>0$:
+\[
+\Prob(|T-c|\ge\varepsilon)=\Prob\big((T-c)^2\ge\varepsilon^2\big)\le\frac{\E[(T-c)^2]}{\varepsilon^2}.
+\]
+Com $c=\theta$: $\ \Prob_\theta(|T-\theta|\ge\varepsilon)\le\EQM_\theta(T)/\varepsilon^2$.
+Com $c=\E(T)$: $\ \Prob(|T-\E T|\ge\varepsilon)\le\Var(T)/\varepsilon^2$ (Chebyshev clássica).
+\end{corolario}
+\begin{proof}
+Aplique Markov a $X=(T-c)^2\ge 0$ com $a=\varepsilon^2$; os eventos $\{|T-c|\ge\varepsilon\}$ e $\{(T-c)^2\ge\varepsilon^2\}$ são iguais.
+\end{proof}
+
+\subsection{Relações entre os tipos de consistência}
+
+\begin{teorema}[MQ $\Rightarrow$ probabilidade]\label{teo:mq_p}
+Se $T_n\convMQ\theta$, então $T_n\convP\theta$.
+\end{teorema}
+\begin{proof}
+Pelo Corolário~\ref{cor:cheb}, para todo $\varepsilon>0$:
+\[
+0\le\Prob_\theta(|T_n-\theta|\ge\varepsilon)\le\frac{\EQM_\theta(T_n)}{\varepsilon^2}\xrightarrow[n\to\infty]{}0 .
+\]
+Pelo teorema do confronto, a probabilidade tende a zero.
+\end{proof}
+
+\begin{corolario}[Critério prático]\label{cor:criterio}
+$\EQM_\theta(T_n)\to 0$ se, e somente se, $\B_\theta(T_n)\to 0$ \textbf{e} $\Var_\theta(T_n)\to 0$.
+Logo: se $T_n$ é (assintoticamente) não-viciado e $\Var(T_n)\to 0$, então $T_n$ é consistente em MQ e, portanto, em probabilidade.
+\end{corolario}
+\begin{proof}
+Pela decomposição, $\EQM=\Var+\B^2$ é soma de dois termos não negativos; a soma vai a zero se, e somente se, cada parcela vai a zero.
+\end{proof}
+
+\begin{observacao}[A recíproca é falsa]
+Consistência em probabilidade \textbf{não} implica consistência em MQ. Contraexemplo: seja
+\[
+\Prob(T_n=\theta+n)=\tfrac1n,\qquad \Prob(T_n=\theta)=1-\tfrac1n .
+\]
+Para $0<\varepsilon<1$ e $n\ge 2$: $\Prob(|T_n-\theta|\ge\varepsilon)=\Prob(T_n=\theta+n)=1/n\to0$, logo $T_n\convP\theta$. Mas
+\[
+\EQM(T_n)=\E[(T_n-\theta)^2]=n^2\cdot\tfrac1n+0\cdot\big(1-\tfrac1n\big)=n\to\infty .
+\]
+\end{observacao}
+
+\subsection{Lei dos Grandes Números e funções contínuas}
+
+\begin{teorema}[Lei Fraca dos Grandes Números]\label{teo:lgn}
+Se $Y_1,\dots,Y_n$ é a.a. com $\E(Y)=\mu$ e $\Var(Y)=\sigma^2<\infty$, então $\bY\convP\mu$. Mais geralmente, se $\E(Y^{2k})<\infty$, o $k$-ésimo momento amostral $M_k=\frac1n\sum_i Y_i^k$ satisfaz $M_k\convP\E(Y^k)$.
+\end{teorema}
+\begin{proof}
+Pelo Teorema~\ref{teo:media}, $\E(\bY)=\mu$ e $\Var(\bY)=\sigma^2/n$. Por Chebyshev,
+$\Prob(|\bY-\mu|\ge\varepsilon)\le\dfrac{\sigma^2}{n\varepsilon^2}\to 0$.
+Para $M_k$, aplique o mesmo argumento às variáveis $X_i=Y_i^k$, que são i.i.d. com média $\E(Y^k)$ e variância $\E(Y^{2k})-[\E(Y^k)]^2<\infty$.
+\end{proof}
+
+\begin{teorema}[Aplicação contínua]\label{teo:cont}
+Se $T_n\convP\theta$ e $g$ é contínua em $\theta$, então $g(T_n)\convP g(\theta)$. O resultado vale também para vetores: se $(T_{1n},\dots,T_{pn})\convP(\theta_1,\dots,\theta_p)$ e $g:\R^p\to\R$ é contínua nesse ponto, então $g(T_{1n},\dots,T_{pn})\convP g(\theta_1,\dots,\theta_p)$.
+\end{teorema}
+\begin{proof}[Ideia]
+Continuidade em $\theta$: dado $\varepsilon>0$ existe $\delta>0$ tal que $|t-\theta|<\delta\Rightarrow|g(t)-g(\theta)|<\varepsilon$. Logo
+$\{|g(T_n)-g(\theta)|\ge\varepsilon\}\subseteq\{|T_n-\theta|\ge\delta\}$ e
+$\Prob(|g(T_n)-g(\theta)|\ge\varepsilon)\le\Prob(|T_n-\theta|\ge\delta)\to 0$.
+\end{proof}
+
+\begin{observacao}
+Consequências úteis: se $T_n\convP\theta$ e $a_n\to a$ (sequência numérica), então $a_nT_n\convP a\theta$; somas e produtos de sequências consistentes são consistentes para a soma e o produto dos limites.
+\end{observacao}
+
+\subsection{Quando um estimador \emph{não} é consistente}
+
+\begin{proposicao}[Estimador que não usa a informação crescente]\label{prop:naocons}
+Seja $T$ um estimador cuja distribuição \textbf{não depende de $n$} (por exemplo, uma função de um número fixo de observações). Se $T$ não é degenerado em $\theta$, isto é, existe $\varepsilon_0>0$ com $p_0=\Prob_\theta(|T-\theta|\ge\varepsilon_0)>0$, então $T$ não é consistente.
+\end{proposicao}
+\begin{proof}
+Para todo $n$, $\Prob_\theta(|T_n-\theta|\ge\varepsilon_0)=p_0$, uma constante positiva. Logo o limite é $p_0\neq 0$, violando a definição (que exige limite zero para \emph{todo} $\varepsilon$).
+\end{proof}
+
+\begin{observacao}
+Para provar \textbf{não}-consistência basta exibir \emph{um} $\varepsilon>0$ para o qual $\Prob(|T_n-\theta|\ge\varepsilon)\not\to0$. Mostrar apenas que o EQM não vai a zero \textbf{não basta}, pois MQ é mais forte que probabilidade (pela observação da recíproca falsa).
+\end{observacao}
+
+\subsection{Consistência via f.d.a. (útil para máximos e mínimos)}
+
+Quando $T_n$ é um máximo ou mínimo, muitas vezes é mais fácil calcular $\Prob(|T_n-\theta|\ge\varepsilon)$ \emph{diretamente} pela f.d.a. (Teorema~\ref{teo:ordem}) do que passar pelo EQM. O roteiro é:
+\begin{enumerate}[label=\arabic*.]
+\item Observe se $T_n$ fica sempre de um lado de $\theta$ (por exemplo $T_n\le\theta$); isso simplifica o valor absoluto.
+\item Escreva $\Prob(|T_n-\theta|\ge\varepsilon)$ em termos de $F_{T_n}$.
+\item Use que $r^n\to0$ quando $0\le r<1$.
+\end{enumerate}
+Veja o Exemplo~\ref{ex:expo}, item (d), onde isso é feito para um mínimo.
+
+%=====================================================================
+\section{Método dos momentos}
+%=====================================================================
+
+\begin{definicao}[Momentos populacionais e amostrais]
+O $k$-ésimo momento populacional (em torno da origem) é $\mu_k'(\theta)=\E_\theta(Y^k)$. O $k$-ésimo momento amostral é
+\[
+M_k=\frac1n\sum_{i=1}^n Y_i^k .
+\]
+Em particular $M_1=\bY$.
+\end{definicao}
+
+\begin{definicao}[Estimador de momentos]
+Se $\theta=(\theta_1,\dots,\theta_p)$, o \emph{estimador de momentos} $\tilde\theta$ é a solução (em $\theta$) do sistema
+\[
+\mu_1'(\theta)=M_1,\qquad \mu_2'(\theta)=M_2,\qquad \dots,\qquad \mu_p'(\theta)=M_p .
+\]
+Usa-se a notação $\tilde\theta$ para distinguir do EMV $\hat\theta$.
+\end{definicao}
+
+\begin{mdframed}[linecolor=Gray,backgroundcolor=Gray!5]
+\textbf{Roteiro de prova -- método dos momentos}
+\begin{enumerate}[label=\arabic*.]
+\item Conte quantos parâmetros desconhecidos há ($p$).
+\item Calcule os $p$ primeiros momentos populacionais $\E(Y),\dots,\E(Y^p)$ como funções de $\theta$, \textbf{fazendo as integrais} (ou consultando a tabela da Seção~\ref{sec:tabela}). Se $\E(Y)$ não depende de $\theta$ (ou for zero por simetria), ele não serve: passe para o próximo momento.
+\item Iguale cada momento populacional ao amostral correspondente.
+\item Resolva o sistema para $\theta$ e troque $\theta$ por $\tilde\theta$.
+\item Confira se a estimativa pertence a $\Theta$ e é compatível com os dados.
+\end{enumerate}
+\end{mdframed}
+
+\begin{teorema}[Propriedades gerais]
+\begin{enumerate}[label=(\roman*)]
+\item Cada $M_k$ é não-viciado para $\mu_k'$: $\E(M_k)=\frac1n\sum_i\E(Y_i^k)=\mu_k'$.
+\item Se $\tilde\theta=g(M_1,\dots,M_p)$ com $g$ contínua, então $\tilde\theta$ é consistente para $\theta$ (LGN + aplicação contínua, Teoremas~\ref{teo:lgn} e~\ref{teo:cont}).
+\item Em geral, $\tilde\theta$ é \textbf{viciado} quando $g$ é não linear (pela observação sobre não-vício e funções não lineares).
+\end{enumerate}
+\end{teorema}
+
+\begin{observacao}[Limitações do método]
+\begin{enumerate}[label=(\alph*)]
+\item \textbf{Não unicidade:} o mesmo parâmetro pode ser estimado igualando momentos diferentes (por exemplo, na Poisson $\E(Y)=\Var(Y)=\lambda$), gerando estimadores distintos.
+\item \textbf{Incompatibilidade com os dados:} a estimativa pode cair fora de $\Theta$ ou contradizer a amostra (Exemplo~\ref{ex:unifdesloc}).
+\item \textbf{Não usa a verossimilhança:} nem sempre é eficiente; costuma servir como ponto de partida (por exemplo, valor inicial para algoritmos de máxima verossimilhança).
+\end{enumerate}
+\end{observacao}
+
+%=====================================================================
+\section{Tabela de momentos de referência}\label{sec:tabela}
+%=====================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Distribuição & Densidade / f.p. & $\E(Y)$ & $\Var(Y)$\\
+\midrule
+$\text{Ber}(p)$ & $p^y(1-p)^{1-y}$, $y\in\{0,1\}$ & $p$ & $p(1-p)$\\
+$\text{Bin}(n,p)$ & $\binom ny p^y(1-p)^{n-y}$ & $np$ & $np(1-p)$\\
+$\text{Poi}(\lambda)$ & $e^{-\lambda}\lambda^y/y!$ & $\lambda$ & $\lambda$\\
+$N(\mu,\sigma^2)$ & $\frac{1}{\sqrt{2\pi}\sigma}e^{-(y-\mu)^2/(2\sigma^2)}$ & $\mu$ & $\sigma^2$\\
+$\text{Exp}(\lambda)$ (taxa) & $\lambda e^{-\lambda y}$, $y>0$ & $1/\lambda$ & $1/\lambda^2$\\
+$\text{Gama}(\alpha,\beta)$ (taxa) & $\frac{\beta^\alpha}{\Gamma(\alpha)}y^{\alpha-1}e^{-\beta y}$, $y>0$ & $\alpha/\beta$ & $\alpha/\beta^2$\\
+$U(a,b)$ & $\frac{1}{b-a}\ind\{a<y<b\}$ & $(a+b)/2$ & $(b-a)^2/12$\\
+$\chi^2_k$ & $\text{Gama}(k/2,1/2)$ & $k$ & $2k$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{observacao}[Integral gama -- a ferramenta para momentos de densidades do tipo $y^a e^{-by}$]
+Para $\alpha>0$, $\beta>0$:
+\[
+\int_0^\infty y^{\alpha-1}e^{-\beta y}\,dy=\frac{\Gamma(\alpha)}{\beta^\alpha},
+\qquad \Gamma(m)=(m-1)!\ \text{ para } m\in\mathbb N .
+\]
+Prova: substitua $u=\beta y$, $dy=du/\beta$: $\int_0^\infty (u/\beta)^{\alpha-1}e^{-u}\,du/\beta=\beta^{-\alpha}\Gamma(\alpha)$.
+Ao calcular $\E(Y^k)$ de uma densidade com fator $y^a e^{-by}$, junte as potências de $y$ e reconheça uma integral gama.
+\end{observacao}
+
+%=====================================================================
+\section{Exemplos resolvidos à mão}
+%=====================================================================
+
+Os exemplos usam modelos \emph{diferentes} dos da lista, para que as técnicas fiquem claras sem entregar as respostas.
+
+%---------------------------------------------------------------
+\begin{exemplo}[Poisson: as cinco propriedades + Cramér--Rao]\label{ex:poisson}
+Seja $Y_1,\dots,Y_n\iid\text{Poi}(\lambda)$ e $\hat\lambda=\bY$.
+
+\textbf{(a) Não-vício.} Por linearidade, com $\E(Y_i)=\lambda$:
+\[
+\E(\hat\lambda)=\frac1n\sum_{i=1}^n\E(Y_i)=\frac1n\cdot n\lambda=\lambda .
+\]
+Logo $\B_\lambda(\hat\lambda)=0$ para todo $\lambda>0$.
+
+\textbf{(b) Variância.} Por independência, com $\Var(Y_i)=\lambda$:
+\[
+\Var(\hat\lambda)=\frac1{n^2}\sum_{i=1}^n\Var(Y_i)=\frac{n\lambda}{n^2}=\frac{\lambda}{n}.
+\]
+
+\textbf{(c) EQM.} Pela decomposição:
+\[
+\EQM_\lambda(\hat\lambda)=\Var(\hat\lambda)+[\B(\hat\lambda)]^2=\frac{\lambda}{n}+0=\frac{\lambda}{n}.
+\]
+
+\textbf{(d) Consistência em MQ.} Para cada $\lambda>0$ fixo:
+\[
+\lim_{n\to\infty}\EQM_\lambda(\hat\lambda)=\lim_{n\to\infty}\frac{\lambda}{n}=0 .
+\]
+
+\textbf{(e) Consistência em probabilidade.} Pela desigualdade de Chebyshev, para todo $\varepsilon>0$:
+\[
+0\le\Prob(|\hat\lambda-\lambda|\ge\varepsilon)\le\frac{\EQM_\lambda(\hat\lambda)}{\varepsilon^2}=\frac{\lambda}{n\varepsilon^2}\xrightarrow[n\to\infty]{}0 .
+\]
+
+\textbf{(f) Comparação com o limite de Cramér--Rao.}
+\[
+L(\lambda)=\prod_{i=1}^n\frac{e^{-\lambda}\lambda^{y_i}}{y_i!},
+\qquad
+\ell(\lambda)=-n\lambda+\Big(\sum_{i=1}^n y_i\Big)\log\lambda-\sum_{i=1}^n\log(y_i!) .
+\]
+\[
+U(\lambda)=\frac{\partial\ell}{\partial\lambda}=-n+\frac{\sum_i y_i}{\lambda},
+\qquad
+I_o(\lambda)=-\frac{\partial^2\ell}{\partial\lambda^2}=\frac{\sum_i y_i}{\lambda^2},
+\]
+\[
+I_e(\lambda)=\E\big[I_o(\lambda)\big]=\frac{\E(\sum_i Y_i)}{\lambda^2}=\frac{n\lambda}{\lambda^2}=\frac{n}{\lambda}.
+\]
+Com $\tau(\lambda)=\lambda$, $\tau'(\lambda)=1$, o limite é $1/I_e(\lambda)=\lambda/n=\Var(\hat\lambda)$. Portanto $\hat\lambda$ é \textbf{eficiente}.
+
+\textbf{(g) Numérico.} Amostra $(2,0,3,1,4)$, $n=5$:
+\[
+\hat\lambda=\frac{2+0+3+1+4}{5}=\frac{10}{5}=2,
+\qquad
+\widehat{\EQM}=\frac{\hat\lambda}{n}=\frac{2}{5}=0{,}4 .
+\]
+\end{exemplo}
+
+%---------------------------------------------------------------
+\begin{exemplo}[Exponencial: dois estimadores não-viciados, só um consistente]\label{ex:expo}
+Seja $Y_1,\dots,Y_n\iid$ Exponencial com \emph{média} $\beta$, isto é, $f(y;\beta)=\frac1\beta e^{-y/\beta}\ind\{y>0\}$, com $\E(Y)=\beta$, $\Var(Y)=\beta^2$ e $F(y)=1-e^{-y/\beta}$ para $y>0$. Considere
+\[
+T_1=\bY,\qquad T_2=n\,Y_{(1)} .
+\]
+
+\textbf{(a) Distribuição de $Y_{(1)}$.} Pelo Teorema~\ref{teo:ordem}, para $y>0$:
+\[
+\Prob(Y_{(1)}>y)=[1-F(y)]^n=\big(e^{-y/\beta}\big)^n=e^{-ny/\beta}.
+\]
+Ou seja, $Y_{(1)}\sim$ Exponencial com média $\beta/n$. Então, para $T_2=nY_{(1)}$:
+\[
+\Prob(T_2>t)=\Prob\Big(Y_{(1)}>\frac tn\Big)=e^{-n(t/n)/\beta}=e^{-t/\beta},
+\]
+isto é, $T_2\sim$ Exponencial com média $\beta$, \textbf{qualquer que seja $n$}.
+
+\textbf{(b) Não-vício e variância.}
+\[
+\E(T_1)=\beta,\quad \Var(T_1)=\frac{\beta^2}{n};
+\qquad
+\E(T_2)=\beta,\quad \Var(T_2)=\beta^2 .
+\]
+Ambos são não-viciados, então $\EQM(T_1)=\beta^2/n$ e $\EQM(T_2)=\beta^2$.
+
+\textbf{(c) Eficiência relativa.}
+\[
+\operatorname{ef}(T_1,T_2)=\frac{\EQM(T_2)}{\EQM(T_1)}=\frac{\beta^2}{\beta^2/n}=n .
+\]
+$T_1$ é $n$ vezes mais eficiente, para todo $\beta$: $T_1$ é uniformemente melhor (para $n\ge2$).
+
+\textbf{(d) Consistência.} $T_1$: $\EQM(T_1)=\beta^2/n\to0$, logo é consistente (MQ e em probabilidade).
+
+$T_2$: como sua distribuição não depende de $n$, pela Proposição~\ref{prop:naocons} não é consistente. Explicitamente, para $0<\varepsilon<\beta$:
+\[
+\Prob(|T_2-\beta|\ge\varepsilon)=\Prob(T_2\le\beta-\varepsilon)+\Prob(T_2\ge\beta+\varepsilon)
+=\big(1-e^{-(\beta-\varepsilon)/\beta}\big)+e^{-(\beta+\varepsilon)/\beta},
+\]
+um número positivo que \textbf{não depende de $n$}, logo não tende a zero.
+
+\textbf{Moral:} não-vício não garante consistência. O que importa é se a dispersão do estimador encolhe com $n$.
+\end{exemplo}
+
+%---------------------------------------------------------------
+\begin{exemplo}[Um estimador viciado pode ter EQM menor]\label{ex:shrink}
+Seja $Y_1,\dots,Y_n\iid N(\mu,\sigma^2)$ com $\sigma^2$ conhecido, e $T_c=c\,\bY$ com $0<c\le1$.
+
+\textbf{Viés:} $\E(T_c)=c\mu$, logo $\B(T_c)=c\mu-\mu=(c-1)\mu$.
+
+\textbf{Variância:} $\Var(T_c)=c^2\Var(\bY)=c^2\sigma^2/n$.
+
+\textbf{EQM:}
+\[
+\EQM_\mu(T_c)=\frac{c^2\sigma^2}{n}+(c-1)^2\mu^2 .
+\]
+
+\textbf{Numérico:} $n=10$, $\sigma^2=1$, comparando $c=1$ (média amostral) com $c=0{,}9$:
+\[
+\EQM(T_1)=\frac{1}{10}=0{,}1,
+\qquad
+\EQM(T_{0,9})=\frac{0{,}81}{10}+(0{,}1)^2\mu^2=0{,}081+0{,}01\mu^2 .
+\]
+$T_{0,9}$ é melhor se, e somente se,
+\[
+0{,}081+0{,}01\mu^2<0{,}1
+\iff 0{,}01\mu^2<0{,}019
+\iff \mu^2<1{,}9
+\iff |\mu|<\sqrt{1{,}9}\approx1{,}378 .
+\]
+As curvas de EQM se cruzam: nenhum dos dois é uniformemente melhor. Note ainda que, para $c<1$ fixo, $\B(T_c)\to(c-1)\mu\neq0$, então $T_c$ \textbf{não} é consistente para $\mu\ne0$, embora possa ganhar em amostras pequenas.
+\end{exemplo}
+
+%---------------------------------------------------------------
+\begin{exemplo}[Momentos -- exponencial com taxa $\lambda$, incluindo o viés]\label{ex:mmexp}
+Seja $Y_1,\dots,Y_n\iid\text{Exp}(\lambda)$, $f(y;\lambda)=\lambda e^{-\lambda y}$, $y>0$.
+
+\textbf{Passo 1 (momento populacional).} Usando a integral gama com $\alpha=2$, $\beta=\lambda$:
+\[
+\E(Y)=\int_0^\infty y\,\lambda e^{-\lambda y}\,dy=\lambda\cdot\frac{\Gamma(2)}{\lambda^2}=\lambda\cdot\frac{1}{\lambda^2}=\frac1\lambda .
+\]
+
+\textbf{Passo 2 (igualar e resolver).}
+\[
+\frac{1}{\tilde\lambda}=\bY \quad\Longrightarrow\quad \tilde\lambda=\frac{1}{\bY}.
+\]
+
+\textbf{Passo 3 (consistência).} $\bY\convP1/\lambda$ (LGN) e $g(x)=1/x$ é contínua em $1/\lambda>0$, logo $\tilde\lambda\convP\lambda$.
+
+\textbf{Passo 4 (viés).} $S=\sum_iY_i\sim\text{Gama}(n,\lambda)$ e $\tilde\lambda=n/S$. Pela integral gama:
+\[
+\E\Big(\frac1S\Big)=\int_0^\infty\frac1s\cdot\frac{\lambda^n}{\Gamma(n)}s^{n-1}e^{-\lambda s}\,ds
+=\frac{\lambda^n}{\Gamma(n)}\cdot\frac{\Gamma(n-1)}{\lambda^{n-1}}
+=\frac{\lambda}{n-1}\qquad(n\ge2),
+\]
+usando $\Gamma(n)=(n-1)\Gamma(n-1)$. Logo
+\[
+\E(\tilde\lambda)=\frac{n\lambda}{n-1},\qquad \B(\tilde\lambda)=\frac{n\lambda}{n-1}-\lambda=\frac{\lambda}{n-1}\xrightarrow[n\to\infty]{}0 .
+\]
+O estimador é viciado, mas assintoticamente não-viciado. (Isso ilustra a observação sobre funções não lineares: $\E(1/\bY)\neq1/\E(\bY)$.)
+
+\textbf{Numérico.} Amostra $(0{,}4;\ 1{,}1;\ 0{,}7;\ 2{,}8)$:
+\[
+\bar y=\frac{0{,}4+1{,}1+0{,}7+2{,}8}{4}=\frac{5{,}0}{4}=1{,}25,
+\qquad
+\tilde\lambda=\frac{1}{1{,}25}=0{,}8 .
+\]
+\end{exemplo}
+
+%---------------------------------------------------------------
+\begin{exemplo}[Momentos com dois parâmetros -- Gama$(\alpha,\beta)$]\label{ex:gama2}
+Seja $Y\sim\text{Gama}(\alpha,\beta)$ (taxa), ambos desconhecidos ($p=2$).
+
+\textbf{Passo 1.} $\E(Y)=\alpha/\beta$ e $\Var(Y)=\alpha/\beta^2$, logo
+\[
+\E(Y^2)=\Var(Y)+[\E(Y)]^2=\frac{\alpha}{\beta^2}+\frac{\alpha^2}{\beta^2}=\frac{\alpha(\alpha+1)}{\beta^2}.
+\]
+
+\textbf{Passo 2 (sistema).}
+\[
+\frac{\tilde\alpha}{\tilde\beta}=M_1,
+\qquad
+\frac{\tilde\alpha(\tilde\alpha+1)}{\tilde\beta^2}=M_2 .
+\]
+
+\textbf{Passo 3 (resolver).} Subtraindo o quadrado da primeira equação da segunda:
+\[
+M_2-M_1^2=\frac{\tilde\alpha^2+\tilde\alpha}{\tilde\beta^2}-\frac{\tilde\alpha^2}{\tilde\beta^2}=\frac{\tilde\alpha}{\tilde\beta^2}.
+\]
+Dividindo a primeira equação por esta:
+\[
+\frac{M_1}{M_2-M_1^2}=\frac{\tilde\alpha/\tilde\beta}{\tilde\alpha/\tilde\beta^2}=\tilde\beta
+\quad\Longrightarrow\quad
+\tilde\beta=\frac{M_1}{M_2-M_1^2},
+\qquad
+\tilde\alpha=M_1\tilde\beta=\frac{M_1^2}{M_2-M_1^2}.
+\]
+Observe que, pelo Lema~\ref{lema:sq}, $M_2-M_1^2=\frac1n\sum_i(Y_i-\bY)^2$.
+
+\textbf{Numérico.} Amostra $(1,2,2,3,7)$, $n=5$:
+\[
+M_1=\frac{15}{5}=3,
+\qquad
+M_2=\frac{1+4+4+9+49}{5}=\frac{67}{5}=13{,}4,
+\qquad
+M_2-M_1^2=13{,}4-9=4{,}4 .
+\]
+\[
+\tilde\beta=\frac{3}{4{,}4}\approx0{,}682,
+\qquad
+\tilde\alpha=\frac{9}{4{,}4}\approx2{,}045 .
+\]
+\end{exemplo}
+
+%---------------------------------------------------------------
+\begin{exemplo}[Momentos -- Normal com $\mu$ e $\sigma^2$ desconhecidos]\label{ex:normalmm}
+$\E(Y)=\mu$ e $\E(Y^2)=\sigma^2+\mu^2$. O sistema
+\[
+\tilde\mu=M_1,\qquad \tilde\sigma^2+\tilde\mu^2=M_2
+\]
+dá
+\[
+\tilde\mu=\bY,\qquad \tilde\sigma^2=M_2-M_1^2=\frac1n\sum_{i=1}^n(Y_i-\bY)^2 .
+\]
+Pelo Teorema~\ref{teo:sq}, $\E(\tilde\sigma^2)=\frac{n-1}{n}\sigma^2$: o estimador de momentos da variância usa divisor $n$, não $n-1$.
+\end{exemplo}
+
+%---------------------------------------------------------------
+\begin{exemplo}[Momentos -- quando a estimativa contradiz os dados]\label{ex:unifdesloc}
+Seja $Y\sim U(\theta,\theta+1)$, $\theta\in\R$. Então $\E(Y)=\frac{\theta+(\theta+1)}{2}=\theta+\frac12$ e
+\[
+\tilde\theta+\frac12=\bY\quad\Longrightarrow\quad\tilde\theta=\bY-\frac12 .
+\]
+Ele é não-viciado e $\Var(\tilde\theta)=\Var(\bY)=\frac{1}{12n}\to0$, logo consistente.
+
+\textbf{Problema com os dados.} Amostra $(0{,}9;\ 1{,}0;\ 1{,}1;\ 1{,}85)$:
+\[
+\bar y=\frac{4{,}85}{4}=1{,}2125,\qquad\tilde\theta=0{,}7125 .
+\]
+Mas o suporte exige $\theta<y_i<\theta+1$ para toda observação, isto é,
+\[
+\theta<\min_i y_i=0{,}9
+\qquad\text{e}\qquad
+\theta>\max_i y_i-1=0{,}85 .
+\]
+Como $0{,}7125<0{,}85$, o modelo com $\theta=\tilde\theta$ diria que observar $1{,}85$ era \emph{impossível}. A estimativa de momentos ignora a informação contida nos extremos da amostra. Quando o suporte depende do parâmetro, vale sempre a pena checar isso e comparar com estimadores baseados em $Y_{(1)}$ ou $Y_{(n)}$.
+\end{exemplo}
+
+%=====================================================================
+\section{Roteiros de prova (checklist)}
+%=====================================================================
+
+\begin{mdframed}[linecolor=Gray,backgroundcolor=Gray!5]
+\textbf{Mostrar que $T$ é não-viciado.}
+Calcule $\E_\theta(T)$ usando linearidade (escreva $T$ como combinação de $Y_i$ sempre que possível) e mostre que é igual a $\theta$ para todo $\theta$.
+
+\medskip
+\textbf{Encontrar $\Var(T)$.}
+Se $T=\sum a_iY_i$ com $Y_i$ independentes: $\sum a_i^2\Var(Y_i)$. Se $T$ envolve somas de quadrados sob normalidade: escreva $T$ como constante $\times\ \chi^2$. Se $T$ é máximo ou mínimo: obtenha a densidade pelo Teorema~\ref{teo:ordem} e integre para $\E(T)$ e $\E(T^2)$.
+
+\medskip
+\textbf{Encontrar o EQM.}
+$\EQM=\Var+\B^2$. Nunca esqueça o viés ao quadrado.
+
+\medskip
+\textbf{Consistência em MQ.}
+Mostre que $\lim_{n\to\infty}\EQM_\theta(T_n)=0$ para cada $\theta$ fixo.
+
+\medskip
+\textbf{Consistência em probabilidade.}
+Ou (i) cite MQ $\Rightarrow$ P, escrevendo a cadeia de Chebyshev
+$\Prob(|T_n-\theta|\ge\varepsilon)\le\EQM/\varepsilon^2\to0$;
+ou (ii) calcule $\Prob(|T_n-\theta|\ge\varepsilon)$ diretamente pela f.d.a.;
+ou (iii) use LGN + aplicação contínua.
+
+\medskip
+\textbf{Não-consistência.}
+Exiba um $\varepsilon>0$ com $\Prob(|T_n-\theta|\ge\varepsilon)\not\to0$.
+
+\medskip
+\textbf{Comparar estimadores.}
+Calcule os dois EQM, forme a diferença ou a razão e estude o sinal \emph{como função de $\theta$} e de $n$. Conclua se há dominância uniforme ou cruzamento, e discuta também viés e consistência.
+
+\medskip
+\textbf{Estimador de momentos.}
+Roteiro da Seção 6: momentos populacionais $\to$ igualar aos amostrais $\to$ resolver $\to$ checar $\Theta$ e compatibilidade com os dados.
+\end{mdframed}
+
+\end{document}
