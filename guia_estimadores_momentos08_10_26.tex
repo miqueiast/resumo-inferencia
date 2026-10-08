@@ -40,6 +40,7 @@
 \newcommand{\convP}{\xrightarrow{\;\Prob\;}}
 \newcommand{\convMQ}{\xrightarrow{\;\text{MQ}\;}}
 \newcommand{\bY}{\bar{Y}}
+\newcommand{\just}[1]{\tag*{\footnotesize\textcolor{gray}{[#1]}}}
 
 \title{\textbf{CE309 -- Inferência Estatística}\\[4pt]
 \large Guia de Estudos: Propriedades de Estimadores e Método dos Momentos}
@@ -308,7 +309,7 @@ Se $T$ é não-viciado, $\EQM_\theta(T)=\Var_\theta(T)$.
 \end{corolario}
 
 \begin{observacao}[Interpretação]
-O EQM mede a distância quadrática média entre o estimador e o alvo. O viés mede erro \emph{sistemático} (acurácia); a variância mede \emph{dispersão} (precisão). O EQM penaliza ambos. Um estimador levemente viciado mas com variância bem menor pode ter EQM menor que um não-viciado (Exemplo~\ref{ex:shrink}).
+O EQM mede a distância quadrática média entre o estimador e o alvo. O viés mede erro \emph{sistemático} (acurácia); a variância mede \emph{dispersão} (precisão). O EQM penaliza ambos. Um estimador levemente viciado mas com variância bem menor pode ter EQM menor que um não-viciado (exemplo da Seção~\ref{ex:shrink}).
 \end{observacao}
 
 \subsection{Comparação de estimadores}
@@ -491,7 +492,7 @@ Quando $T_n$ é um máximo ou mínimo, muitas vezes é mais fácil calcular $\Pr
 \item Escreva $\Prob(|T_n-\theta|\ge\varepsilon)$ em termos de $F_{T_n}$.
 \item Use que $r^n\to0$ quando $0\le r<1$.
 \end{enumerate}
-Veja o Exemplo~\ref{ex:expo}, item (d), onde isso é feito para um mínimo.
+Veja o Exemplo 2 (Seção~\ref{ex:expo}), item (d), onde isso é feito para um mínimo.
 
 %=====================================================================
 \section{Método dos momentos}
@@ -535,7 +536,7 @@ Usa-se a notação $\tilde\theta$ para distinguir do EMV $\hat\theta$.
 \begin{observacao}[Limitações do método]
 \begin{enumerate}[label=(\alph*)]
 \item \textbf{Não unicidade:} o mesmo parâmetro pode ser estimado igualando momentos diferentes (por exemplo, na Poisson $\E(Y)=\Var(Y)=\lambda$), gerando estimadores distintos.
-\item \textbf{Incompatibilidade com os dados:} a estimativa pode cair fora de $\Theta$ ou contradizer a amostra (Exemplo~\ref{ex:unifdesloc}).
+\item \textbf{Incompatibilidade com os dados:} a estimativa pode cair fora de $\Theta$ ou contradizer a amostra (exemplo da Seção~\ref{ex:unifdesloc}).
 \item \textbf{Não usa a verossimilhança:} nem sempre é eficiente; costuma servir como ponto de partida (por exemplo, valor inicial para algoritmos de máxima verossimilhança).
 \end{enumerate}
 \end{observacao}
@@ -573,251 +574,654 @@ Ao calcular $\E(Y^k)$ de uma densidade com fator $y^a e^{-by}$, junte as potênc
 \end{observacao}
 
 %=====================================================================
-\section{Exemplos resolvidos à mão}
+\section{Caixa de ferramentas: propriedades numeradas}\label{sec:props}
 %=====================================================================
 
-Os exemplos usam modelos \emph{diferentes} dos da lista, para que as técnicas fiquem claras sem entregar as respostas.
+Nos exemplos da próxima seção, \textbf{cada passagem algébrica vem com uma etiqueta cinza à direita}, como \textcolor{gray}{[P1]}, indicando qual propriedade abaixo foi usada. A ideia é que você consiga refazer qualquer linha sozinho, sabendo exatamente \emph{por que} ela vale.
+
+\subsection*{Esperança e variância}
+\begin{enumerate}[label=\textbf{(P\arabic*)},leftmargin=3.2em]
+\item \textbf{Linearidade da esperança.} $\E(aX+b)=a\E(X)+b$ e $\E\big(\sum_i X_i\big)=\sum_i\E(X_i)$. Constantes ``saem'' da esperança e a esperança de uma soma é a soma das esperanças (não exige independência).
+\item \textbf{Constantes na variância.} $\Var(aX+b)=a^2\Var(X)$. A constante sai \emph{ao quadrado}; somar uma constante $b$ não altera a dispersão.
+\item \textbf{Variância da soma de independentes.} Se $X_1,\dots,X_n$ são independentes, $\Var\big(\sum_i X_i\big)=\sum_i\Var(X_i)$ (as covariâncias são nulas).
+\item \textbf{Fórmula de atalho.} $\Var(X)=\E(X^2)-[\E(X)]^2$, ou seja, $\E(X^2)=\Var(X)+[\E(X)]^2$.
+\item \textbf{Esperança de constante.} $\E(c)=c$ e $\Var(c)=0$.
+\item \textbf{Independência.} $\E(XW)=\E(X)\E(W)$ e $\Prob(A\cap B)=\Prob(A)\Prob(B)$ para eventos ligados a variáveis independentes.
+\item \textbf{Esperança de uma função (LOTUS).} $\E[g(X)]=\int g(x)f(x)\,dx$ (contínua) ou $\sum_x g(x)p(x)$ (discreta).
+\item \textbf{Identicamente distribuídas.} Em uma a.a., todas as $Y_i$ têm a mesma distribuição de $Y$; logo $\E(Y_i)=\E(Y)$, $\Var(Y_i)=\Var(Y)$ e $\Prob(Y_i>y)=\Prob(Y>y)$ para todo $i$.
+\end{enumerate}
+
+\subsection*{Somatórios e produtórios}
+\begin{enumerate}[label=\textbf{(S\arabic*)},leftmargin=3.2em]
+\item $\sum_{i=1}^n c = nc$ \ (somar a mesma constante $n$ vezes).
+\item $\sum_i c\,x_i = c\sum_i x_i$ \ (constante sai do somatório).
+\item $\sum_i (x_i+w_i)=\sum_i x_i+\sum_i w_i$.
+\item $\sum_{i=1}^n x_i = n\bar x$ \ (definição da média: $\bar x=\frac1n\sum_i x_i$).
+\item $\prod_{i=1}^n c = c^n$ e $\prod_i (a_ib_i)=\big(\prod_i a_i\big)\big(\prod_i b_i\big)$.
+\end{enumerate}
+
+\subsection*{Logaritmo e exponencial (sempre $\log=\ln$)}
+\begin{enumerate}[label=\textbf{(L\arabic*)},leftmargin=3.2em]
+\item $\log(ab)=\log a+\log b$; portanto $\log\prod_i a_i=\sum_i\log a_i$.
+\item $\log(a^b)=b\log a$.
+\item $\log(e^x)=x$; \ $e^ae^b=e^{a+b}$; \ $(e^a)^n=e^{na}$.
+\item $\log(a/b)=\log a-\log b$.
+\end{enumerate}
+
+\subsection*{Derivadas}
+\begin{enumerate}[label=\textbf{(D\arabic*)},leftmargin=3.2em]
+\item $\frac{d}{dx}(cx)=c$ e $\frac{d}{dx}c=0$ \ (o que não depende da variável é constante).
+\item $\frac{d}{dx}\log x=\frac1x$ \ e \ $\frac{d}{dx}x^{k}=kx^{k-1}$ (em particular $\frac{d}{dx}x^{-1}=-x^{-2}$).
+\item Derivada da soma é a soma das derivadas.
+\end{enumerate}
+
+\subsection*{Integrais}
+\begin{enumerate}[label=\textbf{(I\arabic*)},leftmargin=3.2em]
+\item \textbf{Integral gama.} Para $\alpha>0$ e $\beta>0$: $\displaystyle\int_0^\infty y^{\alpha-1}e^{-\beta y}\,dy=\frac{\Gamma(\alpha)}{\beta^\alpha}$.
+\item \textbf{Propriedades da função gama.} $\Gamma(\alpha+1)=\alpha\,\Gamma(\alpha)$; \ $\Gamma(1)=1$; \ $\Gamma(m)=(m-1)!$ para $m$ inteiro positivo. Ex.: $\Gamma(2)=1$, $\Gamma(3)=2$, $\Gamma(4)=6$.
+\item Constante sai da integral: $\int c\,g(y)\,dy=c\int g(y)\,dy$.
+\item \textbf{Polinômios.} $\int_a^b y^k\,dy=\Big[\frac{y^{k+1}}{k+1}\Big]_a^b=\frac{b^{k+1}-a^{k+1}}{k+1}$.
+\item \textbf{Exponencial.} $\int_0^y \frac1\beta e^{-t/\beta}\,dt=\Big[-e^{-t/\beta}\Big]_0^y=1-e^{-y/\beta}$.
+\end{enumerate}
+
+\subsection*{Probabilidade}
+\begin{enumerate}[label=\textbf{(Pr\arabic*)},leftmargin=3.6em]
+\item \textbf{Complemento.} $\Prob(A^c)=1-\Prob(A)$; em particular $\Prob(Y>y)=1-F(y)$.
+\item \textbf{União disjunta.} Se $A\cap B=\emptyset$, $\Prob(A\cup B)=\Prob(A)+\Prob(B)$.
+\item \textbf{Valor absoluto.} $|X-c|\ge\varepsilon \iff X\le c-\varepsilon$ \ ou \ $X\ge c+\varepsilon$ (dois eventos disjuntos).
+\item \textbf{FGM.} $M_X(t)=\E(e^{tX})$. A FGM de uma soma de independentes é o produto das FGMs, e a FGM determina a distribuição (unicidade).
+\item \textbf{Mínimo e máximo.} $\{Y_{(1)}>y\}=\{Y_1>y,\dots,Y_n>y\}$ \ e \ $\{Y_{(n)}\le y\}=\{Y_1\le y,\dots,Y_n\le y\}$.
+\end{enumerate}
+
+\subsection*{Limites e desigualdades}
+\begin{enumerate}[label=\textbf{(Li\arabic*)},leftmargin=3.6em]
+\item Para $c$ constante (não depende de $n$): $\lim_{n\to\infty} c/n=0$ e $\lim_{n\to\infty}c=c$.
+\item \textbf{Confronto.} Se $0\le a_n\le b_n$ e $b_n\to0$, então $a_n\to0$.
+\item Multiplicar ou dividir uma desigualdade por número \textbf{positivo} preserva o sentido; somar ou subtrair qualquer número também.
+\item Se $a,b\ge0$: $a<b\iff a^2<b^2$, e $\sqrt{a^2}=|a|$.
+\end{enumerate}
+
+\subsection*{Resultados do próprio guia que serão citados}
+\textbf{[Decomp]} $\EQM=\Var+\B^2$ (Teorema~\ref{teo:decomp}). \quad
+\textbf{[Cheb]} $\Prob(|T-\theta|\ge\varepsilon)\le\EQM(T)/\varepsilon^2$ (Corolário~\ref{cor:cheb}). \quad
+\textbf{[LGN]} $\bY\convP\E(Y)$ (Teorema~\ref{teo:lgn}). \quad
+\textbf{[Cont]} aplicação contínua (Teorema~\ref{teo:cont}). \quad
+\textbf{[Lema-SQ]} $\sum_i(Y_i-\bY)^2=\sum_iY_i^2-n\bY^2$ (Lema~\ref{lema:sq}). \quad
+\textbf{[Teo-SQ]} $\E\big[\sum_i(Y_i-\bY)^2\big]=(n-1)\sigma^2$ (Teorema~\ref{teo:sq}).
+
+%=====================================================================
+\section{Exemplos resolvidos à mão, passo a passo}
+%=====================================================================
+
+Os exemplos usam modelos \emph{diferentes} dos da lista, para que as técnicas fiquem claras sem entregar as respostas. Leia cada linha e, antes de olhar a etiqueta, tente dizer qual propriedade justifica a passagem.
 
 %---------------------------------------------------------------
-\begin{exemplo}[Poisson: as cinco propriedades + Cramér--Rao]\label{ex:poisson}
-Seja $Y_1,\dots,Y_n\iid\text{Poi}(\lambda)$ e $\hat\lambda=\bY$.
+\subsection{Exemplo 1 -- Poisson: as cinco propriedades e Cramér--Rao}\label{ex:poisson}
 
-\textbf{(a) Não-vício.} Por linearidade, com $\E(Y_i)=\lambda$:
-\[
-\E(\hat\lambda)=\frac1n\sum_{i=1}^n\E(Y_i)=\frac1n\cdot n\lambda=\lambda .
-\]
-Logo $\B_\lambda(\hat\lambda)=0$ para todo $\lambda>0$.
+\textbf{Enunciado.} Seja $Y_1,\dots,Y_n\iid\text{Poi}(\lambda)$, com $f(y;\lambda)=\dfrac{e^{-\lambda}\lambda^y}{y!}$, $y=0,1,2,\dots$, e o estimador $\hat\lambda=\bY=\frac1n\sum_{i=1}^nY_i$.
 
-\textbf{(b) Variância.} Por independência, com $\Var(Y_i)=\lambda$:
+\subsubsection*{Passo 0 -- de onde vêm $\E(Y)=\lambda$ e $\Var(Y)=\lambda$}
+
+Não decore: veja de onde sai. Vamos usar a série de Taylor $\sum_{k=0}^\infty\frac{\lambda^k}{k!}=e^\lambda$.
+
+\textit{Esperança.} O termo $y=0$ vale zero (está multiplicado por $y=0$), então a soma começa em $y=1$. Como $\frac{y}{y!}=\frac{1}{(y-1)!}$ para $y\ge1$:
+\begin{align*}
+\E(Y)&=\sum_{y=0}^\infty y\,\frac{e^{-\lambda}\lambda^y}{y!} \just{P7}\\
+&=\sum_{y=1}^\infty \frac{e^{-\lambda}\lambda^y}{(y-1)!} \just{termo $y=0$ é nulo; $y/y!=1/(y-1)!$}\\
+&=\lambda e^{-\lambda}\sum_{y=1}^\infty \frac{\lambda^{y-1}}{(y-1)!} \just{$\lambda^y=\lambda\cdot\lambda^{y-1}$; S2}\\
+&=\lambda e^{-\lambda}\sum_{k=0}^\infty \frac{\lambda^{k}}{k!} \just{troca $k=y-1$}\\
+&=\lambda e^{-\lambda}e^{\lambda}=\lambda . \just{série de Taylor; L3}
+\end{align*}
+
+\textit{Variância.} O truque é calcular $\E[Y(Y-1)]$, porque $\frac{y(y-1)}{y!}=\frac{1}{(y-2)!}$ para $y\ge2$. Repetindo o raciocínio:
+\begin{align*}
+\E[Y(Y-1)]&=\sum_{y=2}^\infty \frac{e^{-\lambda}\lambda^y}{(y-2)!}
+=\lambda^2e^{-\lambda}\sum_{k=0}^\infty\frac{\lambda^k}{k!}=\lambda^2 . \just{mesmo argumento, $k=y-2$}
+\end{align*}
+Como $\E[Y(Y-1)]=\E(Y^2)-\E(Y)$ (por P1), temos $\E(Y^2)=\lambda^2+\lambda$. Então
+\begin{align*}
+\Var(Y)&=\E(Y^2)-[\E(Y)]^2 \just{P4}\\
+&=\lambda^2+\lambda-\lambda^2=\lambda .
+\end{align*}
+
+\subsubsection*{(a) Não-vício}
+\textbf{Objetivo:} mostrar que $\E(\hat\lambda)=\lambda$ para todo $\lambda>0$.
+\begin{align*}
+\E(\hat\lambda)&=\E\Big(\frac1n\sum_{i=1}^nY_i\Big) \just{definição de $\hat\lambda$}\\
+&=\frac1n\,\E\Big(\sum_{i=1}^nY_i\Big) \just{P1: constante $1/n$ sai}\\
+&=\frac1n\sum_{i=1}^n\E(Y_i) \just{P1: esperança da soma}\\
+&=\frac1n\sum_{i=1}^n\lambda \just{P8 + Passo 0}\\
+&=\frac1n\cdot n\lambda \just{S1}\\
+&=\lambda .
+\end{align*}
+Logo $\B_\lambda(\hat\lambda)=\E(\hat\lambda)-\lambda=\lambda-\lambda=0$ para todo $\lambda>0$: $\hat\lambda$ é não-viciado.
+
+\subsubsection*{(b) Variância}
+\begin{align*}
+\Var(\hat\lambda)&=\Var\Big(\frac1n\sum_{i=1}^nY_i\Big)\\
+&=\frac1{n^2}\,\Var\Big(\sum_{i=1}^nY_i\Big) \just{P2: $1/n$ sai \textbf{ao quadrado}}\\
+&=\frac1{n^2}\sum_{i=1}^n\Var(Y_i) \just{P3: as $Y_i$ são independentes}\\
+&=\frac1{n^2}\sum_{i=1}^n\lambda \just{P8 + Passo 0}\\
+&=\frac1{n^2}\cdot n\lambda \just{S1}\\
+&=\frac{\lambda}{n}. \just{simplifica $n/n^2=1/n$}
+\end{align*}
+\textbf{Erro comum:} esquecer o quadrado em P2 e escrever $\frac1n\cdot n\lambda=\lambda$. Outro erro: usar P3 sem citar a independência, que é exatamente o que a justifica.
+
+\subsubsection*{(c) Erro quadrático médio}
+\begin{align*}
+\EQM_\lambda(\hat\lambda)&=\Var(\hat\lambda)+[\B_\lambda(\hat\lambda)]^2 \just{Decomp}\\
+&=\frac{\lambda}{n}+0^2 \just{itens (a) e (b)}\\
+&=\frac{\lambda}{n}.
+\end{align*}
+
+\subsubsection*{(d) Consistência em média quadrática}
+Fixamos um valor qualquer de $\lambda>0$. Ele \textbf{não muda com $n$}, então funciona como uma constante no limite:
+\begin{align*}
+\lim_{n\to\infty}\EQM_\lambda(\hat\lambda)&=\lim_{n\to\infty}\frac{\lambda}{n}=0 . \just{Li1 com $c=\lambda$}
+\end{align*}
+Como isso vale para todo $\lambda>0$, $\hat\lambda$ é médio quadrático consistente.
+
+\subsubsection*{(e) Consistência em probabilidade}
+\textbf{Objetivo:} para todo $\varepsilon>0$, mostrar que $\Prob(|\hat\lambda-\lambda|\ge\varepsilon)\to0$.
+\begin{align*}
+\Prob(|\hat\lambda-\lambda|\ge\varepsilon)
+&\le\frac{\EQM_\lambda(\hat\lambda)}{\varepsilon^2} \just{Cheb}\\
+&=\frac{\lambda/n}{\varepsilon^2}=\frac{\lambda}{n\varepsilon^2}. \just{item (c)}
+\end{align*}
+Com $\lambda$ e $\varepsilon$ fixos, $\frac{\lambda}{\varepsilon^2}$ é uma constante e $\frac{\lambda}{n\varepsilon^2}\to0$ (Li1). Como toda probabilidade é $\ge0$, temos
 \[
-\Var(\hat\lambda)=\frac1{n^2}\sum_{i=1}^n\Var(Y_i)=\frac{n\lambda}{n^2}=\frac{\lambda}{n}.
+0\le\Prob(|\hat\lambda-\lambda|\ge\varepsilon)\le\frac{\lambda}{n\varepsilon^2}\to0,
+\]
+e pelo confronto (Li2) a probabilidade tende a zero. Portanto $\hat\lambda\convP\lambda$.
+
+\textit{Atalho legítimo em prova:} ``como $\hat\lambda$ é consistente em MQ (item d), pelo Teorema~\ref{teo:mq_p} é consistente em probabilidade''. Mas é bom saber escrever a cadeia acima, porque é ela que \emph{prova} o teorema.
+
+\subsubsection*{(f) Verossimilhança, escore, $I_o$, $I_e$ e Cramér--Rao}
+
+\textit{Verossimilhança.} Por independência, a densidade conjunta é o produto:
+\[
+L(\lambda)=\prod_{i=1}^n\frac{e^{-\lambda}\lambda^{y_i}}{y_i!}.
 \]
 
-\textbf{(c) EQM.} Pela decomposição:
+\textit{Log-verossimilhança.} O log transforma o produto em soma:
+\begin{align*}
+\ell(\lambda)&=\log\prod_{i=1}^n\frac{e^{-\lambda}\lambda^{y_i}}{y_i!}
+=\sum_{i=1}^n\log\Big(\frac{e^{-\lambda}\lambda^{y_i}}{y_i!}\Big) \just{L1}\\
+&=\sum_{i=1}^n\Big[\log e^{-\lambda}+\log\lambda^{y_i}-\log(y_i!)\Big] \just{L1 e L4}\\
+&=\sum_{i=1}^n\Big[-\lambda+y_i\log\lambda-\log(y_i!)\Big] \just{L3 e L2}\\
+&=\sum_{i=1}^n(-\lambda)+\sum_{i=1}^ny_i\log\lambda-\sum_{i=1}^n\log(y_i!) \just{S3}\\
+&=-n\lambda+\Big(\sum_{i=1}^ny_i\Big)\log\lambda-\sum_{i=1}^n\log(y_i!). \just{S1 e S2}
+\end{align*}
+
+\textit{Escore.} Derivamos termo a termo em relação a $\lambda$ (D3). Os $y_i$ são números observados, logo constantes:
+\begin{align*}
+\frac{d}{d\lambda}(-n\lambda)&=-n \just{D1}\\
+\frac{d}{d\lambda}\Big[\Big(\sum_iy_i\Big)\log\lambda\Big]&=\Big(\sum_iy_i\Big)\cdot\frac1\lambda \just{D1 e D2}\\
+\frac{d}{d\lambda}\Big[\sum_i\log(y_i!)\Big]&=0 \just{D1: não depende de $\lambda$}
+\end{align*}
 \[
-\EQM_\lambda(\hat\lambda)=\Var(\hat\lambda)+[\B(\hat\lambda)]^2=\frac{\lambda}{n}+0=\frac{\lambda}{n}.
+U(\lambda)=-n+\frac{\sum_{i=1}^ny_i}{\lambda}.
 \]
 
-\textbf{(d) Consistência em MQ.} Para cada $\lambda>0$ fixo:
+\textit{Informação observada.} Derivamos de novo e trocamos o sinal. Escreva $\frac{\sum_iy_i}{\lambda}=\big(\sum_iy_i\big)\lambda^{-1}$:
+\begin{align*}
+\frac{d^2\ell}{d\lambda^2}=\frac{dU}{d\lambda}&=0+\Big(\sum_iy_i\Big)\cdot(-1)\lambda^{-2} \just{D1 e D2}\\
+&=-\frac{\sum_iy_i}{\lambda^2},
+\end{align*}
 \[
-\lim_{n\to\infty}\EQM_\lambda(\hat\lambda)=\lim_{n\to\infty}\frac{\lambda}{n}=0 .
+I_o(\lambda)=-\frac{d^2\ell}{d\lambda^2}=\frac{\sum_{i=1}^ny_i}{\lambda^2}.
 \]
 
-\textbf{(e) Consistência em probabilidade.} Pela desigualdade de Chebyshev, para todo $\varepsilon>0$:
+\textit{Informação esperada.} Trocamos os valores observados $y_i$ pelas variáveis aleatórias $Y_i$ e tomamos esperança:
+\begin{align*}
+I_e(\lambda)&=\E\Big[\frac{\sum_iY_i}{\lambda^2}\Big]
+=\frac1{\lambda^2}\sum_{i=1}^n\E(Y_i) \just{P1}\\
+&=\frac{n\lambda}{\lambda^2}=\frac{n}{\lambda}. \just{P8, S1}
+\end{align*}
+\textit{Conferência pela outra definição, $I_e=\E[U^2]$.} Primeiro, $\E[U]=-n+\frac{n\lambda}{\lambda}=0$. Então $\E[U^2]=\Var(U)$ (P4), e
 \[
-0\le\Prob(|\hat\lambda-\lambda|\ge\varepsilon)\le\frac{\EQM_\lambda(\hat\lambda)}{\varepsilon^2}=\frac{\lambda}{n\varepsilon^2}\xrightarrow[n\to\infty]{}0 .
+\Var(U)=\Var\Big(-n+\frac1\lambda\sum_iY_i\Big)=\frac1{\lambda^2}\Var\Big(\sum_iY_i\Big)=\frac{n\lambda}{\lambda^2}=\frac{n}{\lambda}
 \]
+usando P2 (a constante $-n$ some e $1/\lambda$ sai ao quadrado) e P3. As duas definições batem.
 
-\textbf{(f) Comparação com o limite de Cramér--Rao.}
+\textit{Limite de Cramér--Rao.} Aqui o alvo é o próprio $\lambda$, então $\tau(\lambda)=\lambda$ e $\tau'(\lambda)=1$:
 \[
-L(\lambda)=\prod_{i=1}^n\frac{e^{-\lambda}\lambda^{y_i}}{y_i!},
-\qquad
-\ell(\lambda)=-n\lambda+\Big(\sum_{i=1}^n y_i\Big)\log\lambda-\sum_{i=1}^n\log(y_i!) .
+\text{LICR}=\frac{[\tau'(\lambda)]^2}{I_e(\lambda)}=\frac{1}{n/\lambda}=\frac{\lambda}{n}.
 \]
-\[
-U(\lambda)=\frac{\partial\ell}{\partial\lambda}=-n+\frac{\sum_i y_i}{\lambda},
-\qquad
-I_o(\lambda)=-\frac{\partial^2\ell}{\partial\lambda^2}=\frac{\sum_i y_i}{\lambda^2},
-\]
-\[
-I_e(\lambda)=\E\big[I_o(\lambda)\big]=\frac{\E(\sum_i Y_i)}{\lambda^2}=\frac{n\lambda}{\lambda^2}=\frac{n}{\lambda}.
-\]
-Com $\tau(\lambda)=\lambda$, $\tau'(\lambda)=1$, o limite é $1/I_e(\lambda)=\lambda/n=\Var(\hat\lambda)$. Portanto $\hat\lambda$ é \textbf{eficiente}.
+Como $\Var(\hat\lambda)=\lambda/n$ (item b) é \emph{igual} ao limite, $\hat\lambda$ é \textbf{eficiente}. Nenhum estimador não-viciado de $\lambda$ tem variância menor.
 
-\textbf{(g) Numérico.} Amostra $(2,0,3,1,4)$, $n=5$:
+\textit{Bônus: o EMV.} Igualando o escore a zero:
 \[
-\hat\lambda=\frac{2+0+3+1+4}{5}=\frac{10}{5}=2,
-\qquad
-\widehat{\EQM}=\frac{\hat\lambda}{n}=\frac{2}{5}=0{,}4 .
+-n+\frac{\sum_iy_i}{\lambda}=0
+\iff\frac{\sum_iy_i}{\lambda}=n
+\iff\lambda=\frac{\sum_iy_i}{n}=\bar y .
 \]
-\end{exemplo}
+A segunda derivada $-\sum_iy_i/\lambda^2<0$ confirma que é um máximo. Aqui o EMV coincide com o estimador de momentos ($\E(Y)=\lambda=\bY$), mas isso \emph{nem sempre} acontece.
+
+\subsubsection*{(g) Numérico}
+Amostra $(2,\,0,\,3,\,1,\,4)$, com $n=5$:
+\begin{align*}
+\sum_iy_i&=2+0+3+1+4=10,\\
+\hat\lambda&=\frac{10}{5}=2,\\
+\widehat{\Var}(\hat\lambda)&=\frac{\hat\lambda}{n}=\frac{2}{5}=0{,}4 \quad\text{(trocamos o $\lambda$ desconhecido pela estimativa)},\\
+\text{erro-padrão}&=\sqrt{0{,}4}\approx0{,}632 .
+\end{align*}
 
 %---------------------------------------------------------------
-\begin{exemplo}[Exponencial: dois estimadores não-viciados, só um consistente]\label{ex:expo}
-Seja $Y_1,\dots,Y_n\iid$ Exponencial com \emph{média} $\beta$, isto é, $f(y;\beta)=\frac1\beta e^{-y/\beta}\ind\{y>0\}$, com $\E(Y)=\beta$, $\Var(Y)=\beta^2$ e $F(y)=1-e^{-y/\beta}$ para $y>0$. Considere
+\subsection{Exemplo 2 -- Exponencial: dois estimadores não-viciados, só um consistente}\label{ex:expo}
+
+\textbf{Enunciado.} Seja $Y_1,\dots,Y_n\iid$ Exponencial com \emph{média} $\beta$, isto é, $f(y;\beta)=\frac1\beta e^{-y/\beta}$ para $y>0$. Compare $T_1=\bY$ e $T_2=n\,Y_{(1)}$, em que $Y_{(1)}=\min(Y_1,\dots,Y_n)$.
+
+\subsubsection*{Passo 0 -- momentos e f.d.a. de $Y$}
+
+\textit{Esperança.} Reescrevemos o integrando no formato da integral gama $y^{\alpha-1}e^{-(\text{taxa})\,y}$. Aqui $y=y^{2-1}$ e a taxa é $1/\beta$:
+\begin{align*}
+\E(Y)&=\int_0^\infty y\cdot\frac1\beta e^{-y/\beta}\,dy \just{P7}\\
+&=\frac1\beta\int_0^\infty y^{2-1}e^{-(1/\beta)y}\,dy \just{I3}\\
+&=\frac1\beta\cdot\frac{\Gamma(2)}{(1/\beta)^2} \just{I1 com $\alpha=2$, taxa $1/\beta$}\\
+&=\frac1\beta\cdot\frac{1}{1/\beta^2} \just{I2: $\Gamma(2)=1!=1$}\\
+&=\frac1\beta\cdot\beta^2=\beta .
+\end{align*}
+
+\textit{Segundo momento.} Agora $y^2=y^{3-1}$:
+\begin{align*}
+\E(Y^2)&=\frac1\beta\int_0^\infty y^{3-1}e^{-(1/\beta)y}\,dy
+=\frac1\beta\cdot\frac{\Gamma(3)}{(1/\beta)^3} \just{P7, I3, I1 com $\alpha=3$}\\
+&=\frac1\beta\cdot2\beta^3=2\beta^2 . \just{I2: $\Gamma(3)=2!=2$}
+\end{align*}
+
+\textit{Variância.}
 \[
-T_1=\bY,\qquad T_2=n\,Y_{(1)} .
+\Var(Y)=\E(Y^2)-[\E(Y)]^2=2\beta^2-\beta^2=\beta^2 . \just{P4}
 \]
 
-\textbf{(a) Distribuição de $Y_{(1)}$.} Pelo Teorema~\ref{teo:ordem}, para $y>0$:
-\[
-\Prob(Y_{(1)}>y)=[1-F(y)]^n=\big(e^{-y/\beta}\big)^n=e^{-ny/\beta}.
-\]
-Ou seja, $Y_{(1)}\sim$ Exponencial com média $\beta/n$. Então, para $T_2=nY_{(1)}$:
-\[
-\Prob(T_2>t)=\Prob\Big(Y_{(1)}>\frac tn\Big)=e^{-n(t/n)/\beta}=e^{-t/\beta},
-\]
-isto é, $T_2\sim$ Exponencial com média $\beta$, \textbf{qualquer que seja $n$}.
+\textit{F.d.a. e sobrevivência.} Para $y>0$:
+\begin{align*}
+F(y)&=\int_0^y\frac1\beta e^{-t/\beta}\,dt=1-e^{-y/\beta}, \just{I5}\\
+\Prob(Y>y)&=1-F(y)=e^{-y/\beta}. \just{Pr1}
+\end{align*}
 
-\textbf{(b) Não-vício e variância.}
+\subsubsection*{(a) A distribuição de $Y_{(1)}$ e de $T_2$}
+\textbf{Ideia-chave:} o mínimo é maior que $y$ se, e somente se, \emph{todas} as observações são maiores que $y$.
+\begin{align*}
+\Prob(Y_{(1)}>y)&=\Prob(Y_1>y,\;Y_2>y,\;\dots,\;Y_n>y) \just{Pr5}\\
+&=\prod_{i=1}^n\Prob(Y_i>y) \just{P6: independência}\\
+&=\prod_{i=1}^n e^{-y/\beta} \just{P8 + Passo 0}\\
+&=\big(e^{-y/\beta}\big)^n \just{S5}\\
+&=e^{-ny/\beta}. \just{L3}
+\end{align*}
+Compare com a sobrevivência de uma exponencial de média $m$, que é $e^{-y/m}$. Escrevendo $e^{-ny/\beta}=e^{-y/(\beta/n)}$, vemos que $Y_{(1)}$ é exponencial com \textbf{média $\beta/n$}.
+
+Agora $T_2=nY_{(1)}$. Para $t>0$:
+\begin{align*}
+\Prob(T_2>t)&=\Prob(nY_{(1)}>t)\\
+&=\Prob\Big(Y_{(1)}>\frac tn\Big) \just{Li3: dividir por $n>0$}\\
+&=e^{-n\,(t/n)/\beta} \just{resultado acima com $y=t/n$}\\
+&=e^{-t/\beta}. \just{$n\cdot\frac tn=t$}
+\end{align*}
+Ou seja, \textbf{$T_2$ tem exatamente a mesma distribuição de uma única observação $Y$, qualquer que seja $n$}. Multiplicar por $n$ desfaz o encolhimento do mínimo.
+
+\subsubsection*{(b) Viés e variância de cada estimador}
+\textit{$T_1=\bY$.} Repetindo os passos do Exemplo~1 (a) e (b), agora com $\E(Y_i)=\beta$ e $\Var(Y_i)=\beta^2$:
 \[
-\E(T_1)=\beta,\quad \Var(T_1)=\frac{\beta^2}{n};
+\E(T_1)=\frac1n\sum_{i=1}^n\beta=\beta,
 \qquad
-\E(T_2)=\beta,\quad \Var(T_2)=\beta^2 .
+\Var(T_1)=\frac1{n^2}\sum_{i=1}^n\beta^2=\frac{n\beta^2}{n^2}=\frac{\beta^2}{n}.
 \]
-Ambos são não-viciados, então $\EQM(T_1)=\beta^2/n$ e $\EQM(T_2)=\beta^2$.
-
-\textbf{(c) Eficiência relativa.}
+\textit{$T_2=nY_{(1)}$.} Pelo item (a), $T_2$ tem a mesma distribuição de $Y$, então herda os momentos do Passo 0:
 \[
-\operatorname{ef}(T_1,T_2)=\frac{\EQM(T_2)}{\EQM(T_1)}=\frac{\beta^2}{\beta^2/n}=n .
+\E(T_2)=\beta,\qquad\Var(T_2)=\beta^2 .
 \]
-$T_1$ é $n$ vezes mais eficiente, para todo $\beta$: $T_1$ é uniformemente melhor (para $n\ge2$).
+Também dá para ver a esperança por P1: $\E(T_2)=n\,\E(Y_{(1)})=n\cdot\frac{\beta}{n}=\beta$.
 
-\textbf{(d) Consistência.} $T_1$: $\EQM(T_1)=\beta^2/n\to0$, logo é consistente (MQ e em probabilidade).
+\textbf{Conclusão:} $\B(T_1)=\B(T_2)=0$, ou seja, \emph{ambos são não-viciados}.
 
-$T_2$: como sua distribuição não depende de $n$, pela Proposição~\ref{prop:naocons} não é consistente. Explicitamente, para $0<\varepsilon<\beta$:
+\subsubsection*{(c) EQM e eficiência relativa}
+Como ambos são não-viciados, pela Decomp o EQM é só a variância:
 \[
-\Prob(|T_2-\beta|\ge\varepsilon)=\Prob(T_2\le\beta-\varepsilon)+\Prob(T_2\ge\beta+\varepsilon)
-=\big(1-e^{-(\beta-\varepsilon)/\beta}\big)+e^{-(\beta+\varepsilon)/\beta},
+\EQM(T_1)=\frac{\beta^2}{n},\qquad\EQM(T_2)=\beta^2 .
 \]
-um número positivo que \textbf{não depende de $n$}, logo não tende a zero.
+\begin{align*}
+\operatorname{ef}(T_1,T_2)&=\frac{\EQM(T_2)}{\EQM(T_1)}=\frac{\beta^2}{\beta^2/n} \just{definição}\\
+&=\beta^2\cdot\frac{n}{\beta^2} \just{dividir por fração = multiplicar pelo inverso}\\
+&=n .
+\end{align*}
+Para $n\ge2$, $\EQM(T_1)<\EQM(T_2)$ para \textbf{todo} $\beta>0$, então $T_1$ é uniformemente melhor.
 
-\textbf{Moral:} não-vício não garante consistência. O que importa é se a dispersão do estimador encolhe com $n$.
-\end{exemplo}
+\subsubsection*{(d) Consistência}
+\textit{$T_1$.} $\EQM(T_1)=\beta^2/n\to0$ (Li1), logo $T_1$ é consistente em MQ e, portanto, em probabilidade.
+
+\textit{$T_2$.} Vamos calcular a probabilidade de erro diretamente. Tome $0<\varepsilon<\beta$ (assim $\beta-\varepsilon>0$):
+\begin{align*}
+\Prob(|T_2-\beta|\ge\varepsilon)&=\Prob(T_2\le\beta-\varepsilon)+\Prob(T_2\ge\beta+\varepsilon) \just{Pr3 e Pr2}\\
+&=F(\beta-\varepsilon)+e^{-(\beta+\varepsilon)/\beta} \just{$T_2$ tem a f.d.a. $F$ do Passo 0}\\
+&=\Big(1-e^{-(\beta-\varepsilon)/\beta}\Big)+e^{-(\beta+\varepsilon)/\beta}\\
+&=1-e^{-1+\varepsilon/\beta}+e^{-1-\varepsilon/\beta}. \just{$\frac{\beta\pm\varepsilon}{\beta}=1\pm\frac\varepsilon\beta$}
+\end{align*}
+Repare que \textbf{não aparece $n$} nessa expressão. Ela é estritamente positiva, porque já a segunda parcela $e^{-1-\varepsilon/\beta}$ é positiva. Logo o limite quando $n\to\infty$ é essa mesma constante positiva, e não zero: \textbf{$T_2$ não é consistente}.
+
+\textit{Numérico}, com $\beta=1$ e $\varepsilon=0{,}5$:
+\[
+1-e^{-0{,}5}+e^{-1{,}5}\approx1-0{,}6065+0{,}2231=0{,}6166 .
+\]
+Mesmo com um milhão de observações, há cerca de $62\%$ de chance de $T_2$ errar por $0{,}5$ ou mais.
+
+\textbf{Moral:} não-vício não garante consistência. O que importa é se a dispersão do estimador encolhe com $n$; a de $T_2$ não encolhe.
 
 %---------------------------------------------------------------
-\begin{exemplo}[Um estimador viciado pode ter EQM menor]\label{ex:shrink}
-Seja $Y_1,\dots,Y_n\iid N(\mu,\sigma^2)$ com $\sigma^2$ conhecido, e $T_c=c\,\bY$ com $0<c\le1$.
+\subsection{Exemplo 3 -- Um estimador viciado pode ter EQM menor}\label{ex:shrink}
 
-\textbf{Viés:} $\E(T_c)=c\mu$, logo $\B(T_c)=c\mu-\mu=(c-1)\mu$.
+\textbf{Enunciado.} Seja $Y_1,\dots,Y_n\iid N(\mu,\sigma^2)$ com $\sigma^2$ conhecido. Considere $T_c=c\,\bY$ com $0<c\le1$ (``encolher'' a média em direção a zero).
 
-\textbf{Variância:} $\Var(T_c)=c^2\Var(\bY)=c^2\sigma^2/n$.
+\subsubsection*{Viés}
+\begin{align*}
+\E(T_c)&=\E(c\bY)=c\,\E(\bY) \just{P1}\\
+&=c\mu, \just{Teorema~\ref{teo:media}}\\
+\B(T_c)&=\E(T_c)-\mu=c\mu-\mu=(c-1)\mu . \just{coloca $\mu$ em evidência}
+\end{align*}
+Se $c<1$ e $\mu\neq0$, o estimador é viciado.
 
-\textbf{EQM:}
-\[
-\EQM_\mu(T_c)=\frac{c^2\sigma^2}{n}+(c-1)^2\mu^2 .
-\]
+\subsubsection*{Variância}
+\begin{align*}
+\Var(T_c)&=\Var(c\bY)=c^2\Var(\bY) \just{P2}\\
+&=c^2\frac{\sigma^2}{n}. \just{Teorema~\ref{teo:media}}
+\end{align*}
 
-\textbf{Numérico:} $n=10$, $\sigma^2=1$, comparando $c=1$ (média amostral) com $c=0{,}9$:
-\[
-\EQM(T_1)=\frac{1}{10}=0{,}1,
-\qquad
-\EQM(T_{0,9})=\frac{0{,}81}{10}+(0{,}1)^2\mu^2=0{,}081+0{,}01\mu^2 .
-\]
-$T_{0,9}$ é melhor se, e somente se,
-\[
-0{,}081+0{,}01\mu^2<0{,}1
-\iff 0{,}01\mu^2<0{,}019
-\iff \mu^2<1{,}9
-\iff |\mu|<\sqrt{1{,}9}\approx1{,}378 .
-\]
-As curvas de EQM se cruzam: nenhum dos dois é uniformemente melhor. Note ainda que, para $c<1$ fixo, $\B(T_c)\to(c-1)\mu\neq0$, então $T_c$ \textbf{não} é consistente para $\mu\ne0$, embora possa ganhar em amostras pequenas.
-\end{exemplo}
+\subsubsection*{EQM}
+\begin{align*}
+\EQM_\mu(T_c)&=\Var(T_c)+[\B(T_c)]^2 \just{Decomp}\\
+&=\frac{c^2\sigma^2}{n}+[(c-1)\mu]^2\\
+&=\frac{c^2\sigma^2}{n}+(c-1)^2\mu^2 . \just{$(ab)^2=a^2b^2$}
+\end{align*}
+Leia a fórmula: diminuir $c$ \emph{reduz} a primeira parcela (variância) mas \emph{aumenta} a segunda (viés$^2$). É o \textbf{compromisso viés--variância}.
 
-%---------------------------------------------------------------
-\begin{exemplo}[Momentos -- exponencial com taxa $\lambda$, incluindo o viés]\label{ex:mmexp}
-Seja $Y_1,\dots,Y_n\iid\text{Exp}(\lambda)$, $f(y;\lambda)=\lambda e^{-\lambda y}$, $y>0$.
+\subsubsection*{Comparação numérica: $n=10$, $\sigma^2=1$, $c=1$ contra $c=0{,}9$}
+\begin{align*}
+\EQM(T_1)&=\frac{1^2\cdot1}{10}+(1-1)^2\mu^2=0{,}1,\\
+\EQM(T_{0,9})&=\frac{(0{,}9)^2\cdot1}{10}+(0{,}9-1)^2\mu^2=\frac{0{,}81}{10}+(-0{,}1)^2\mu^2=0{,}081+0{,}01\mu^2 .
+\end{align*}
+Quando $T_{0,9}$ é melhor? Resolvemos a desigualdade passo a passo:
+\begin{align*}
+0{,}081+0{,}01\mu^2&<0{,}1\\
+0{,}01\mu^2&<0{,}019 \just{Li3: subtrai $0{,}081$}\\
+\mu^2&<1{,}9 \just{Li3: divide por $0{,}01>0$}\\
+|\mu|&<\sqrt{1{,}9}\approx1{,}378 . \just{Li4}
+\end{align*}
+\textbf{Conclusão:} se $|\mu|<1{,}378$, o estimador viciado $T_{0,9}$ tem EQM menor; se $|\mu|>1{,}378$, $\bY$ vence. As curvas se cruzam, então \emph{nenhum é uniformemente melhor}. Como $\mu$ é desconhecido, não sabemos de antemão em qual região estamos.
 
-\textbf{Passo 1 (momento populacional).} Usando a integral gama com $\alpha=2$, $\beta=\lambda$:
-\[
-\E(Y)=\int_0^\infty y\,\lambda e^{-\lambda y}\,dy=\lambda\cdot\frac{\Gamma(2)}{\lambda^2}=\lambda\cdot\frac{1}{\lambda^2}=\frac1\lambda .
-\]
+\subsubsection*{Bônus: o $c$ ótimo (e por que não dá para usá-lo)}
+Derivamos o EQM em relação a $c$ e igualamos a zero. Pela regra da cadeia, $\frac{d}{dc}(c-1)^2=2(c-1)$:
+\begin{align*}
+\frac{d}{dc}\EQM&=\frac{2c\sigma^2}{n}+2(c-1)\mu^2=0\\
+c\frac{\sigma^2}{n}+c\mu^2-\mu^2&=0 \just{divide por 2 e distribui}\\
+c\Big(\frac{\sigma^2}{n}+\mu^2\Big)&=\mu^2 \just{coloca $c$ em evidência}\\
+c^*&=\frac{\mu^2}{\mu^2+\sigma^2/n}.
+\end{align*}
+O $c^*$ depende do $\mu$ desconhecido, então $c^*\bY$ \textbf{não é uma estatística}. Lembre que estimador não pode depender do parâmetro.
 
-\textbf{Passo 2 (igualar e resolver).}
-\[
-\frac{1}{\tilde\lambda}=\bY \quad\Longrightarrow\quad \tilde\lambda=\frac{1}{\bY}.
-\]
-
-\textbf{Passo 3 (consistência).} $\bY\convP1/\lambda$ (LGN) e $g(x)=1/x$ é contínua em $1/\lambda>0$, logo $\tilde\lambda\convP\lambda$.
-
-\textbf{Passo 4 (viés).} $S=\sum_iY_i\sim\text{Gama}(n,\lambda)$ e $\tilde\lambda=n/S$. Pela integral gama:
-\[
-\E\Big(\frac1S\Big)=\int_0^\infty\frac1s\cdot\frac{\lambda^n}{\Gamma(n)}s^{n-1}e^{-\lambda s}\,ds
-=\frac{\lambda^n}{\Gamma(n)}\cdot\frac{\Gamma(n-1)}{\lambda^{n-1}}
-=\frac{\lambda}{n-1}\qquad(n\ge2),
-\]
-usando $\Gamma(n)=(n-1)\Gamma(n-1)$. Logo
-\[
-\E(\tilde\lambda)=\frac{n\lambda}{n-1},\qquad \B(\tilde\lambda)=\frac{n\lambda}{n-1}-\lambda=\frac{\lambda}{n-1}\xrightarrow[n\to\infty]{}0 .
-\]
-O estimador é viciado, mas assintoticamente não-viciado. (Isso ilustra a observação sobre funções não lineares: $\E(1/\bY)\neq1/\E(\bY)$.)
-
-\textbf{Numérico.} Amostra $(0{,}4;\ 1{,}1;\ 0{,}7;\ 2{,}8)$:
-\[
-\bar y=\frac{0{,}4+1{,}1+0{,}7+2{,}8}{4}=\frac{5{,}0}{4}=1{,}25,
-\qquad
-\tilde\lambda=\frac{1}{1{,}25}=0{,}8 .
-\]
-\end{exemplo}
+\subsubsection*{Consistência de $T_c$ com $c<1$ fixo}
+O viés $(c-1)\mu$ \textbf{não depende de $n$}. Logo $\EQM\to(c-1)^2\mu^2\neq0$ quando $\mu\ne0$, e não há consistência em MQ. Também não há consistência em probabilidade: por LGN e Cont, $T_c=c\bY\convP c\mu\neq\mu$. Ganhar em amostras pequenas não garante bom comportamento assintótico.
 
 %---------------------------------------------------------------
-\begin{exemplo}[Momentos com dois parâmetros -- Gama$(\alpha,\beta)$]\label{ex:gama2}
-Seja $Y\sim\text{Gama}(\alpha,\beta)$ (taxa), ambos desconhecidos ($p=2$).
+\subsection{Exemplo 4 -- Momentos: exponencial com taxa $\lambda$, incluindo o viés}\label{ex:mmexp}
 
-\textbf{Passo 1.} $\E(Y)=\alpha/\beta$ e $\Var(Y)=\alpha/\beta^2$, logo
+\textbf{Enunciado.} Seja $Y_1,\dots,Y_n\iid\text{Exp}(\lambda)$, com $f(y;\lambda)=\lambda e^{-\lambda y}$ para $y>0$. Encontre o estimador de momentos de $\lambda$ e estude suas propriedades.
+
+\subsubsection*{Passo 1 -- momento populacional}
+Há um parâmetro ($p=1$), então basta o primeiro momento.
+
+\textit{Via integral gama:}
+\begin{align*}
+\E(Y)&=\int_0^\infty y\cdot\lambda e^{-\lambda y}\,dy \just{P7}\\
+&=\lambda\int_0^\infty y^{2-1}e^{-\lambda y}\,dy \just{I3; $y=y^{2-1}$}\\
+&=\lambda\cdot\frac{\Gamma(2)}{\lambda^2} \just{I1: $\alpha=2$, taxa $\lambda$}\\
+&=\lambda\cdot\frac{1}{\lambda^2}=\frac1\lambda . \just{I2}
+\end{align*}
+
+\textit{Via integração por partes (para conferir).} Com $u=y$, $dv=\lambda e^{-\lambda y}dy$, temos $du=dy$ e $v=-e^{-\lambda y}$:
+\begin{align*}
+\E(Y)&=\Big[-y\,e^{-\lambda y}\Big]_0^\infty+\int_0^\infty e^{-\lambda y}\,dy
+=(0-0)+\Big[-\frac1\lambda e^{-\lambda y}\Big]_0^\infty
+=0+\Big(0+\frac1\lambda\Big)=\frac1\lambda .
+\end{align*}
+No primeiro colchete, $y\,e^{-\lambda y}\to0$ quando $y\to\infty$ porque a exponencial decai mais rápido do que $y$ cresce.
+
+\subsubsection*{Passo 2 -- igualar e resolver}
+O método manda igualar o momento populacional ao amostral, trocando $\lambda$ por $\tilde\lambda$:
+\begin{align*}
+\frac{1}{\tilde\lambda}&=\bY\\
+1&=\tilde\lambda\,\bY \just{multiplica os dois lados por $\tilde\lambda$}\\
+\tilde\lambda&=\frac{1}{\bY}. \just{divide por $\bY>0$}
+\end{align*}
+($\bY>0$ com probabilidade 1, pois cada $Y_i>0$.)
+
+\subsubsection*{Passo 3 -- consistência}
+\begin{enumerate}[label=(\roman*)]
+\item Pela LGN, $\bY\convP\E(Y)=\frac1\lambda$.
+\item A função $g(x)=\frac1x$ é contínua em todo $x\ne0$; em particular, em $x=\frac1\lambda>0$.
+\item Pela aplicação contínua (Cont), $\tilde\lambda=g(\bY)\convP g\big(\frac1\lambda\big)=\frac{1}{1/\lambda}=\lambda$.
+\end{enumerate}
+Logo $\tilde\lambda$ é consistente.
+
+\subsubsection*{Passo 4 -- viés}
+Como $\tilde\lambda=\frac{1}{\bY}=\frac{n}{S}$, com $S=\sum_iY_i$, precisamos de $\E(1/S)$. Para isso precisamos da \textbf{distribuição de $S$}.
+
+\textit{4a) FGM de uma $Y\sim\text{Exp}(\lambda)$.} Para $t<\lambda$:
+\begin{align*}
+M_Y(t)=\E(e^{tY})&=\int_0^\infty e^{ty}\lambda e^{-\lambda y}\,dy \just{P7}\\
+&=\lambda\int_0^\infty e^{-(\lambda-t)y}\,dy \just{L3: $e^{ty}e^{-\lambda y}=e^{-(\lambda-t)y}$}\\
+&=\lambda\cdot\frac{\Gamma(1)}{(\lambda-t)^1}=\frac{\lambda}{\lambda-t}. \just{I1 com $\alpha=1$; I2}
+\end{align*}
+A condição $t<\lambda$ garante que a taxa $\lambda-t$ é positiva, como I1 exige.
+
+\textit{4b) FGM da soma.}
+\begin{align*}
+M_S(t)=\E\big(e^{t\sum_iY_i}\big)&=\E\Big(\prod_{i=1}^ne^{tY_i}\Big) \just{L3}\\
+&=\prod_{i=1}^n\E(e^{tY_i}) \just{P6: independência}\\
+&=\Big(\frac{\lambda}{\lambda-t}\Big)^n . \just{P8 e S5}
+\end{align*}
+A FGM de uma $\text{Gama}(\alpha,\beta)$ (taxa $\beta$) é $\big(\frac{\beta}{\beta-t}\big)^\alpha$. Pela unicidade (Pr4), $S\sim\text{Gama}(n,\lambda)$, ou seja,
 \[
-\E(Y^2)=\Var(Y)+[\E(Y)]^2=\frac{\alpha}{\beta^2}+\frac{\alpha^2}{\beta^2}=\frac{\alpha(\alpha+1)}{\beta^2}.
+f_S(s)=\frac{\lambda^n}{\Gamma(n)}s^{n-1}e^{-\lambda s},\qquad s>0 .
 \]
+
+\textit{4c) Cálculo de $\E(1/S)$} (supondo $n\ge2$):
+\begin{align*}
+\E\Big(\frac1S\Big)&=\int_0^\infty\frac1s\cdot\frac{\lambda^n}{\Gamma(n)}s^{n-1}e^{-\lambda s}\,ds \just{P7}\\
+&=\frac{\lambda^n}{\Gamma(n)}\int_0^\infty s^{n-2}e^{-\lambda s}\,ds \just{I3; $s^{-1}s^{n-1}=s^{n-2}$}\\
+&=\frac{\lambda^n}{\Gamma(n)}\int_0^\infty s^{(n-1)-1}e^{-\lambda s}\,ds \just{reescreve no formato de I1}\\
+&=\frac{\lambda^n}{\Gamma(n)}\cdot\frac{\Gamma(n-1)}{\lambda^{n-1}} \just{I1: $\alpha=n-1>0$}\\
+&=\lambda^{n-(n-1)}\cdot\frac{\Gamma(n-1)}{\Gamma(n)} \just{$\lambda^a/\lambda^b=\lambda^{a-b}$}\\
+&=\lambda\cdot\frac{\Gamma(n-1)}{(n-1)\,\Gamma(n-1)} \just{I2: $\Gamma(n)=(n-1)\Gamma(n-1)$}\\
+&=\frac{\lambda}{n-1}.
+\end{align*}
+
+\textit{4d) Esperança e viés de $\tilde\lambda$.}
+\begin{align*}
+\E(\tilde\lambda)&=\E\Big(\frac nS\Big)=n\,\E\Big(\frac1S\Big) \just{P1}\\
+&=\frac{n\lambda}{n-1},\\
+\B(\tilde\lambda)&=\frac{n\lambda}{n-1}-\lambda=\frac{n\lambda-(n-1)\lambda}{n-1} \just{denominador comum}\\
+&=\frac{n\lambda-n\lambda+\lambda}{n-1}=\frac{\lambda}{n-1}.
+\end{align*}
+Então $\tilde\lambda$ é \textbf{viciado} (superestima $\lambda$ em média), mas $\B(\tilde\lambda)=\frac{\lambda}{n-1}\to0$: é \textbf{assintoticamente não-viciado}.
+
+\textit{Por que superestima?} A função $g(x)=1/x$ é convexa em $x>0$. Pela desigualdade de Jensen, $\E[g(\bY)]\ge g(\E\bY)$, isto é, $\E(1/\bY)\ge1/\E(\bY)=\lambda$. É a mesma lição da observação sobre funções não lineares: $\E(1/\bY)\neq1/\E(\bY)$.
+
+\textit{Correção do viés.} Como $\E(\tilde\lambda)=\frac{n}{n-1}\lambda$, multiplicando por $\frac{n-1}{n}$ (P1):
+\[
+\E\Big(\frac{n-1}{n}\tilde\lambda\Big)=\frac{n-1}{n}\cdot\frac{n}{n-1}\lambda=\lambda .
+\]
+Logo $\tilde\lambda^*=\frac{n-1}{n}\cdot\frac nS=\frac{n-1}{S}$ é não-viciado.
+
+\subsubsection*{Numérico}
+Amostra $(0{,}4;\ 1{,}1;\ 0{,}7;\ 2{,}8)$, $n=4$:
+\begin{align*}
+\sum_iy_i&=0{,}4+1{,}1+0{,}7+2{,}8=5{,}0,\\
+\bar y&=\frac{5{,}0}{4}=1{,}25,\\
+\tilde\lambda&=\frac1{1{,}25}=0{,}8,\\
+\tilde\lambda^*&=\frac{n-1}{\sum_iy_i}=\frac{3}{5{,}0}=0{,}6 .
+\end{align*}
+
+%---------------------------------------------------------------
+\subsection{Exemplo 5 -- Momentos com dois parâmetros: Gama$(\alpha,\beta)$}\label{ex:gama2}
+
+\textbf{Enunciado.} Seja $Y_1,\dots,Y_n$ a.a. de $Y\sim\text{Gama}(\alpha,\beta)$ (taxa), com $f(y)=\frac{\beta^\alpha}{\Gamma(\alpha)}y^{\alpha-1}e^{-\beta y}$ para $y>0$, e ambos os parâmetros desconhecidos. Encontre os estimadores de momentos.
+
+\subsubsection*{Passo 1 -- dois parâmetros exigem dois momentos}
+\textit{Primeiro momento.}
+\begin{align*}
+\E(Y)&=\int_0^\infty y\cdot\frac{\beta^\alpha}{\Gamma(\alpha)}y^{\alpha-1}e^{-\beta y}\,dy \just{P7}\\
+&=\frac{\beta^\alpha}{\Gamma(\alpha)}\int_0^\infty y^{(\alpha+1)-1}e^{-\beta y}\,dy \just{I3; $y\cdot y^{\alpha-1}=y^{\alpha}=y^{(\alpha+1)-1}$}\\
+&=\frac{\beta^\alpha}{\Gamma(\alpha)}\cdot\frac{\Gamma(\alpha+1)}{\beta^{\alpha+1}} \just{I1 com expoente $\alpha+1$}\\
+&=\frac{\Gamma(\alpha+1)}{\Gamma(\alpha)}\cdot\frac{\beta^\alpha}{\beta^{\alpha+1}}
+=\frac{\alpha\,\Gamma(\alpha)}{\Gamma(\alpha)}\cdot\frac1\beta \just{I2}\\
+&=\frac\alpha\beta .
+\end{align*}
+\textit{Segundo momento.} Mesmo caminho, agora com $y^2\cdot y^{\alpha-1}=y^{(\alpha+2)-1}$:
+\begin{align*}
+\E(Y^2)&=\frac{\beta^\alpha}{\Gamma(\alpha)}\cdot\frac{\Gamma(\alpha+2)}{\beta^{\alpha+2}} \just{P7, I3, I1}\\
+&=\frac{(\alpha+1)\,\alpha\,\Gamma(\alpha)}{\Gamma(\alpha)}\cdot\frac{1}{\beta^2} \just{I2 duas vezes}\\
+&=\frac{\alpha(\alpha+1)}{\beta^2}.
+\end{align*}
+O passo ``I2 duas vezes'' é $\Gamma(\alpha+2)=(\alpha+1)\Gamma(\alpha+1)=(\alpha+1)\,\alpha\,\Gamma(\alpha)$.
+
+\subsubsection*{Passo 2 -- montar o sistema}
+\[
+\text{(i)}\quad\frac{\tilde\alpha}{\tilde\beta}=M_1,
+\qquad\qquad
+\text{(ii)}\quad\frac{\tilde\alpha(\tilde\alpha+1)}{\tilde\beta^2}=M_2 .
+\]
+
+\subsubsection*{Passo 3 -- resolver}
+\textit{Separe a fração de (ii) em duas:}
+\[
+\frac{\tilde\alpha(\tilde\alpha+1)}{\tilde\beta^2}=\frac{\tilde\alpha^2+\tilde\alpha}{\tilde\beta^2}=\frac{\tilde\alpha^2}{\tilde\beta^2}+\frac{\tilde\alpha}{\tilde\beta^2}.
+\]
+\textit{Use (i) ao quadrado:} $\frac{\tilde\alpha^2}{\tilde\beta^2}=\Big(\frac{\tilde\alpha}{\tilde\beta}\Big)^2=M_1^2$. Substituindo em (ii):
+\begin{align*}
+M_1^2+\frac{\tilde\alpha}{\tilde\beta^2}&=M_2\\
+\text{(iii)}\qquad\frac{\tilde\alpha}{\tilde\beta^2}&=M_2-M_1^2 . \just{subtrai $M_1^2$}
+\end{align*}
+\textit{Divida (i) por (iii)}, membro a membro:
+\begin{align*}
+\frac{\tilde\alpha/\tilde\beta}{\tilde\alpha/\tilde\beta^2}&=\frac{M_1}{M_2-M_1^2}\\
+\frac{\tilde\alpha}{\tilde\beta}\cdot\frac{\tilde\beta^2}{\tilde\alpha}&=\frac{M_1}{M_2-M_1^2} \just{inverso da fração}\\
+\tilde\beta&=\frac{M_1}{M_2-M_1^2}. \just{cancela $\tilde\alpha$ e um $\tilde\beta$}
+\end{align*}
+\textit{Volte em (i)} para achar $\tilde\alpha$:
+\[
+\tilde\alpha=M_1\,\tilde\beta=M_1\cdot\frac{M_1}{M_2-M_1^2}=\frac{M_1^2}{M_2-M_1^2}.
+\]
+
+\textit{Interpretação do denominador.} Dividindo o Lema-SQ por $n$:
+\[
+\frac1n\sum_i(Y_i-\bY)^2=\frac1n\sum_iY_i^2-\bY^2=M_2-M_1^2 .
+\]
+É a variância amostral com divisor $n$: positiva, a menos que todas as observações sejam iguais.
+
+\subsubsection*{Numérico}
+Amostra $(1,2,2,3,7)$, $n=5$. Organize em tabela (é assim que se faz em prova):
+\begin{center}
+\begin{tabular}{@{}cccccc|c@{}}
+\toprule
+$i$ & 1 & 2 & 3 & 4 & 5 & Soma\\
+\midrule
+$y_i$ & 1 & 2 & 2 & 3 & 7 & 15\\
+$y_i^2$ & 1 & 4 & 4 & 9 & 49 & 67\\
+$(y_i-\bar y)^2$ & 4 & 1 & 1 & 0 & 16 & 22\\
+\bottomrule
+\end{tabular}
+\end{center}
+\begin{align*}
+M_1&=\frac{15}{5}=3, \qquad M_2=\frac{67}{5}=13{,}4,\\
+M_2-M_1^2&=13{,}4-9=4{,}4 \qquad\Big(\text{confere: }\tfrac{22}{5}=4{,}4\Big),\\
+\tilde\beta&=\frac{3}{4{,}4}=\frac{15}{22}\approx0{,}682,\\
+\tilde\alpha&=\frac{3^2}{4{,}4}=\frac{9}{4{,}4}=\frac{45}{22}\approx2{,}045 .
+\end{align*}
+\textit{Conferência} na equação (i): $\tilde\alpha/\tilde\beta=\frac{45/22}{15/22}=\frac{45}{15}=3=M_1$. Correto.
+
+%---------------------------------------------------------------
+\subsection{Exemplo 6 -- Momentos: Normal com $\mu$ e $\sigma^2$ desconhecidos}\label{ex:normalmm}
+
+\textbf{Passo 1.} $\E(Y)=\mu$ e, por P4, $\E(Y^2)=\Var(Y)+[\E(Y)]^2=\sigma^2+\mu^2$.
 
 \textbf{Passo 2 (sistema).}
 \[
-\frac{\tilde\alpha}{\tilde\beta}=M_1,
-\qquad
-\frac{\tilde\alpha(\tilde\alpha+1)}{\tilde\beta^2}=M_2 .
+\text{(i)}\quad\tilde\mu=M_1,\qquad\qquad\text{(ii)}\quad\tilde\sigma^2+\tilde\mu^2=M_2 .
 \]
 
-\textbf{Passo 3 (resolver).} Subtraindo o quadrado da primeira equação da segunda:
-\[
-M_2-M_1^2=\frac{\tilde\alpha^2+\tilde\alpha}{\tilde\beta^2}-\frac{\tilde\alpha^2}{\tilde\beta^2}=\frac{\tilde\alpha}{\tilde\beta^2}.
-\]
-Dividindo a primeira equação por esta:
-\[
-\frac{M_1}{M_2-M_1^2}=\frac{\tilde\alpha/\tilde\beta}{\tilde\alpha/\tilde\beta^2}=\tilde\beta
-\quad\Longrightarrow\quad
-\tilde\beta=\frac{M_1}{M_2-M_1^2},
-\qquad
-\tilde\alpha=M_1\tilde\beta=\frac{M_1^2}{M_2-M_1^2}.
-\]
-Observe que, pelo Lema~\ref{lema:sq}, $M_2-M_1^2=\frac1n\sum_i(Y_i-\bY)^2$.
+\textbf{Passo 3 (resolver).} De (i), $\tilde\mu=\bY$. Substituindo em (ii):
+\begin{align*}
+\tilde\sigma^2&=M_2-\tilde\mu^2=M_2-M_1^2 \just{subtrai $\tilde\mu^2$}\\
+&=\frac1n\sum_iY_i^2-\bY^2
+=\frac1n\Big[\sum_iY_i^2-n\bY^2\Big] \just{põe $\frac1n$ em evidência}\\
+&=\frac1n\sum_{i=1}^n(Y_i-\bY)^2 . \just{Lema-SQ}
+\end{align*}
 
-\textbf{Numérico.} Amostra $(1,2,2,3,7)$, $n=5$:
-\[
-M_1=\frac{15}{5}=3,
-\qquad
-M_2=\frac{1+4+4+9+49}{5}=\frac{67}{5}=13{,}4,
-\qquad
-M_2-M_1^2=13{,}4-9=4{,}4 .
-\]
-\[
-\tilde\beta=\frac{3}{4{,}4}\approx0{,}682,
-\qquad
-\tilde\alpha=\frac{9}{4{,}4}\approx2{,}045 .
-\]
-\end{exemplo}
+\textbf{Passo 4 (esperança).}
+\begin{align*}
+\E(\tilde\sigma^2)&=\frac1n\,\E\Big[\sum_i(Y_i-\bY)^2\Big] \just{P1}\\
+&=\frac1n(n-1)\sigma^2=\frac{n-1}{n}\sigma^2 . \just{Teo-SQ}
+\end{align*}
+O estimador de momentos da variância usa divisor $n$, e não $n-1$. A sua variância e o seu EQM ficam para a lista.
 
 %---------------------------------------------------------------
-\begin{exemplo}[Momentos -- Normal com $\mu$ e $\sigma^2$ desconhecidos]\label{ex:normalmm}
-$\E(Y)=\mu$ e $\E(Y^2)=\sigma^2+\mu^2$. O sistema
-\[
-\tilde\mu=M_1,\qquad \tilde\sigma^2+\tilde\mu^2=M_2
-\]
-dá
-\[
-\tilde\mu=\bY,\qquad \tilde\sigma^2=M_2-M_1^2=\frac1n\sum_{i=1}^n(Y_i-\bY)^2 .
-\]
-Pelo Teorema~\ref{teo:sq}, $\E(\tilde\sigma^2)=\frac{n-1}{n}\sigma^2$: o estimador de momentos da variância usa divisor $n$, não $n-1$.
-\end{exemplo}
+\subsection{Exemplo 7 -- Momentos: quando a estimativa contradiz os dados}\label{ex:unifdesloc}
 
-%---------------------------------------------------------------
-\begin{exemplo}[Momentos -- quando a estimativa contradiz os dados]\label{ex:unifdesloc}
-Seja $Y\sim U(\theta,\theta+1)$, $\theta\in\R$. Então $\E(Y)=\frac{\theta+(\theta+1)}{2}=\theta+\frac12$ e
+\textbf{Enunciado.} Seja $Y\sim U(\theta,\theta+1)$, $\theta\in\R$. A densidade é $f(y;\theta)=\frac{1}{(\theta+1)-\theta}=1$ para $\theta<y<\theta+1$, e zero fora desse intervalo.
+
+\subsubsection*{Passo 1 -- momentos}
+\begin{align*}
+\E(Y)&=\int_\theta^{\theta+1}y\cdot1\,dy=\Big[\frac{y^2}{2}\Big]_\theta^{\theta+1} \just{P7, I4}\\
+&=\frac{(\theta+1)^2-\theta^2}{2}
+=\frac{\theta^2+2\theta+1-\theta^2}{2} \just{$(a+b)^2=a^2+2ab+b^2$}\\
+&=\frac{2\theta+1}{2}=\theta+\frac12 .
+\end{align*}
+\begin{align*}
+\E(Y^2)&=\Big[\frac{y^3}{3}\Big]_\theta^{\theta+1}=\frac{(\theta+1)^3-\theta^3}{3} \just{P7, I4}\\
+&=\frac{\theta^3+3\theta^2+3\theta+1-\theta^3}{3} \just{$(a+b)^3=a^3+3a^2b+3ab^2+b^3$}\\
+&=\theta^2+\theta+\frac13,
+\end{align*}
+\begin{align*}
+\Var(Y)&=\E(Y^2)-[\E(Y)]^2 \just{P4}\\
+&=\theta^2+\theta+\frac13-\Big(\theta^2+\theta+\frac14\Big)
+=\frac13-\frac14=\frac1{12}.
+\end{align*}
+
+\subsubsection*{Passo 2 -- estimador de momentos}
 \[
 \tilde\theta+\frac12=\bY\quad\Longrightarrow\quad\tilde\theta=\bY-\frac12 .
 \]
-Ele é não-viciado e $\Var(\tilde\theta)=\Var(\bY)=\frac{1}{12n}\to0$, logo consistente.
 
-\textbf{Problema com os dados.} Amostra $(0{,}9;\ 1{,}0;\ 1{,}1;\ 1{,}85)$:
+\subsubsection*{Passo 3 -- propriedades}
+\begin{align*}
+\E(\tilde\theta)&=\E(\bY)-\frac12 \just{P1}\\
+&=\theta+\frac12-\frac12=\theta, \just{Teorema~\ref{teo:media}}\\
+\Var(\tilde\theta)&=\Var(\bY)=\frac{1/12}{n}=\frac{1}{12n}. \just{P2 com $a=1$; Teorema~\ref{teo:media}}
+\end{align*}
+Então $\tilde\theta$ é não-viciado, com $\EQM=\frac1{12n}\to0$: é consistente.
+
+\subsubsection*{Passo 4 -- o problema com os dados}
+Amostra $(0{,}9;\ 1{,}0;\ 1{,}1;\ 1{,}85)$:
 \[
-\bar y=\frac{4{,}85}{4}=1{,}2125,\qquad\tilde\theta=0{,}7125 .
+\bar y=\frac{0{,}9+1{,}0+1{,}1+1{,}85}{4}=\frac{4{,}85}{4}=1{,}2125,
+\qquad
+\tilde\theta=1{,}2125-0{,}5=0{,}7125 .
 \]
-Mas o suporte exige $\theta<y_i<\theta+1$ para toda observação, isto é,
+\textit{Quais valores de $\theta$ são compatíveis com a amostra?} Cada observação precisa cair dentro do suporte, $\theta<y_i<\theta+1$. Separamos as duas desigualdades:
+\begin{itemize}
+\item $\theta<y_i$ para \textbf{todo} $i$ $\iff$ $\theta<\min_iy_i=0{,}9$;
+\item $y_i<\theta+1$ para \textbf{todo} $i$ $\iff$ $\theta>y_i-1$ para todo $i$ $\iff$ $\theta>\max_iy_i-1=1{,}85-1=0{,}85$.
+\end{itemize}
+Só valores de $\theta$ em $(0{,}85;\ 0{,}9)$ são compatíveis com os dados. A verossimilhança mostra o mesmo:
 \[
-\theta<\min_i y_i=0{,}9
-\qquad\text{e}\qquad
-\theta>\max_i y_i-1=0{,}85 .
+L(\theta)=\prod_{i=1}^n\ind\{\theta<y_i<\theta+1\}=\ind\{\max_iy_i-1<\theta<\min_iy_i\}.
 \]
-Como $0{,}7125<0{,}85$, o modelo com $\theta=\tilde\theta$ diria que observar $1{,}85$ era \emph{impossível}. A estimativa de momentos ignora a informação contida nos extremos da amostra. Quando o suporte depende do parâmetro, vale sempre a pena checar isso e comparar com estimadores baseados em $Y_{(1)}$ ou $Y_{(n)}$.
-\end{exemplo}
+Ela vale 1 nesse intervalo e 0 fora dele.
+
+Como $\tilde\theta=0{,}7125<0{,}85$, temos $\tilde\theta+1=1{,}7125<1{,}85$. Ou seja, o modelo ajustado diria que a observação $1{,}85$ era \textbf{impossível}: $f(1{,}85;\tilde\theta)=0$ e $L(\tilde\theta)=0$.
+
+\textbf{Lição:} o método dos momentos só olha para $\bY$ e ignora a informação dos extremos da amostra. Quando o suporte depende do parâmetro, sempre confira a compatibilidade e compare com estimadores baseados em $Y_{(1)}$ ou $Y_{(n)}$.
 
 %=====================================================================
 \section{Roteiros de prova (checklist)}
@@ -856,7 +1260,7 @@ Calcule os dois EQM, forme a diferença ou a razão e estude o sinal \emph{como 
 
 \medskip
 \textbf{Estimador de momentos.}
-Roteiro da Seção 6: momentos populacionais $\to$ igualar aos amostrais $\to$ resolver $\to$ checar $\Theta$ e compatibilidade com os dados.
+Roteiro da seção do método dos momentos: momentos populacionais $\to$ igualar aos amostrais $\to$ resolver $\to$ checar $\Theta$ e compatibilidade com os dados.
 \end{mdframed}
 
 \end{document}

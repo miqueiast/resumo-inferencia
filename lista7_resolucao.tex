@@ -1,0 +1,712 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=NavyBlue,urlcolor=NavyBlue}
+
+% ---------------- Notação ----------------
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\EQM}{\operatorname{EQM}}
+\newcommand{\B}{\operatorname{B}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+\newcommand{\convP}{\xrightarrow{\;\Prob\;}}
+\newcommand{\convD}{\xrightarrow{\;\mathcal D\;}}
+\newcommand{\bY}{\bar{Y}}
+\newcommand{\just}[1]{\tag*{\footnotesize\textcolor{gray}{[#1]}}}
+
+\theoremstyle{definition}
+\newtheorem{definicao}{Definição}[section]
+\theoremstyle{plain}
+\newtheorem{teorema}{Teorema}[section]
+\surroundwithmdframed[linecolor=NavyBlue,linewidth=0.8pt,backgroundcolor=NavyBlue!3]{definicao}
+\surroundwithmdframed[linecolor=BrickRed,linewidth=0.8pt,backgroundcolor=BrickRed!3]{teorema}
+
+\newmdenv[linecolor=ForestGreen,linewidth=1pt,backgroundcolor=ForestGreen!5,
+  frametitle={Resposta},frametitlebackgroundcolor=ForestGreen!15]{resposta}
+\newmdenv[linecolor=NavyBlue,linewidth=0.8pt,backgroundcolor=NavyBlue!3]{ideia}
+
+\title{\textbf{CE309 -- Inferência Estatística}\\[4pt]
+\large Lista 7 -- Estimadores de Máxima Verossimilhança\\
+Resumo teórico e resolução comentada passo a passo}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%=====================================================================
+\part*{Parte I -- Resumo teórico}
+\addcontentsline{toc}{part}{Parte I -- Resumo teórico}
+%=====================================================================
+
+\section{Definições e roteiro}
+
+\begin{definicao}[Verossimilhança e EMV]
+Dada a amostra observada $y_1,\dots,y_n$ de uma a.a. com densidade $f(y;\theta)$, a \emph{função de verossimilhança} é a densidade conjunta vista como função de $\theta$ (com os dados fixos):
+\[
+L(\theta)=\prod_{i=1}^nf(y_i;\theta),\qquad\theta\in\Theta .
+\]
+O \emph{estimador de máxima verossimilhança} (EMV) $\hat\theta$ é o valor de $\theta\in\Theta$ que maximiza $L(\theta)$. Intuição: é o valor do parâmetro que torna os dados observados ``mais prováveis''.
+\end{definicao}
+
+Como $\log$ é estritamente crescente, maximizar $L$ é o mesmo que maximizar
+\[
+\ell(\theta)=\log L(\theta)=\sum_{i=1}^n\log f(y_i;\theta),
+\]
+o que transforma produtos em somas e facilita derivar.
+
+\begin{definicao}[Escore e informações]
+Para $\theta$ escalar:
+\[
+U(\theta)=\frac{d\ell(\theta)}{d\theta}\ \ (\text{escore}),\qquad
+I_o(\theta)=-\frac{d^2\ell(\theta)}{d\theta^2}\ \ (\text{informação observada}),
+\]
+\[
+I_e(\theta)=\E_\theta\big[I_o(\theta)\big]=\E_\theta\big[U(\theta)^2\big]\ \ (\text{informação esperada de Fisher}).
+\]
+Para $\theta=(\theta_1,\dots,\theta_p)$, $U$ é o vetor gradiente e $I_o$, $I_e$ são matrizes $p\times p$ com entradas $-\partial^2\ell/\partial\theta_j\partial\theta_k$.
+\end{definicao}
+
+\begin{mdframed}[linecolor=Gray,backgroundcolor=Gray!5]
+\textbf{Roteiro de prova para o EMV (caso regular)}
+\begin{enumerate}[label=\arabic*.]
+\item Escrever $L(\theta)=\prod_if(y_i;\theta)$ e simplificar o produto (S5, L3).
+\item Tomar o log: $\ell(\theta)$, separando os termos que dependem de $\theta$ dos que não dependem.
+\item Derivar: $U(\theta)$.
+\item Resolver a \emph{equação de verossimilhança} $U(\hat\theta)=0$.
+\item Verificar que é máximo: $\frac{d^2\ell}{d\theta^2}<0$ no ponto, isto é, $I_o(\hat\theta)>0$. Se $\ell''<0$ para todo $\theta$, a função é côncava e o máximo é global e único.
+\item Calcular $I_e(\theta)$ e estudar as propriedades.
+\end{enumerate}
+\textbf{Atenção:} se o suporte de $f$ depende de $\theta$ (uniformes!), o passo 3 não vale. Escreva $L$ com funções indicadoras e maximize ``olhando'' a função (Exercício 10).
+\end{mdframed}
+
+\section{Propriedades do EMV}
+
+\begin{teorema}[Invariância]
+Se $\hat\theta$ é o EMV de $\theta$, então para qualquer função $g$, o EMV de $g(\theta)$ é $g(\hat\theta)$.
+\end{teorema}
+
+\begin{teorema}[Função de estatística suficiente]
+Se $T$ é suficiente para $\theta$ e o EMV é único, então $\hat\theta$ é função de $T$.
+\end{teorema}
+
+\begin{teorema}[Critério da fatoração de Neyman]
+$T=T(Y_1,\dots,Y_n)$ é suficiente para $\theta$ se, e somente se, existem funções $g\ge0$ e $h\ge0$ tais que
+\[
+\prod_{i=1}^nf(y_i;\theta)=g\big(T(y);\theta\big)\cdot h(y),
+\]
+em que $h$ não depende de $\theta$ e $g$ depende dos dados apenas através de $T$.
+\end{teorema}
+
+\begin{teorema}[Propriedades assintóticas -- sob regularidade]
+Sob condições de regularidade (suporte não depende de $\theta$, $\theta$ interior a $\Theta$, derivadas até 3ª ordem bem-comportadas):
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Consistência:} $\hat\theta\convP\theta$.
+\item \textbf{Normalidade assintótica:} $\sqrt n(\hat\theta-\theta)\convD N\big(0,\ i_1(\theta)^{-1}\big)$, em que $i_1(\theta)=I_e(\theta)/n$ é a informação de uma observação. Na prática:
+\[
+\hat\theta\ \dot\sim\ N\Big(\theta,\ \frac{1}{I_e(\theta)}\Big),\qquad\text{com erro-padrão estimado }\ \frac{1}{\sqrt{I_e(\hat\theta)}}\ \text{ ou }\ \frac{1}{\sqrt{I_o(\hat\theta)}} .
+\]
+\item \textbf{Eficiência assintótica:} a variância assintótica $1/I_e(\theta)$ é o limite de Cramér--Rao.
+\end{enumerate}
+\end{teorema}
+
+\begin{mdframed}[linecolor=BrickRed,backgroundcolor=BrickRed!3]
+\textbf{O que o EMV \emph{não} garante:} não-vício em amostras finitas (ver Exercícios 3, 4 e 7), nem existência em forma fechada (Exercícios 4 e 9), nem unicidade (Exercício 10c).
+\end{mdframed}
+
+\begin{teorema}[Limite de Cramér--Rao e eficiência]
+Sob regularidade, se $T$ é não-viciado para $\tau(\theta)$, então $\Var(T)\ge[\tau'(\theta)]^2/I_e(\theta)$. Se a igualdade vale, $T$ é \emph{eficiente}. Isso ocorre se, e somente se, o escore pode ser escrito como $U(\theta)=a(\theta)\,[T-\tau(\theta)]$.
+\end{teorema}
+
+Uma ferramenta muito usada nesta lista vem da família exponencial com estatística $S=\sum_iY_i$. Se $Y_i\iid\text{Gama}(\alpha,\beta)$ (taxa $\beta$), então $S\sim\text{Gama}(n\alpha,\beta)$, e para $m=n\alpha$:
+\begin{align*}
+\E\Big(\frac1S\Big)&=\int_0^\infty\frac1s\,\frac{\beta^m}{\Gamma(m)}s^{m-1}e^{-\beta s}ds=\frac{\beta^m}{\Gamma(m)}\cdot\frac{\Gamma(m-1)}{\beta^{m-1}}=\frac{\beta}{m-1}\quad(m>1),\\
+\E\Big(\frac1{S^2}\Big)&=\frac{\beta^m}{\Gamma(m)}\cdot\frac{\Gamma(m-2)}{\beta^{m-2}}=\frac{\beta^2}{(m-1)(m-2)}\quad(m>2),
+\end{align*}
+usando a integral gama e $\Gamma(m)=(m-1)(m-2)\Gamma(m-2)$.
+
+\section{Métodos numéricos}
+
+Quando $U(\theta)=0$ não tem solução explícita, usa-se um método iterativo a partir de um chute inicial $\theta^{(0)}$ (por exemplo, o estimador de momentos).
+
+\begin{definicao}[Newton--Raphson]
+Expandindo $U$ em Taylor ao redor de $\theta^{(m)}$, $0=U(\hat\theta)\approx U(\theta^{(m)})+U'(\theta^{(m)})(\hat\theta-\theta^{(m)})$. Isolando:
+\[
+\theta^{(m+1)}=\theta^{(m)}-\frac{U(\theta^{(m)})}{U'(\theta^{(m)})}=\theta^{(m)}+\frac{U(\theta^{(m)})}{I_o(\theta^{(m)})}.
+\]
+Itera-se até $|\theta^{(m+1)}-\theta^{(m)}|<\text{tolerância}$.
+\end{definicao}
+
+\textbf{Escore de Fisher:} troca $I_o$ por $I_e$, ou seja, $\theta^{(m+1)}=\theta^{(m)}+U(\theta^{(m)})/I_e(\theta^{(m)})$. \textbf{Bissecção:} se $U$ é contínua e muda de sinal em $[a,b]$, divide-se o intervalo ao meio repetidamente. É mais lenta, mas sempre converge.
+
+\textbf{Verossimilhança perfilada:} com dois parâmetros $(\theta,k)$, se para $k$ fixo existe $\hat\theta(k)$ explícito, substitui-se em $\ell$ e maximiza-se $\ell_p(k)=\ell\big(\hat\theta(k),k\big)$, um problema de uma variável só (Exercício 9).
+
+\textbf{Funções especiais:} $\psi(\alpha)=\frac{d}{d\alpha}\log\Gamma(\alpha)$ (digama) e $\psi'(\alpha)$ (trigama). Valem
+\[\psi'(\alpha)=\sum_{j=0}^\infty\frac{1}{(\alpha+j)^2}>0,\] $\psi(\alpha)\to-\infty$ quando $\alpha\to0^+$ e $\psi(\alpha)\to+\infty$ quando $\alpha\to\infty$.
+
+\subsection*{Etiquetas usadas nas passagens}
+As mesmas dos materiais anteriores: \textbf{P1} linearidade da esperança; \textbf{P2} $\Var(aX+b)=a^2\Var(X)$; \textbf{P3} variância de soma de independentes; \textbf{P4} $\Var=\E(X^2)-[\E X]^2$; \textbf{P6} independência; \textbf{P7} LOTUS; \textbf{P8} identicamente distribuídas; \textbf{S1--S5} somatórios/produtórios ($\prod c=c^n$, $\prod a_ib_i=\prod a_i\prod b_i$); \textbf{L1} $\log\prod=\sum\log$; \textbf{L2} $\log a^b=b\log a$; \textbf{L3} $\log e^x=x$, $\prod e^{a_i}=e^{\sum a_i}$; \textbf{D1} derivada de constante e de $cx$; \textbf{D2} $(\log x)'=1/x$, $(x^k)'=kx^{k-1}$; \textbf{Decomp} $\EQM=\Var+\B^2$; \textbf{LGN}, \textbf{Cont}.
+
+%=====================================================================
+\part*{Parte II -- Resolução da lista}
+\addcontentsline{toc}{part}{Parte II -- Resolução da lista}
+%=====================================================================
+\setcounter{section}{0}
+
+%=====================================================================
+\section{Exercício 1 -- Poisson}
+%=====================================================================
+
+$Y_i\iid\text{Poi}(\lambda)$, $f(y;\lambda)=\dfrac{e^{-\lambda}\lambda^y}{y!}$, $y=0,1,2,\dots$, $\lambda>0$.
+
+\subsection*{Verossimilhança}
+\begin{align*}
+L(\lambda)&=\prod_{i=1}^n\frac{e^{-\lambda}\lambda^{y_i}}{y_i!}
+=\frac{\prod_ie^{-\lambda}\cdot\prod_i\lambda^{y_i}}{\prod_iy_i!} \just{S5}\\
+&=\frac{e^{-n\lambda}\,\lambda^{\sum_iy_i}}{\prod_iy_i!}. \just{S5, L3; $\prod\lambda^{y_i}=\lambda^{\sum y_i}$}
+\end{align*}
+
+\subsection*{Log-verossimilhança}
+\begin{align*}
+\ell(\lambda)&=\log e^{-n\lambda}+\log\lambda^{\sum_iy_i}-\log\prod_iy_i! \just{L1}\\
+&=-n\lambda+\Big(\sum_{i=1}^ny_i\Big)\log\lambda-\sum_{i=1}^n\log(y_i!). \just{L3, L2, L1}
+\end{align*}
+
+\subsection*{Escore e equação de verossimilhança}
+\begin{align*}
+U(\lambda)&=-n+\frac{\sum_iy_i}{\lambda}+0 \just{D1, D2}\\
+U(\hat\lambda)=0&\iff\frac{\sum_iy_i}{\hat\lambda}=n\iff\hat\lambda=\frac{\sum_iy_i}{n}=\bar y .
+\end{align*}
+
+\subsection*{Verificação do máximo}
+\[
+\frac{d^2\ell}{d\lambda^2}=-\frac{\sum_iy_i}{\lambda^2}\quad\Longrightarrow\quad I_o(\lambda)=\frac{\sum_iy_i}{\lambda^2}\ge0 . \just{D2}
+\]
+Se $\sum_iy_i>0$, temos $\ell''<0$ para todo $\lambda$: $\ell$ é estritamente côncava e $\hat\lambda=\bar y$ é o máximo global. (Se todos os $y_i=0$, $\ell(\lambda)=-n\lambda$ é decrescente e o supremo fica na fronteira $\lambda\to0$; nesse caso o EMV não existe em $(0,\infty)$, embora $\bar y=0$ seja a estimativa natural.)
+
+\subsection*{Informação esperada}
+\[
+I_e(\lambda)=\E\Big[\frac{\sum_iY_i}{\lambda^2}\Big]=\frac{n\lambda}{\lambda^2}=\frac{n}{\lambda}. \just{P1, P8}
+\]
+
+\subsection*{Propriedades}
+\begin{align*}
+\E(\hat\lambda)&=\frac1n\sum_i\E(Y_i)=\lambda, \just{P1, P8}\\
+\Var(\hat\lambda)&=\frac1{n^2}\sum_i\Var(Y_i)=\frac{\lambda}{n}=\frac{1}{I_e(\lambda)}. \just{P2, P3}
+\end{align*}
+\begin{resposta}
+$\hat\lambda=\bY$. Propriedades:
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{não-viciado}, com $\Var(\hat\lambda)=\EQM=\lambda/n$;
+\item \textbf{eficiente}: atinge o limite de Cramér--Rao $1/I_e=\lambda/n$, como confirma o escore na forma $U(\lambda)=\frac{n}{\lambda}(\bY-\lambda)$;
+\item \textbf{consistente} (em MQ e em probabilidade, pois $\EQM\to0$);
+\item função da estatística suficiente $\sum_iY_i$;
+\item assintoticamente $\hat\lambda\ \dot\sim\ N(\lambda,\lambda/n)$ (TCL);
+\item por invariância, o EMV de $\Prob(Y=0)=e^{-\lambda}$ é $e^{-\bY}$.
+\end{itemize}
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 2 -- Bernoulli}
+%=====================================================================
+
+$Y_i\iid\text{Ber}(p)$, $f(y;p)=p^y(1-p)^{1-y}$, $y\in\{0,1\}$, $0<p<1$. Notação: $s=\sum_iy_i$ (número de sucessos).
+
+\subsection*{Verossimilhança e log-verossimilhança}
+\begin{align*}
+L(p)&=\prod_{i=1}^np^{y_i}(1-p)^{1-y_i}=p^{\sum_iy_i}(1-p)^{\sum_i(1-y_i)}=p^{s}(1-p)^{n-s}, \just{S5; $\sum(1-y_i)=n-s$}\\
+\ell(p)&=s\log p+(n-s)\log(1-p). \just{L1, L2}
+\end{align*}
+
+\subsection*{Escore}
+Pela regra da cadeia, $\frac{d}{dp}\log(1-p)=\frac{-1}{1-p}$:
+\begin{align*}
+U(p)&=\frac{s}{p}-\frac{n-s}{1-p}. \just{D2}
+\end{align*}
+\begin{align*}
+U(\hat p)=0&\iff\frac{s}{\hat p}=\frac{n-s}{1-\hat p}\\
+&\iff s(1-\hat p)=(n-s)\hat p \just{multiplica cruzado}\\
+&\iff s-s\hat p=n\hat p-s\hat p\\
+&\iff\hat p=\frac sn=\bar y .
+\end{align*}
+
+\subsection*{Verificação e informação}
+\begin{align*}
+\frac{d^2\ell}{dp^2}&=-\frac{s}{p^2}-\frac{n-s}{(1-p)^2}<0\quad(\text{se }0<s<n),\\
+I_o(p)&=\frac{s}{p^2}+\frac{n-s}{(1-p)^2},\\
+I_e(p)&=\frac{np}{p^2}+\frac{n-np}{(1-p)^2}=\frac np+\frac{n}{1-p} \just{P1: $\E(S)=np$}\\
+&=\frac{n(1-p)+np}{p(1-p)}=\frac{n}{p(1-p)}.
+\end{align*}
+\begin{resposta}
+$\hat p=\bY$ (proporção amostral de sucessos). Propriedades:
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{não-viciado}, com $\Var(\hat p)=\frac{p(1-p)}{n}=\frac{1}{I_e(p)}$, ou seja, \textbf{eficiente};
+\item \textbf{consistente} (Lista 6, Exercício 1);
+\item função da suficiente $\sum_iY_i$;
+\item $\hat p\ \dot\sim\ N\big(p,\ p(1-p)/n\big)$;
+\item por invariância, o EMV da chance $p/(1-p)$ é $\hat p/(1-\hat p)$.
+\end{itemize}
+Se $s=0$ ou $s=n$, o máximo ocorre na fronteira ($\hat p=0$ ou $1$), fora do espaço aberto $(0,1)$.
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 3 -- Exponencial}
+%=====================================================================
+
+Parametrização pela taxa: $f(y;\lambda)=\lambda e^{-\lambda y}$, $y>0$, $\lambda>0$, com $\E(Y)=1/\lambda$ e $\Var(Y)=1/\lambda^2$. Notação: $s=\sum_iy_i$.
+
+\subsection*{Verossimilhança, log-verossimilhança e escore}
+\begin{align*}
+L(\lambda)&=\prod_{i=1}^n\lambda e^{-\lambda y_i}=\lambda^n e^{-\lambda\sum_iy_i}=\lambda^ne^{-\lambda s}, \just{S5, L3}\\
+\ell(\lambda)&=n\log\lambda-\lambda s, \just{L1, L2, L3}\\
+U(\lambda)&=\frac{n}{\lambda}-s. \just{D1, D2}
+\end{align*}
+\[
+U(\hat\lambda)=0\iff\frac{n}{\hat\lambda}=s\iff\hat\lambda=\frac ns=\frac{1}{\bar y}.
+\]
+
+\subsection*{Verificação e informação}
+\[
+\frac{d^2\ell}{d\lambda^2}=-\frac{n}{\lambda^2}<0\ \ \forall\lambda
+\qquad\Longrightarrow\qquad
+I_o(\lambda)=I_e(\lambda)=\frac{n}{\lambda^2}.
+\]
+$\ell$ é estritamente côncava, então o máximo é global e único. Aqui $I_o$ não depende dos dados, por isso coincide com $I_e$.
+
+\subsection*{Distribuição de $S=\sum_iY_i$}
+A FGM de $Y$ é $M_Y(t)=\int_0^\infty e^{ty}\lambda e^{-\lambda y}dy=\frac{\lambda}{\lambda-t}$ para $t<\lambda$. Por independência,
+\[
+M_S(t)=\prod_iM_{Y_i}(t)=\Big(\frac{\lambda}{\lambda-t}\Big)^n,
+\]
+que é a FGM de uma $\text{Gama}(n,\lambda)$. Logo $S\sim\text{Gama}(n,\lambda)$, e pelas fórmulas da Parte I com $m=n$, $\beta=\lambda$:
+\[
+\E\Big(\frac1S\Big)=\frac{\lambda}{n-1},\qquad\E\Big(\frac1{S^2}\Big)=\frac{\lambda^2}{(n-1)(n-2)}.
+\]
+
+\subsection*{Viés, variância e EQM}
+\begin{align*}
+\E(\hat\lambda)&=n\,\E\Big(\frac1S\Big)=\frac{n\lambda}{n-1}, \just{P1}\\
+\B(\hat\lambda)&=\frac{n\lambda}{n-1}-\lambda=\frac{\lambda}{n-1}, \just{denominador comum}\\
+\E(\hat\lambda^2)&=n^2\,\E\Big(\frac1{S^2}\Big)=\frac{n^2\lambda^2}{(n-1)(n-2)}, \just{P1}\\
+\Var(\hat\lambda)&=\frac{n^2\lambda^2}{(n-1)(n-2)}-\frac{n^2\lambda^2}{(n-1)^2} \just{P4}\\
+&=n^2\lambda^2\,\frac{(n-1)-(n-2)}{(n-1)^2(n-2)}=\frac{n^2\lambda^2}{(n-1)^2(n-2)},\\
+\EQM(\hat\lambda)&=\frac{n^2\lambda^2}{(n-1)^2(n-2)}+\frac{\lambda^2}{(n-1)^2} \just{Decomp}\\
+&=\frac{\lambda^2\,[n^2+(n-2)]}{(n-1)^2(n-2)}=\frac{\lambda^2(n+2)(n-1)}{(n-1)^2(n-2)}=\frac{(n+2)\lambda^2}{(n-1)(n-2)},
+\end{align*}
+usando a fatoração $n^2+n-2=(n+2)(n-1)$.
+
+\begin{resposta}
+$\hat\lambda=1/\bY$. Propriedades:
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{viciado}: $\E(\hat\lambda)=\frac{n}{n-1}\lambda$ (superestima), mas assintoticamente não-viciado ($\B=\frac{\lambda}{n-1}\to0$);
+\item $\EQM=\frac{(n+2)\lambda^2}{(n-1)(n-2)}\to0$, logo \textbf{consistente} (também por LGN + Cont);
+\item a versão corrigida $\tilde\lambda=\frac{n-1}{n}\hat\lambda=\frac{n-1}{S}$ é não-viciada, com $\Var=\frac{\lambda^2}{n-2}$. Isso é maior que o limite de Cramér--Rao $\frac{\lambda^2}{n}$: nem ela é eficiente, mas a razão vai a 1;
+\item \textbf{assintoticamente eficiente}: $\hat\lambda\ \dot\sim\ N(\lambda,\lambda^2/n)$;
+\item função da suficiente $\sum_iY_i$;
+\item por invariância, o EMV da média $1/\lambda$ é $\bY$, que é não-viciado e eficiente ($\Var=\frac{1}{n\lambda^2}$).
+\end{itemize}
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 4 -- Gama$(\alpha,\beta)$}
+%=====================================================================
+
+Parametrização pela taxa: $f(y;\alpha,\beta)=\dfrac{\beta^\alpha}{\Gamma(\alpha)}y^{\alpha-1}e^{-\beta y}$, $y>0$. Temos $\E(Y)=\alpha/\beta$ e $\Var(Y)=\alpha/\beta^2$.
+
+\subsection*{Log-verossimilhança comum aos dois casos}
+\begin{align*}
+L(\alpha,\beta)&=\prod_{i=1}^n\frac{\beta^\alpha}{\Gamma(\alpha)}y_i^{\alpha-1}e^{-\beta y_i}
+=\frac{\beta^{n\alpha}}{[\Gamma(\alpha)]^n}\Big(\prod_iy_i\Big)^{\alpha-1}e^{-\beta\sum_iy_i}, \just{S5, L3}\\
+\ell(\alpha,\beta)&=n\alpha\log\beta-n\log\Gamma(\alpha)+(\alpha-1)\sum_{i=1}^n\log y_i-\beta\sum_{i=1}^ny_i . \just{L1, L2}
+\end{align*}
+
+\subsection*{(i) EMV de $\alpha$ com $\beta$ conhecido}
+\textit{Escore.} Usando $\frac{d}{d\alpha}\log\Gamma(\alpha)=\psi(\alpha)$:
+\[
+U(\alpha)=n\log\beta-n\psi(\alpha)+\sum_{i=1}^n\log y_i .
+\]
+\textit{Equação de verossimilhança.}
+\[
+U(\hat\alpha)=0\iff\psi(\hat\alpha)=\log\beta+\frac1n\sum_{i=1}^n\log y_i .
+\]
+\textit{Existência e unicidade.} $\psi$ é contínua e estritamente crescente ($\psi'>0$), com $\psi(0^+)=-\infty$ e $\psi(\infty)=+\infty$. Logo, para qualquer valor do lado direito, existe exatamente uma solução $\hat\alpha>0$. Além disso,
+\[
+\frac{d^2\ell}{d\alpha^2}=-n\psi'(\alpha)<0
+\qquad\Longrightarrow\qquad
+I_o(\alpha)=I_e(\alpha)=n\psi'(\alpha),
+\]
+então $\ell$ é côncava em $\alpha$ e a raiz é o máximo global. \textbf{Não há forma fechada}: resolve-se numericamente, por exemplo com Newton--Raphson:
+\[
+\alpha^{(m+1)}=\alpha^{(m)}-\frac{\psi(\alpha^{(m)})-c}{\psi'(\alpha^{(m)})},\qquad c=\log\beta+\frac1n\sum_i\log y_i,
+\]
+partindo do estimador de momentos com $\beta$ conhecido, $\alpha^{(0)}=\beta\bar y$ (pois $\E Y=\alpha/\beta$).
+
+\begin{resposta}
+$\hat\alpha$ é a única solução de $\psi(\hat\alpha)=\log\beta+\frac1n\sum_i\log Y_i$ (sem forma fechada). Propriedades:
+\begin{itemize}[leftmargin=1.2em]
+\item é função da estatística suficiente $\sum_i\log Y_i$. Pela fatoração, com $\beta$ conhecido:
+\[L=\Big[\beta^{n\alpha}\Gamma(\alpha)^{-n}e^{(\alpha-1)\sum\log y_i}\Big]\cdot e^{-\beta\sum y_i};\]
+\item viés e variância exatos não têm expressão simples;
+\item pelas propriedades gerais (modelo regular): \textbf{consistente}, \textbf{assintoticamente normal} e \textbf{assintoticamente eficiente}, com $\hat\alpha\ \dot\sim\ N\big(\alpha,\ \frac{1}{n\psi'(\alpha)}\big)$.
+\end{itemize}
+\end{resposta}
+
+\subsection*{(ii) EMV de $\beta$ com $\alpha$ conhecido}
+\begin{align*}
+U(\beta)&=\frac{n\alpha}{\beta}-\sum_iy_i, \just{D1, D2}\\
+U(\hat\beta)=0&\iff\hat\beta=\frac{n\alpha}{\sum_iy_i}=\frac{\alpha}{\bar y},\\
+\frac{d^2\ell}{d\beta^2}&=-\frac{n\alpha}{\beta^2}<0\quad\Longrightarrow\quad I_o(\beta)=I_e(\beta)=\frac{n\alpha}{\beta^2}.
+\end{align*}
+\textit{Propriedades exatas.} $S=\sum_iY_i\sim\text{Gama}(n\alpha,\beta)$ (produto das FGMs). Com $m=n\alpha$:
+\begin{align*}
+\E(\hat\beta)&=n\alpha\,\E\Big(\frac1S\Big)=\frac{n\alpha\beta}{n\alpha-1}, \qquad \B(\hat\beta)=\frac{\beta}{n\alpha-1}, \just{P1}\\
+\Var(\hat\beta)&=(n\alpha)^2\Big[\frac{\beta^2}{(n\alpha-1)(n\alpha-2)}-\frac{\beta^2}{(n\alpha-1)^2}\Big]=\frac{(n\alpha)^2\beta^2}{(n\alpha-1)^2(n\alpha-2)}. \just{P4}
+\end{align*}
+(A conta é idêntica à do Exercício 3, trocando $n$ por $n\alpha$; com $\alpha=1$ recupera-se o Exercício 3.)
+\begin{resposta}
+$\hat\beta=\alpha/\bY$. Propriedades:
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{viciado}, com $\B=\frac{\beta}{n\alpha-1}\to0$; versão não-viciada: $\frac{n\alpha-1}{S}$;
+\item \textbf{consistente}: $\Var\to0$ e $\B\to0$;
+\item \textbf{assintoticamente eficiente}: $\hat\beta\ \dot\sim\ N\big(\beta,\frac{\beta^2}{n\alpha}\big)$;
+\item função da suficiente $\sum_iY_i$;
+\item por invariância, o EMV da média $\alpha/\beta$ é $\bY$ (não-viciado).
+\end{itemize}
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 5 -- Binomial negativa $(\mu,\phi)$, $\phi$ conhecido}
+%=====================================================================
+
+Parametrização média--dispersão:
+\[
+f(y;\mu,\phi)=\frac{\Gamma(y+\phi)}{\Gamma(\phi)\,y!}\Big(\frac{\phi}{\mu+\phi}\Big)^\phi\Big(\frac{\mu}{\mu+\phi}\Big)^y,\qquad y=0,1,2,\dots,
+\]
+com $\E(Y)=\mu$ e $\Var(Y)=\mu+\mu^2/\phi$. Notação: $s=\sum_iy_i$.
+
+\subsection*{Log-verossimilhança}
+Tomando o log de cada fator (L1, L2) e somando em $i$:
+\begin{align*}
+\ell(\mu)&=\underbrace{\sum_{i=1}^n\log\frac{\Gamma(y_i+\phi)}{\Gamma(\phi)\,y_i!}+n\phi\log\phi}_{\text{não depende de }\mu}
+-n\phi\log(\mu+\phi)+s\log\mu-s\log(\mu+\phi)\\
+&=C+s\log\mu-(n\phi+s)\log(\mu+\phi).
+\end{align*}
+Os termos com $\log(\mu+\phi)$ vêm de $\phi\log\frac{\phi}{\mu+\phi}$ (somado $n$ vezes) e de $y_i\log\frac{\mu}{\mu+\phi}$ (somado em $i$).
+
+\subsection*{Escore e equação}
+\begin{align*}
+U(\mu)&=\frac{s}{\mu}-\frac{n\phi+s}{\mu+\phi}, \just{D2}\\
+U(\hat\mu)=0&\iff s(\hat\mu+\phi)=\hat\mu(n\phi+s) \just{multiplica cruzado}\\
+&\iff s\hat\mu+s\phi=n\phi\hat\mu+s\hat\mu\\
+&\iff s\phi=n\phi\hat\mu\iff\hat\mu=\frac sn=\bar y . \just{divide por $n\phi>0$}
+\end{align*}
+
+\subsection*{Verificação e informação}
+\begin{align*}
+\frac{d^2\ell}{d\mu^2}&=-\frac{s}{\mu^2}+\frac{n\phi+s}{(\mu+\phi)^2}. \just{D2}
+\end{align*}
+No ponto $\mu=\bar y$, com $s=n\bar y$:
+\[
+\frac{d^2\ell}{d\mu^2}\Big|_{\hat\mu}=-\frac{n}{\bar y}+\frac{n(\phi+\bar y)}{(\bar y+\phi)^2}=-\frac{n}{\bar y}+\frac{n}{\bar y+\phi}<0
+\qquad(\bar y>0),
+\]
+então é um máximo. Para a informação esperada, trocamos $s$ por $S$ e usamos $\E(S)=n\mu$:
+\begin{align*}
+I_e(\mu)&=\frac{n\mu}{\mu^2}-\frac{n\phi+n\mu}{(\mu+\phi)^2}=\frac{n}{\mu}-\frac{n}{\mu+\phi}=\frac{n\phi}{\mu(\mu+\phi)}. \just{P1}
+\end{align*}
+
+\subsection*{Propriedades}
+\begin{align*}
+\E(\hat\mu)&=\mu,\\
+\Var(\hat\mu)&=\frac{\Var(Y)}{n}=\frac{\mu+\mu^2/\phi}{n}=\frac{\mu(\mu+\phi)}{n\phi}=\frac{1}{I_e(\mu)}. \just{P2, P3}
+\end{align*}
+\begin{resposta}
+$\hat\mu=\bY$. Propriedades:
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{não-viciado} e \textbf{eficiente}: atinge o limite de Cramér--Rao $\frac{\mu(\mu+\phi)}{n\phi}$;
+\item \textbf{consistente}: $\EQM=\frac{\mu(\mu+\phi)}{n\phi}\to0$;
+\item função da suficiente $\sum_iY_i$;
+\item $\hat\mu\ \dot\sim\ N\big(\mu,\ \frac{\mu+\mu^2/\phi}{n}\big)$;
+\item observação: a variância é maior que a da Poisson ($\mu/n$) por causa da sobredispersão. Quando $\phi\to\infty$ recupera-se o caso Poisson.
+\end{itemize}
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 6 -- Log-normal $(\mu,\sigma^2)$}
+%=====================================================================
+
+$f(y;\mu,\sigma^2)=\dfrac{1}{y\sqrt{2\pi\sigma^2}}\exp\Big\{-\dfrac{(\log y-\mu)^2}{2\sigma^2}\Big\}$, $y>0$. Notação: $z_i=\log y_i$ e $\bar z=\frac1n\sum_iz_i$. Fato-chave: $Y\sim\text{LN}(\mu,\sigma^2)\iff Z=\log Y\sim N(\mu,\sigma^2)$.
+
+\subsection*{Log-verossimilhança}
+\begin{align*}
+\ell(\mu,\sigma^2)&=\sum_{i=1}^n\Big[-\log y_i-\frac12\log(2\pi)-\frac12\log\sigma^2-\frac{(z_i-\mu)^2}{2\sigma^2}\Big] \just{L1, L2, L3}\\
+&=-\sum_iz_i-\frac n2\log(2\pi)-\frac n2\log\sigma^2-\frac{1}{2\sigma^2}\sum_{i=1}^n(z_i-\mu)^2 . \just{S1, S3}
+\end{align*}
+
+\subsection*{Escores (derivamos em relação a $\mu$ e a $\tau=\sigma^2$)}
+\begin{align*}
+\frac{\partial\ell}{\partial\mu}&=-\frac{1}{2\sigma^2}\sum_i2(z_i-\mu)(-1)=\frac{1}{\sigma^2}\sum_{i=1}^n(z_i-\mu), \just{regra da cadeia}\\
+\frac{\partial\ell}{\partial\sigma^2}&=-\frac{n}{2\sigma^2}+\frac{1}{2\sigma^4}\sum_{i=1}^n(z_i-\mu)^2 . \just{D2: $\frac{d}{d\tau}\tau^{-1}=-\tau^{-2}$}
+\end{align*}
+
+\subsection*{Sistema de equações}
+Da primeira: $\sum_i(z_i-\hat\mu)=0\iff\sum_iz_i-n\hat\mu=0\iff\hat\mu=\bar z$.
+
+Substituindo na segunda e multiplicando por $2\hat\sigma^4>0$:
+\[
+-n\hat\sigma^2+\sum_i(z_i-\bar z)^2=0\iff\hat\sigma^2=\frac1n\sum_{i=1}^n(z_i-\bar z)^2 .
+\]
+
+\subsection*{Verificação (matriz hessiana)}
+\begin{align*}
+\frac{\partial^2\ell}{\partial\mu^2}&=-\frac{n}{\sigma^2},\qquad
+\frac{\partial^2\ell}{\partial\mu\,\partial\sigma^2}=-\frac{1}{\sigma^4}\sum_i(z_i-\mu),\qquad
+\frac{\partial^2\ell}{\partial(\sigma^2)^2}=\frac{n}{2\sigma^4}-\frac{1}{\sigma^6}\sum_i(z_i-\mu)^2 .
+\end{align*}
+No ponto $(\bar z,\hat\sigma^2)$: o termo cruzado é zero (pois $\sum(z_i-\bar z)=0$) e
+\[
+\frac{\partial^2\ell}{\partial(\sigma^2)^2}=\frac{n}{2\hat\sigma^4}-\frac{n\hat\sigma^2}{\hat\sigma^6}=-\frac{n}{2\hat\sigma^4}.
+\]
+A hessiana é diagonal com entradas $-\frac{n}{\hat\sigma^2}<0$ e $-\frac{n}{2\hat\sigma^4}<0$, ou seja, negativa definida: é um máximo.
+
+\textit{Matriz de informação esperada} (usando $\E(Z_i-\mu)=0$ e $\E(Z_i-\mu)^2=\sigma^2$):
+\[
+I_e(\mu,\sigma^2)=
+\begin{pmatrix}
+n/\sigma^2 & 0\\
+0 & n/(2\sigma^4)
+\end{pmatrix}.
+\]
+
+\begin{resposta}
+\[
+\hat\mu=\frac1n\sum_{i=1}^n\log Y_i,\qquad\hat\sigma^2=\frac1n\sum_{i=1}^n\big(\log Y_i-\hat\mu\big)^2 .
+\]
+Como $Z_i=\log Y_i\sim N(\mu,\sigma^2)$, valem os resultados da Lista 6 (Exercícios 2 e 3):
+\begin{itemize}[leftmargin=1.2em]
+\item $\hat\mu$: \textbf{não-viciado}, $\Var=\sigma^2/n$, que é o limite de Cramér--Rao, logo \textbf{eficiente}; consistente;
+\item $\hat\sigma^2$: \textbf{viciado}, $\B=-\sigma^2/n$; $\Var=\frac{2(n-1)\sigma^4}{n^2}$; $\EQM=\frac{(2n-1)\sigma^4}{n^2}$; consistente e assintoticamente eficiente (limite $2\sigma^4/n$);
+\item $\hat\mu$ e $\hat\sigma^2$ são independentes (teorema de Fisher) e funções das suficientes $\sum\log Y_i$ e $\sum(\log Y_i)^2$;
+\item por invariância, o EMV da média da log-normal, $\E(Y)=e^{\mu+\sigma^2/2}$, é $e^{\hat\mu+\hat\sigma^2/2}$, que é viciado em amostras finitas.
+\end{itemize}
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 7 -- $f(y;\theta)=\theta e^{-\theta y}$}
+%=====================================================================
+
+É a exponencial do Exercício 3 com $\theta$ no lugar de $\lambda$. Escrevemos tudo explicitamente, como pede o enunciado.
+
+\subsection*{Verossimilhança}
+\[
+L(\theta)=\prod_{i=1}^n\theta e^{-\theta y_i}=\theta^n\exp\Big(-\theta\sum_{i=1}^ny_i\Big),\qquad\theta>0 . \just{S5, L3}
+\]
+\subsection*{Log-verossimilhança}
+\[
+\ell(\theta)=n\log\theta-\theta\sum_{i=1}^ny_i . \just{L1, L2, L3}
+\]
+\subsection*{EMV}
+\[
+U(\theta)=\frac n\theta-\sum_iy_i=0\iff\hat\theta=\frac{n}{\sum_iy_i}=\frac{1}{\bar y},
+\qquad
+\frac{d^2\ell}{d\theta^2}=-\frac{n}{\theta^2}<0 .
+\]
+\subsection*{É não-viciado?}
+Com $S=\sum_iY_i\sim\text{Gama}(n,\theta)$ e $\E(1/S)=\frac{\theta}{n-1}$ (ver Exercício 3):
+\[
+\E(\hat\theta)=n\,\E\Big(\frac1S\Big)=\frac{n}{n-1}\theta\neq\theta .
+\]
+\begin{resposta}
+$L(\theta)=\theta^ne^{-\theta\sum y_i}$, \quad $\ell(\theta)=n\log\theta-\theta\sum y_i$, \quad $\hat\theta=1/\bY$.
+
+\textbf{Não é não-viciado}: $\E(\hat\theta)=\frac{n}{n-1}\theta$, com viés $\frac{\theta}{n-1}>0$ (superestima). É assintoticamente não-viciado, e $\frac{n-1}{\sum_iY_i}$ é a versão não-viciada.
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 8 -- $f(y;\theta)=2\theta y\,e^{-\theta y^2}$ (Rayleigh)}
+%=====================================================================
+
+\subsection*{Suficiência de $T=\sum_iY_i^2$ (fatoração)}
+\begin{align*}
+\prod_{i=1}^n2\theta y_ie^{-\theta y_i^2}
+&=2^n\theta^n\Big(\prod_iy_i\Big)\exp\Big(-\theta\sum_iy_i^2\Big) \just{S5, L3}\\
+&=\underbrace{\theta^n\exp\Big(-\theta\sum_iy_i^2\Big)}_{g(T;\theta)}\cdot\underbrace{2^n\prod_iy_i}_{h(y)} .
+\end{align*}
+$g$ depende dos dados só através de $T=\sum_iy_i^2$, e $h$ não depende de $\theta$. Pelo critério da fatoração, \textbf{$T=\sum_iY_i^2$ é suficiente para $\theta$}.
+
+\subsection*{EMV}
+\begin{align*}
+\ell(\theta)&=n\log2+n\log\theta+\sum_i\log y_i-\theta\sum_iy_i^2, \just{L1, L2, L3}\\
+U(\theta)&=\frac n\theta-\sum_iy_i^2, \just{D1, D2}\\
+U(\hat\theta)=0&\iff\hat\theta=\frac{n}{\sum_iy_i^2},\\
+\frac{d^2\ell}{d\theta^2}&=-\frac{n}{\theta^2}<0\quad\Longrightarrow\quad I_o=I_e=\frac{n}{\theta^2}.
+\end{align*}
+Note que o EMV é função de $T$, como garante a teoria.
+
+\textit{Complemento.} $W=Y^2$ tem distribuição exponencial de taxa $\theta$:
+\[
+\Prob(W>t)=\Prob(Y>\sqrt t)=\int_{\sqrt t}^\infty2\theta ye^{-\theta y^2}dy=\Big[-e^{-\theta y^2}\Big]_{\sqrt t}^\infty=e^{-\theta t}.
+\]
+Logo $\hat\theta=n/\sum W_i$ tem exatamente as propriedades do Exercício 3: viciado, com $\E(\hat\theta)=\frac{n}{n-1}\theta$, consistente e assintoticamente eficiente.
+
+\begin{resposta}
+$\sum_iY_i^2$ é suficiente (fatoração) e $\hat\theta=\dfrac{n}{\sum_{i=1}^nY_i^2}$.
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 9 -- Weibull: $f(y)=\theta ky^{k-1}e^{-\theta y^k}$}
+%=====================================================================
+
+\subsection*{(a) EMV de $\theta$ com $k$ conhecido}
+\begin{align*}
+L(\theta,k)&=\theta^nk^n\Big(\prod_iy_i\Big)^{k-1}\exp\Big(-\theta\sum_iy_i^k\Big), \just{S5, L3}\\
+\ell(\theta,k)&=n\log\theta+n\log k+(k-1)\sum_i\log y_i-\theta\sum_iy_i^k, \just{L1, L2}\\
+\frac{\partial\ell}{\partial\theta}&=\frac n\theta-\sum_iy_i^k=0\iff\hat\theta=\frac{n}{\sum_{i=1}^ny_i^k}, \just{D1, D2}\\
+\frac{\partial^2\ell}{\partial\theta^2}&=-\frac{n}{\theta^2}<0 .
+\end{align*}
+\begin{resposta}
+$\hat\theta=\dfrac{n}{\sum_{i=1}^nY_i^k}$. (Com $k=1$ volta-se ao Exercício 7; com $k=2$, ao Exercício 8.)
+\end{resposta}
+
+\subsection*{(b) Método numérico para $k$ desconhecido}
+\textit{Escore em $k$.} Usando $\frac{d}{dk}y^k=y^k\log y$:
+\[
+\frac{\partial\ell}{\partial k}=\frac nk+\sum_i\log y_i-\theta\sum_iy_i^k\log y_i .
+\]
+\textit{Verossimilhança perfilada.} Para cada $k$, o melhor $\theta$ é $\hat\theta(k)=n/\sum_iy_i^k$. Substituindo no escore em $k$ e dividindo por $n$, obtemos uma equação só em $k$:
+\[
+g(k)=\frac1k+\frac1n\sum_{i=1}^n\log y_i-\frac{\sum_iy_i^k\log y_i}{\sum_iy_i^k}=0 .
+\]
+Defina $A(k)=\sum_iy_i^k$, $B(k)=\sum_iy_i^k\log y_i$ e $C(k)=\sum_iy_i^k(\log y_i)^2$. Note que $A'=B$ e $B'=C$. Pela regra do quociente,
+\[
+g'(k)=-\frac{1}{k^2}-\frac{C\,A-B^2}{A^2}.
+\]
+Como $CA-B^2\ge0$ (Cauchy--Schwarz: é $A^2$ vezes uma variância ponderada de $\log y_i$), temos $g'(k)<0$. Logo $g$ é estritamente decrescente e a raiz é única.
+
+\begin{resposta}
+\textbf{Método sugerido: Newton--Raphson na equação perfilada}
+\[
+k^{(m+1)}=k^{(m)}-\frac{g(k^{(m)})}{g'(k^{(m)})},
+\]
+a partir de $k^{(0)}=1$ (caso exponencial), até $|k^{(m+1)}-k^{(m)}|<10^{-6}$. Depois, $\hat\theta=n/A(\hat k)$. Como $g$ é monótona, a bissecção também funciona e sempre converge. Alternativa: Newton--Raphson bidimensional em $(\theta,k)$ usando a matriz $I_o$.
+\end{resposta}
+
+\subsection*{(c) Estimativa com $y=(4{,}2;\ 0{,}7;\ 2{,}5;\ 1{,}9;\ 7{,}9)$, $n=5$}
+\textit{Quantidade fixa:} $\frac1n\sum_i\log y_i=\frac{4{,}703417}{5}=0{,}940683$.
+
+\textit{Iteração 0 ($k^{(0)}=1$), calculada linha a linha:}
+\begin{center}
+\begin{tabular}{@{}cccc@{}}
+\toprule
+$y_i$ & $\log y_i$ & $y_i\log y_i$ & $y_i(\log y_i)^2$\\
+\midrule
+4,2 & 1,435085 & 6,027355 & 8,649764\\
+0,7 & $-0{,}356675$ & $-0{,}249672$ & 0,089052\\
+2,5 & 0,916291 & 2,290727 & 2,098972\\
+1,9 & 0,641854 & 1,219522 & 0,782755\\
+7,9 & 2,066863 & 16,328216 & 33,748181\\
+\midrule
+Soma & 4,703417 & $B=25{,}616148$ & $C=45{,}368724$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Com $A(1)=\sum y_i=17{,}2$:
+\begin{align*}
+g(1)&=\frac11+0{,}940683-\frac{25{,}616148}{17{,}2}=1+0{,}940683-1{,}489311=0{,}451372,\\
+g'(1)&=-1-\frac{45{,}368724\cdot17{,}2-25{,}616148^2}{17{,}2^2}=-1-0{,}419669=-1{,}419669,\\
+k^{(1)}&=1-\frac{0{,}451372}{-1{,}419669}=1+0{,}317942=1{,}317942 .
+\end{align*}
+
+\textit{Iterações seguintes} (mesmo procedimento, com $y_i^k$ no lugar de $y_i$):
+\begin{center}
+\begin{tabular}{@{}crrrrr@{}}
+\toprule
+$m$ & $k^{(m)}$ & $A$ & $B$ & $g(k^{(m)})$ & $g'(k^{(m)})$\\
+\midrule
+0 & 1,000000 & 17,2000 & 25,6161 & 0,451372 & $-1{,}419670$\\
+1 & 1,317942 & 28,1702 & 45,3520 & 0,089515 & $-0{,}916331$\\
+2 & 1,415630 & 33,0204 & 54,2230 & 0,004976 & $-0{,}817372$\\
+3 & 1,421718 & 33,3524 & 54,8326 & 0,000017 & $-0{,}811756$\\
+4 & 1,421739 & 33,3535 & 54,8347 & 0,000000 & $-0{,}811737$\\
+\bottomrule
+\end{tabular}
+\end{center}
+A convergência é quadrática: o número de casas corretas praticamente dobra a cada passo, típico do Newton--Raphson.
+
+\textit{Estimativa de $\theta$:}
+\[
+\hat\theta=\frac{n}{A(\hat k)}=\frac{5}{33{,}3535}\approx0{,}1499 .
+\]
+\begin{resposta}
+$\hat k\approx1{,}4217$ \quad e \quad $\hat\theta\approx0{,}1499$.
+
+Como $\hat k>1$, a taxa de falha da Weibull é crescente. O valor máximo da log-verossimilhança é $\ell(\hat\theta,\hat k)\approx-10{,}746$.
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 10 -- Implementação computacional}
+%=====================================================================
+
+\subsection*{(a) $f(x;\theta)=(\theta+1)x^\theta$, $0\le x\le1$, $\theta>-1$}
+O suporte $[0,1]$ não depende de $\theta$: é um caso regular.
+\begin{align*}
+\ell(\theta)&=n\log(\theta+1)+\theta\sum_{i=1}^n\log x_i, \just{L1, L2}\\
+U(\theta)&=\frac{n}{\theta+1}+\sum_i\log x_i=0\iff\hat\theta=-\frac{n}{\sum_i\log x_i}-1,\\
+\frac{d^2\ell}{d\theta^2}&=-\frac{n}{(\theta+1)^2}<0 .
+\end{align*}
+\begin{resposta}
+\textbf{Há forma fechada}: $\hat\theta=-1-n/\sum_i\log x_i$. Não é preciso otimizar numericamente; basta calcular a expressão. Como $x_i\in(0,1)$, temos $\sum\log x_i<0$ e portanto $\hat\theta>-1$: a estimativa sempre cai no espaço paramétrico.
+
+Cuidados de implementação:
+\begin{itemize}[leftmargin=1.2em]
+\item $x_i=0$ gera $\log0=-\infty$ (evento de probabilidade zero, mas pode ocorrer por arredondamento);
+\item $x_i=1$ para todo $i$ dá divisão por zero;
+\item se usar um otimizador genérico, reparametrize $\eta=\log(\theta+1)$ para eliminar a restrição $\theta>-1$.
+\end{itemize}
+A log-verossimilhança é côncava, então qualquer método de gradiente converge. (Bônus: $W=-\log X\sim\text{Exp}(\theta+1)$, logo $\hat\theta+1=n/\sum W_i$ tem as propriedades do Exercício 3.)
+\end{resposta}
+
+\subsection*{(b) $f(x;\theta)=(2\theta)^{-1}$, $-\theta\le x\le\theta$, $\theta>0$}
+O suporte depende de $\theta$. Escrevemos $L$ com indicadoras:
+\begin{align*}
+L(\theta)&=\prod_{i=1}^n\frac{1}{2\theta}\ind\{-\theta\le x_i\le\theta\}
+=(2\theta)^{-n}\prod_i\ind\{|x_i|\le\theta\}\\
+&=(2\theta)^{-n}\,\ind\Big\{\theta\ge\max_i|x_i|\Big\}.
+\end{align*}
+Para $\theta<\max_i|x_i|$, $L=0$; para $\theta\ge\max_i|x_i|$, $L=(2\theta)^{-n}$ é \emph{estritamente decrescente} em $\theta$. O máximo está no menor $\theta$ permitido.
+\begin{resposta}
+$\hat\theta=\max_i|X_i|$. Derivar e igualar a zero \textbf{não funciona}: $U(\theta)=-n/\theta$ nunca se anula e $L$ é descontínua em $\max|x_i|$. Um otimizador baseado em gradiente (Newton, BFGS) empurraria $\theta$ para baixo até ``cair'' em $L=0$ ($\ell=-\infty$), falhando ou devolvendo resultado errado. A implementação correta é \textbf{analítica}: calcular $\max|x_i|$. Também falham as propriedades assintóticas usuais e o limite de Cramér--Rao, porque o suporte depende de $\theta$.
+\end{resposta}
+
+\subsection*{(c) $f(x;\theta)=\frac12$, $\theta-1\le x\le\theta+1$}
+\begin{align*}
+L(\theta)&=\Big(\frac12\Big)^n\prod_i\ind\{\theta-1\le x_i\le\theta+1\}
+=2^{-n}\,\ind\{x_{(n)}-1\le\theta\le x_{(1)}+1\}.
+\end{align*}
+A condição $\theta-1\le x_i$ para todo $i$ equivale a $\theta\le x_{(1)}+1$; a condição $x_i\le\theta+1$ para todo $i$ equivale a $\theta\ge x_{(n)}-1$. O intervalo é não vazio, porque $x_{(n)}-x_{(1)}\le2$.
+\begin{resposta}
+$L$ é \textbf{constante} ($=2^{-n}$) em todo o intervalo $[x_{(n)}-1,\ x_{(1)}+1]$, e zero fora dele. Logo \textbf{o EMV não é único}: qualquer $\hat\theta$ nesse intervalo é EMV.
+
+Implementação:
+\begin{itemize}[leftmargin=1.2em]
+\item o gradiente é zero em todo o intervalo, então um otimizador devolve um ponto arbitrário (geralmente o próprio chute inicial, se ele for viável) e reporta ``convergência'' enganosa;
+\item a saída correta é reportar o intervalo $[x_{(n)}-1,\ x_{(1)}+1]$ ou adotar uma regra de escolha, como o ponto médio $\frac{x_{(1)}+x_{(n)}}{2}$;
+\item como no item (b), o problema é não regular e deve ser tratado analiticamente.
+\end{itemize}
+\end{resposta}
+
+\end{document}

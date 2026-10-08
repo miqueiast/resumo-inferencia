@@ -1,0 +1,708 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[framemethod=default]{mdframed}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\hypersetup{colorlinks=true,linkcolor=NavyBlue,urlcolor=NavyBlue}
+
+% ---------------- Notação ----------------
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\EQM}{\operatorname{EQM}}
+\newcommand{\B}{\operatorname{B}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ind}{\mathbf{1}}
+\newcommand{\iid}{\overset{\text{i.i.d.}}{\sim}}
+\newcommand{\convP}{\xrightarrow{\;\Prob\;}}
+\newcommand{\bY}{\bar{Y}}
+\newcommand{\just}[1]{\tag*{\footnotesize\textcolor{gray}{[#1]}}}
+
+\newmdenv[linecolor=ForestGreen,linewidth=1pt,backgroundcolor=ForestGreen!5,
+  frametitle={Resposta},frametitlebackgroundcolor=ForestGreen!15]{resposta}
+\newmdenv[linecolor=NavyBlue,linewidth=0.8pt,backgroundcolor=NavyBlue!3]{ideia}
+
+\title{\textbf{CE309 -- Inferência Estatística}\\[4pt]
+\large Lista 6 -- Propriedades de Estimadores e Método dos Momentos\\
+Resolução comentada passo a passo}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%=====================================================================
+\section*{Como ler esta resolução}
+\addcontentsline{toc}{section}{Como ler esta resolução}
+%=====================================================================
+
+Cada passagem algébrica traz uma etiqueta cinza à direita dizendo qual propriedade foi usada. As etiquetas são as mesmas do guia de estudos:
+
+\begin{center}
+\footnotesize
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Etiqueta & Propriedade\\
+\midrule
+P1 & $\E(aX+b)=a\E(X)+b$; \ $\E(\sum_iX_i)=\sum_i\E(X_i)$ (linearidade)\\
+P2 & $\Var(aX+b)=a^2\Var(X)$\\
+P3 & $X_i$ independentes $\Rightarrow\Var(\sum_iX_i)=\sum_i\Var(X_i)$\\
+P4 & $\Var(X)=\E(X^2)-[\E(X)]^2$, ou seja, $\E(X^2)=\Var(X)+[\E(X)]^2$\\
+P5 & $\E(c)=c$, \ $\Var(c)=0$\\
+P6 & independência: $\E(XW)=\E(X)\E(W)$; \ $\Prob(A\cap B)=\Prob(A)\Prob(B)$\\
+P7 & $\E[g(X)]=\int g(x)f(x)\,dx$ ou $\sum_xg(x)p(x)$ (LOTUS)\\
+P8 & identicamente distribuídas: $\E(Y_i)=\E(Y)$, $\Var(Y_i)=\Var(Y)$, $F_{Y_i}=F_Y$\\
+S1, S2, S3 & $\sum c=nc$; \ $\sum cx_i=c\sum x_i$; \ $\sum(x_i+w_i)=\sum x_i+\sum w_i$\\
+S4, S5 & $\sum x_i=n\bar x$; \ $\prod c=c^n$\\
+I1 & $\int_0^\infty y^{\alpha-1}e^{-\beta y}dy=\Gamma(\alpha)/\beta^\alpha$\\
+I2 & $\Gamma(\alpha+1)=\alpha\Gamma(\alpha)$; \ $\Gamma(m)=(m-1)!$\\
+I3 & constante sai da integral\\
+I4 & $\int_a^b y^k\,dy=\frac{b^{k+1}-a^{k+1}}{k+1}$\\
+Pr1, Pr2, Pr3 & complemento; \ união disjunta; \ $|X-c|\ge\varepsilon\iff X\le c-\varepsilon$ ou $X\ge c+\varepsilon$\\
+Pr5 & $\{Y_{(n)}\le y\}=\{Y_1\le y,\dots,Y_n\le y\}$\\
+Li1, Li2, Li3, Li4 & $c/n\to0$; \ confronto; \ operações que preservam desigualdade; \ $a,b\ge0$: $a<b\iff a^2<b^2$\\
+Decomp & $\EQM=\Var+\B^2$\\
+Cheb & $\Prob(|T-\theta|\ge\varepsilon)\le\EQM(T)/\varepsilon^2$\\
+LGN, Cont & $\bY\convP\E(Y)$; \ $T_n\convP\theta$ e $g$ contínua em $\theta$ $\Rightarrow g(T_n)\convP g(\theta)$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%=====================================================================
+\section{Exercício 1 -- Bernoulli}
+%=====================================================================
+
+\textbf{Enunciado.} $Y_i\iid\text{Ber}(p)$, $i=1,\dots,n$, e $\hat p=\frac1n\sum_{i=1}^nY_i$.
+
+\subsection*{Passo 0 -- momentos da Bernoulli}
+$Y$ assume o valor $1$ com probabilidade $p$ e o valor $0$ com probabilidade $1-p$.
+\begin{align*}
+\E(Y)&=0\cdot(1-p)+1\cdot p=p . \just{P7}
+\end{align*}
+Como $Y\in\{0,1\}$, vale $Y^2=Y$ ($0^2=0$ e $1^2=1$). Logo $\E(Y^2)=\E(Y)=p$ e
+\begin{align*}
+\Var(Y)&=\E(Y^2)-[\E(Y)]^2 \just{P4}\\
+&=p-p^2=p(1-p). \just{põe $p$ em evidência}
+\end{align*}
+
+\subsection*{(a) Não-vício}
+\textbf{Objetivo:} $\E(\hat p)=p$ para todo $p\in(0,1)$.
+\begin{align*}
+\E(\hat p)&=\E\Big(\frac1n\sum_{i=1}^nY_i\Big)\\
+&=\frac1n\,\E\Big(\sum_{i=1}^nY_i\Big) \just{P1: $1/n$ sai}\\
+&=\frac1n\sum_{i=1}^n\E(Y_i) \just{P1: esperança da soma}\\
+&=\frac1n\sum_{i=1}^np \just{P8 + Passo 0}\\
+&=\frac1n\cdot np=p . \just{S1}
+\end{align*}
+\begin{resposta}
+$\B_p(\hat p)=\E(\hat p)-p=p-p=0$ para todo $p\in(0,1)$. Logo $\hat p$ é não-viciado para $p$.
+\end{resposta}
+
+\subsection*{(b) Variância}
+\begin{align*}
+\Var(\hat p)&=\Var\Big(\frac1n\sum_{i=1}^nY_i\Big)\\
+&=\frac1{n^2}\Var\Big(\sum_{i=1}^nY_i\Big) \just{P2: $1/n$ sai ao quadrado}\\
+&=\frac1{n^2}\sum_{i=1}^n\Var(Y_i) \just{P3: $Y_i$ independentes}\\
+&=\frac1{n^2}\sum_{i=1}^np(1-p) \just{P8 + Passo 0}\\
+&=\frac1{n^2}\cdot np(1-p) \just{S1}\\
+&=\frac{p(1-p)}{n}.
+\end{align*}
+\begin{resposta}
+$\Var(\hat p)=\dfrac{p(1-p)}{n}$.
+\end{resposta}
+
+\subsection*{(c) Erro quadrático médio}
+\begin{align*}
+\EQM_p(\hat p)&=\Var(\hat p)+[\B_p(\hat p)]^2 \just{Decomp}\\
+&=\frac{p(1-p)}{n}+0^2 \just{itens (a) e (b)}\\
+&=\frac{p(1-p)}{n}.
+\end{align*}
+\begin{resposta}
+$\EQM_p(\hat p)=\dfrac{p(1-p)}{n}$ (igual à variância, porque o estimador é não-viciado).
+\end{resposta}
+
+\subsection*{(d) Consistência em média quadrática}
+Fixe $p\in(0,1)$. A quantidade $p(1-p)$ não depende de $n$, então funciona como constante:
+\begin{align*}
+\lim_{n\to\infty}\EQM_p(\hat p)&=\lim_{n\to\infty}\frac{p(1-p)}{n}=0 . \just{Li1 com $c=p(1-p)$}
+\end{align*}
+\begin{resposta}
+Como $\EQM_p(\hat p)\to0$ para todo $p\in(0,1)$, $\hat p$ é médio quadrático consistente.
+\end{resposta}
+
+\subsection*{(e) Consistência em probabilidade}
+\textbf{Objetivo:} para todo $\varepsilon>0$, $\Prob(|\hat p-p|\ge\varepsilon)\to0$.
+\begin{align*}
+0\le\Prob(|\hat p-p|\ge\varepsilon)&\le\frac{\EQM_p(\hat p)}{\varepsilon^2} \just{Cheb}\\
+&=\frac{p(1-p)}{n\varepsilon^2} \just{item (c)}\\
+&\le\frac{1}{4n\varepsilon^2}. \just{$p(1-p)\le\frac14$}
+\end{align*}
+A última desigualdade vem de $p(1-p)=\frac14-\big(p-\frac12\big)^2\le\frac14$. Ela é opcional, mas mostra que a cota nem depende de $p$. Como $\frac{1}{4n\varepsilon^2}\to0$ (Li1), pelo confronto (Li2) a probabilidade vai a zero.
+\begin{resposta}
+$\Prob(|\hat p-p|\ge\varepsilon)\to0$ para todo $\varepsilon>0$ e todo $p$: $\hat p\convP p$. (Alternativamente: consistência em MQ implica consistência em probabilidade.)
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 2 -- Média da Normal}
+%=====================================================================
+
+\textbf{Enunciado.} $Y_i\iid N(\mu,\sigma^2)$ e $\hat\mu=\frac1n\sum_{i=1}^nY_i$. Usamos $\E(Y_i)=\mu$ e $\Var(Y_i)=\sigma^2$.
+
+\subsection*{(a) Não-vício}
+\begin{align*}
+\E(\hat\mu)&=\frac1n\,\E\Big(\sum_{i=1}^nY_i\Big) \just{P1}\\
+&=\frac1n\sum_{i=1}^n\E(Y_i) \just{P1}\\
+&=\frac1n\sum_{i=1}^n\mu=\frac1n\cdot n\mu=\mu . \just{P8, S1}
+\end{align*}
+\begin{resposta}
+$\B_\mu(\hat\mu)=\mu-\mu=0$ para todo $\mu\in\R$: $\hat\mu$ é não-viciado.
+\end{resposta}
+
+\subsection*{(b) Variância}
+\begin{align*}
+\Var(\hat\mu)&=\frac1{n^2}\Var\Big(\sum_{i=1}^nY_i\Big) \just{P2}\\
+&=\frac1{n^2}\sum_{i=1}^n\Var(Y_i) \just{P3: independência}\\
+&=\frac1{n^2}\sum_{i=1}^n\sigma^2=\frac{n\sigma^2}{n^2}=\frac{\sigma^2}{n}. \just{P8, S1}
+\end{align*}
+\begin{resposta}
+$\Var(\hat\mu)=\dfrac{\sigma^2}{n}$.
+\end{resposta}
+
+\subsection*{(c) EQM}
+\begin{align*}
+\EQM_\mu(\hat\mu)&=\Var(\hat\mu)+[\B_\mu(\hat\mu)]^2=\frac{\sigma^2}{n}+0=\frac{\sigma^2}{n}. \just{Decomp}
+\end{align*}
+\begin{resposta}
+$\EQM_\mu(\hat\mu)=\dfrac{\sigma^2}{n}$.
+\end{resposta}
+
+\subsection*{(d) Consistência em média quadrática}
+Com $\sigma^2$ fixo (não depende de $n$):
+\[
+\lim_{n\to\infty}\EQM_\mu(\hat\mu)=\lim_{n\to\infty}\frac{\sigma^2}{n}=0. \just{Li1}
+\]
+\begin{resposta}
+$\hat\mu$ é médio quadrático consistente para $\mu$.
+\end{resposta}
+
+\subsection*{(e) Consistência em probabilidade}
+\textit{Caminho 1 (Chebyshev).}
+\[
+0\le\Prob(|\hat\mu-\mu|\ge\varepsilon)\le\frac{\EQM_\mu(\hat\mu)}{\varepsilon^2}=\frac{\sigma^2}{n\varepsilon^2}\xrightarrow[n\to\infty]{}0 . \just{Cheb, Li1, Li2}
+\]
+
+\textit{Caminho 2 (cálculo exato, aproveitando a normalidade).} Uma combinação linear de normais independentes é normal, então $\hat\mu\sim N(\mu,\sigma^2/n)$. Padronizando, $Z=\frac{\hat\mu-\mu}{\sigma/\sqrt n}\sim N(0,1)$, e
+\begin{align*}
+\Prob(|\hat\mu-\mu|\ge\varepsilon)&=\Prob\Big(|Z|\ge\frac{\varepsilon\sqrt n}{\sigma}\Big) \just{Li3: divide por $\sigma/\sqrt n>0$}\\
+&=2\Big[1-\Phi\Big(\frac{\varepsilon\sqrt n}{\sigma}\Big)\Big]. \just{simetria da normal; Pr1}
+\end{align*}
+Quando $n\to\infty$, $\frac{\varepsilon\sqrt n}{\sigma}\to\infty$, logo $\Phi(\cdot)\to1$ e a probabilidade vai a $0$.
+\begin{resposta}
+$\hat\mu\convP\mu$, ou seja, $\hat\mu$ é consistente em probabilidade.
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 3 -- Variância da Normal: $\hat\sigma^2_1$ contra $\hat\sigma^2_2$}
+%=====================================================================
+
+\textbf{Enunciado.} $Y_i\iid N(\mu,\sigma^2)$, $\hat\mu=\bY$ e
+\[
+\hat\sigma^2_1=\frac1n\sum_{i=1}^n(Y_i-\bY)^2,\qquad
+\hat\sigma^2_2=\frac1{n-1}\sum_{i=1}^n(Y_i-\bY)^2 .
+\]
+Para simplificar, defina a \textbf{soma de quadrados} $SQ=\sum_{i=1}^n(Y_i-\bY)^2$. Então
+\[
+\hat\sigma^2_1=\frac{SQ}{n},\qquad\hat\sigma^2_2=\frac{SQ}{n-1}.
+\]
+\begin{ideia}
+\textbf{Estratégia:} tudo depende de $\E(SQ)$ e $\Var(SQ)$. Calcule essas duas quantidades uma vez só e depois divida por $n$ ou $n-1$ usando P1 e P2.
+\end{ideia}
+
+\subsection*{Passo 0a -- a identidade algébrica de $SQ$}
+\begin{align*}
+SQ&=\sum_{i=1}^n\big(Y_i^2-2Y_i\bY+\bY^2\big) \just{$(a-b)^2=a^2-2ab+b^2$}\\
+&=\sum_{i=1}^nY_i^2-2\bY\sum_{i=1}^nY_i+\sum_{i=1}^n\bY^2 \just{S3, S2 ($\bY$ não depende de $i$)}\\
+&=\sum_{i=1}^nY_i^2-2\bY\cdot n\bY+n\bY^2 \just{S4, S1}\\
+&=\sum_{i=1}^nY_i^2-n\bY^2 .
+\end{align*}
+
+\subsection*{Passo 0b -- $\E(SQ)$}
+Precisamos de $\E(Y_i^2)$ e $\E(\bY^2)$, e ambos saem de P4:
+\begin{align*}
+\E(Y_i^2)&=\Var(Y_i)+[\E(Y_i)]^2=\sigma^2+\mu^2, \just{P4, P8}\\
+\E(\bY^2)&=\Var(\bY)+[\E(\bY)]^2=\frac{\sigma^2}{n}+\mu^2 . \just{P4, Exercício 2}
+\end{align*}
+Então
+\begin{align*}
+\E(SQ)&=\sum_{i=1}^n\E(Y_i^2)-n\,\E(\bY^2) \just{P1}\\
+&=n(\sigma^2+\mu^2)-n\Big(\frac{\sigma^2}{n}+\mu^2\Big) \just{S1}\\
+&=n\sigma^2+n\mu^2-\sigma^2-n\mu^2\\
+&=(n-1)\sigma^2 .
+\end{align*}
+
+\subsection*{Passo 0c -- $\Var(SQ)$ pela qui-quadrado}
+Pelo Teorema de Fisher (válido sob normalidade),
+\[
+W=\frac{SQ}{\sigma^2}\sim\chi^2_{n-1},\qquad\text{com}\quad\E(W)=n-1,\quad\Var(W)=2(n-1).
+\]
+(A esperança confere com o Passo 0b, já que $\E(SQ)=\sigma^2\E(W)=(n-1)\sigma^2$.) Como $SQ=\sigma^2W$:
+\begin{align*}
+\Var(SQ)&=\Var(\sigma^2W)=(\sigma^2)^2\Var(W) \just{P2}\\
+&=2(n-1)\sigma^4 .
+\end{align*}
+
+\subsection*{(a) Viés}
+\textit{Para $\hat\sigma^2_1$:}
+\begin{align*}
+\E(\hat\sigma^2_1)&=\E\Big(\frac{SQ}{n}\Big)=\frac1n\E(SQ) \just{P1}\\
+&=\frac{(n-1)\sigma^2}{n}, \just{Passo 0b}\\
+\B(\hat\sigma^2_1)&=\frac{(n-1)\sigma^2}{n}-\sigma^2
+=\frac{(n-1)\sigma^2-n\sigma^2}{n}=-\frac{\sigma^2}{n}. \just{denominador comum}
+\end{align*}
+\textit{Para $\hat\sigma^2_2$:}
+\begin{align*}
+\E(\hat\sigma^2_2)&=\frac1{n-1}\E(SQ)=\frac{(n-1)\sigma^2}{n-1}=\sigma^2, \just{P1, Passo 0b}\\
+\B(\hat\sigma^2_2)&=\sigma^2-\sigma^2=0 .
+\end{align*}
+\begin{resposta}
+$\hat\sigma^2_1$ \textbf{é viciado}, com $\B(\hat\sigma^2_1)=-\sigma^2/n$: em média subestima $\sigma^2$. Ele é, porém, assintoticamente não-viciado, pois $-\sigma^2/n\to0$.
+
+$\hat\sigma^2_2$ \textbf{é não-viciado} para $\sigma^2$.
+\end{resposta}
+
+\subsection*{(b) Variâncias}
+\begin{align*}
+\Var(\hat\sigma^2_1)&=\Var\Big(\frac{SQ}{n}\Big)=\frac{1}{n^2}\Var(SQ) \just{P2}\\
+&=\frac{2(n-1)\sigma^4}{n^2}, \just{Passo 0c}\\[6pt]
+\Var(\hat\sigma^2_2)&=\frac{1}{(n-1)^2}\Var(SQ) \just{P2}\\
+&=\frac{2(n-1)\sigma^4}{(n-1)^2}=\frac{2\sigma^4}{n-1}. \just{cancela um $(n-1)$}
+\end{align*}
+\begin{resposta}
+$\Var(\hat\sigma^2_1)=\dfrac{2(n-1)\sigma^4}{n^2}$ \qquad e \qquad $\Var(\hat\sigma^2_2)=\dfrac{2\sigma^4}{n-1}$.
+\end{resposta}
+
+\subsection*{(c) EQM}
+\begin{align*}
+\EQM(\hat\sigma^2_1)&=\Var(\hat\sigma^2_1)+[\B(\hat\sigma^2_1)]^2 \just{Decomp}\\
+&=\frac{2(n-1)\sigma^4}{n^2}+\Big(-\frac{\sigma^2}{n}\Big)^2\\
+&=\frac{2(n-1)\sigma^4}{n^2}+\frac{\sigma^4}{n^2}\\
+&=\frac{(2n-2+1)\sigma^4}{n^2}=\frac{(2n-1)\sigma^4}{n^2},\\[6pt]
+\EQM(\hat\sigma^2_2)&=\Var(\hat\sigma^2_2)+0^2=\frac{2\sigma^4}{n-1}. \just{Decomp}
+\end{align*}
+\begin{resposta}
+$\EQM(\hat\sigma^2_1)=\dfrac{(2n-1)\sigma^4}{n^2}$ \qquad e \qquad $\EQM(\hat\sigma^2_2)=\dfrac{2\sigma^4}{n-1}$.
+\end{resposta}
+
+\subsection*{(d) Consistência em média quadrática}
+Para $\hat\sigma^2_1$, dividimos numerador e denominador por $n^2$ para enxergar o limite:
+\begin{align*}
+\frac{(2n-1)\sigma^4}{n^2}&=\sigma^4\Big(\frac{2n}{n^2}-\frac{1}{n^2}\Big)=\sigma^4\Big(\frac2n-\frac1{n^2}\Big)\xrightarrow[n\to\infty]{}\sigma^4(0-0)=0 . \just{Li1}
+\end{align*}
+Para $\hat\sigma^2_2$, como $n-1\to\infty$:
+\[
+\frac{2\sigma^4}{n-1}\xrightarrow[n\to\infty]{}0 . \just{Li1}
+\]
+\begin{resposta}
+Ambos os EQM vão a zero para todo $\sigma^2>0$: $\hat\sigma^2_1$ e $\hat\sigma^2_2$ são médio quadrático consistentes.
+\end{resposta}
+
+\subsection*{(e) Consistência em probabilidade}
+Para $k=1,2$ e qualquer $\varepsilon>0$:
+\begin{align*}
+0\le\Prob\big(|\hat\sigma^2_k-\sigma^2|\ge\varepsilon\big)&\le\frac{\EQM(\hat\sigma^2_k)}{\varepsilon^2}. \just{Cheb}
+\end{align*}
+Pelo item (d), o lado direito vai a zero; pelo confronto (Li2), o do meio também.
+\begin{resposta}
+$\hat\sigma^2_1\convP\sigma^2$ e $\hat\sigma^2_2\convP\sigma^2$: ambos são consistentes em probabilidade.
+\end{resposta}
+
+\subsection*{(f) Comparação}
+Vamos comparar os EQM fazendo a diferença:
+\begin{align*}
+\EQM(\hat\sigma^2_2)-\EQM(\hat\sigma^2_1)
+&=\sigma^4\Big[\frac{2}{n-1}-\frac{2n-1}{n^2}\Big]\\
+&=\sigma^4\,\frac{2n^2-(2n-1)(n-1)}{n^2(n-1)} \just{denominador comum}\\
+&=\sigma^4\,\frac{2n^2-(2n^2-3n+1)}{n^2(n-1)} \just{distributiva}\\
+&=\frac{(3n-1)\,\sigma^4}{n^2(n-1)} .
+\end{align*}
+Para $n\ge2$: $3n-1>0$, $n^2>0$, $n-1>0$ e $\sigma^4>0$. Logo a diferença é \textbf{estritamente positiva}, para todo $\sigma^2$ e todo $n\ge2$.
+
+\textit{Conferência numérica} com $n=5$ e $\sigma^2=1$: $\EQM(\hat\sigma^2_1)=\frac{9}{25}=0{,}36$ e $\EQM(\hat\sigma^2_2)=\frac{2}{4}=0{,}50$. A diferença é $0{,}14$, e a fórmula dá $\frac{14}{25\cdot4}=0{,}14$. Confere.
+
+\begin{resposta}
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{Viés:} $\hat\sigma^2_2$ é não-viciado; $\hat\sigma^2_1$ é viciado (subestima), mas assintoticamente não-viciado.
+\item \textbf{EQM:} $\EQM(\hat\sigma^2_1)<\EQM(\hat\sigma^2_2)$ para todo $\sigma^2>0$ e todo $n\ge2$. Pelo critério do EQM, $\hat\sigma^2_1$ é \emph{uniformemente melhor}: o pequeno viés é mais que compensado pela variância menor.
+\item \textbf{Consistência:} ambos são consistentes, e a diferença entre eles some para $n$ grande, pois $\frac{n}{n-1}\to1$.
+\item \textbf{Conclusão:} não-vício não é sinônimo de ``melhor''. Se o critério é não-vício, escolhe-se $\hat\sigma^2_2$ (o $S^2$ usual); se o critério é EQM, escolhe-se $\hat\sigma^2_1$, que também é o estimador de momentos e o EMV de $\sigma^2$.
+\end{itemize}
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 4 -- Média das duas primeiras observações}
+%=====================================================================
+
+\textbf{Enunciado.} $Y_1,\dots,Y_n$ i.i.d. com $\E(Y)=\mu$ e $\Var(Y)=\sigma^2$, com $0<\sigma^2<\infty$. Seja $T=\frac{Y_1+Y_2}{2}$. Mostrar que $T$ é não-viciado para $\mu$, mas não é consistente.
+
+\subsection*{Não-vício}
+\begin{align*}
+\E(T)&=\frac12\big[\E(Y_1)+\E(Y_2)\big] \just{P1}\\
+&=\frac12(\mu+\mu)=\mu . \just{P8}
+\end{align*}
+Logo $\B(T)=0$ para todo $\mu$.
+
+\subsection*{Variância e EQM}
+\begin{align*}
+\Var(T)&=\frac14\big[\Var(Y_1)+\Var(Y_2)\big] \just{P2, P3}\\
+&=\frac14\cdot2\sigma^2=\frac{\sigma^2}{2},\\
+\EQM(T)&=\frac{\sigma^2}{2}+0^2=\frac{\sigma^2}{2}. \just{Decomp}
+\end{align*}
+O EQM \textbf{não depende de $n$}, logo $\lim_n\EQM(T)=\sigma^2/2\neq0$: $T$ não é consistente em MQ.
+
+\begin{ideia}
+\textbf{Atenção:} isso ainda \emph{não} prova a não-consistência em probabilidade, porque a recíproca ``probabilidade $\Rightarrow$ MQ'' é falsa. Precisamos mostrar diretamente que existe $\varepsilon>0$ com $\Prob(|T-\mu|\ge\varepsilon)\not\to0$.
+\end{ideia}
+
+\subsection*{Não-consistência em probabilidade}
+\textit{Passo 1: a probabilidade não depende de $n$.} $T$ é função apenas de $Y_1$ e $Y_2$, cuja distribuição conjunta é a mesma para qualquer tamanho de amostra $n\ge2$. Logo, para cada $\varepsilon>0$, o número
+\[
+q(\varepsilon)=\Prob(|T-\mu|\ge\varepsilon)
+\]
+é o mesmo para todo $n$, e portanto $\lim_{n\to\infty}\Prob(|T-\mu|\ge\varepsilon)=q(\varepsilon)$.
+
+\textit{Passo 2: existe $\varepsilon$ com $q(\varepsilon)>0$.} Suponha, por absurdo, que $q(\varepsilon)=0$ para \emph{todo} $\varepsilon>0$. O evento $\{T\neq\mu\}$ pode ser escrito como a união $\bigcup_{k=1}^\infty\{|T-\mu|\ge1/k\}$, então
+\[
+\Prob(T\ne\mu)\le\sum_{k=1}^\infty\Prob\big(|T-\mu|\ge1/k\big)=\sum_{k=1}^\infty0=0 .
+\]
+Ou seja, $T=\mu$ com probabilidade 1, o que daria $\Var(T)=0$ (P5). Isso contradiz $\Var(T)=\sigma^2/2>0$. Logo existe $\varepsilon_0>0$ com $q(\varepsilon_0)>0$, e
+\[
+\lim_{n\to\infty}\Prob(|T-\mu|\ge\varepsilon_0)=q(\varepsilon_0)\neq0 .
+\]
+
+\textit{Ilustração numérica (se $Y\sim N(\mu,\sigma^2)$).} Nesse caso $T\sim N(\mu,\sigma^2/2)$. Com $\varepsilon=\sigma$:
+\[
+\Prob(|T-\mu|\ge\sigma)=\Prob\Big(|Z|\ge\frac{\sigma}{\sigma/\sqrt2}\Big)=\Prob(|Z|\ge\sqrt2)=2[1-\Phi(1{,}414)]\approx2(1-0{,}9214)\approx0{,}157,
+\]
+qualquer que seja $n$.
+
+\begin{resposta}
+$T=\frac{Y_1+Y_2}{2}$ é não-viciado ($\E(T)=\mu$), mas \textbf{não é consistente}. Ele usa sempre a mesma quantidade de informação (duas observações), então sua distribuição não se concentra em $\mu$ quando $n$ cresce. Não-vício não implica consistência.
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 5 -- Condição para combinação linear não-viciada}
+%=====================================================================
+
+\textbf{Enunciado.} Determinar a condição sobre $a_1,\dots,a_n$ para que $T=\sum_{i=1}^na_iY_i$ seja não-viciado para $\mu=\E(Y)$.
+
+\subsection*{Cálculo da esperança}
+\begin{align*}
+\E(T)&=\E\Big(\sum_{i=1}^na_iY_i\Big)=\sum_{i=1}^na_i\E(Y_i) \just{P1}\\
+&=\sum_{i=1}^na_i\mu=\mu\sum_{i=1}^na_i . \just{P8, S2}
+\end{align*}
+
+\subsection*{Impondo o não-vício}
+Queremos $\E(T)=\mu$ \textbf{para todo} $\mu$:
+\[
+\mu\sum_{i=1}^na_i=\mu\qquad\text{para todo }\mu .
+\]
+Tomando qualquer $\mu\neq0$ e dividindo os dois lados por $\mu$, obtemos $\sum_ia_i=1$. Reciprocamente, se $\sum_ia_i=1$, então $\E(T)=\mu\cdot1=\mu$ para todo $\mu$.
+
+\begin{resposta}
+$T=\sum_{i=1}^na_iY_i$ é não-viciado para $\E(Y)$ \textbf{se, e somente se,} $\displaystyle\sum_{i=1}^na_i=1$.
+
+Exemplos: $a_i=\frac1n$ para todo $i$ dá $\bY$; $a_1=a_2=\frac12$ e os demais zero dá o estimador do Exercício~4.
+\end{resposta}
+
+\subsection*{Complemento: qual combinação tem menor variância?}
+Por P2 e P3, $\Var(T)=\sigma^2\sum_ia_i^2$. Pela desigualdade de Cauchy--Schwarz,
+\[\Big(\sum_ia_i\cdot1\Big)^2\le\Big(\sum_ia_i^2\Big)\Big(\sum_i1^2\Big),\]
+isto é,
+\[
+1=\Big(\sum_{i=1}^na_i\Big)^2\le n\sum_{i=1}^na_i^2
+\quad\Longrightarrow\quad
+\sum_{i=1}^na_i^2\ge\frac1n,
+\]
+com igualdade se, e somente se, todos os $a_i$ são iguais, ou seja, $a_i=1/n$. Logo, entre todas as combinações lineares não-viciadas, $\bY$ é a de \textbf{menor variância} ($\sigma^2/n$). No Exercício~4, por exemplo, $\sum a_i^2=\frac14+\frac14=\frac12$, que dá variância $\sigma^2/2$.
+
+%=====================================================================
+\section{Exercício 6 -- Binomial: $T_1=Y/n$ contra $T_2=(Y+1)/(n+2)$}
+%=====================================================================
+
+\textbf{Enunciado.} $Y\sim\text{Bin}(n,p)$, com $\E(Y)=np$ e $\Var(Y)=np(1-p)$. (Isso sai do Exercício~1, pois $Y$ é a soma de $n$ Bernoullis independentes.)
+
+\subsection*{EQM de $T_1=Y/n$}
+\begin{align*}
+\E(T_1)&=\frac{\E(Y)}{n}=\frac{np}{n}=p\quad\Rightarrow\quad\B(T_1)=0, \just{P1}\\
+\Var(T_1)&=\frac{\Var(Y)}{n^2}=\frac{np(1-p)}{n^2}=\frac{p(1-p)}{n}, \just{P2}\\
+\EQM(T_1)&=\frac{p(1-p)}{n}. \just{Decomp}
+\end{align*}
+
+\subsection*{EQM de $T_2=(Y+1)/(n+2)$}
+\textit{Viés.}
+\begin{align*}
+\E(T_2)&=\frac{\E(Y)+1}{n+2}=\frac{np+1}{n+2}, \just{P1}\\
+\B(T_2)&=\frac{np+1}{n+2}-p=\frac{np+1-p(n+2)}{n+2} \just{denominador comum}\\
+&=\frac{np+1-np-2p}{n+2}=\frac{1-2p}{n+2}.
+\end{align*}
+\textit{Variância.} A constante $+1$ não altera a variância:
+\begin{align*}
+\Var(T_2)&=\frac{1}{(n+2)^2}\Var(Y+1)=\frac{\Var(Y)}{(n+2)^2}=\frac{np(1-p)}{(n+2)^2}. \just{P2 duas vezes}
+\end{align*}
+\textit{EQM.}
+\begin{align*}
+\EQM(T_2)&=\frac{np(1-p)}{(n+2)^2}+\frac{(1-2p)^2}{(n+2)^2}
+=\frac{np(1-p)+(1-2p)^2}{(n+2)^2}. \just{Decomp}
+\end{align*}
+
+\begin{resposta}
+$\EQM(T_1)=\dfrac{p(1-p)}{n}$ \qquad e \qquad $\EQM(T_2)=\dfrac{np(1-p)+(1-2p)^2}{(n+2)^2}$.
+\end{resposta}
+
+\subsection*{Comparação}
+\textit{Simplificação útil.} Seja $q=p(1-p)$. Como $(1-2p)^2=1-4p+4p^2=1-4(p-p^2)=1-4q$:
+\[
+\EQM(T_2)=\frac{nq+1-4q}{(n+2)^2}=\frac{(n-4)q+1}{(n+2)^2}.
+\]
+\textit{Quando $T_2$ é melhor?} Os denominadores são positivos, então podemos multiplicar cruzado sem mudar o sentido (Li3):
+\begin{align*}
+\EQM(T_2)<\EQM(T_1)
+&\iff\frac{(n-4)q+1}{(n+2)^2}<\frac{q}{n}\\
+&\iff n\big[(n-4)q+1\big]<q(n+2)^2 \just{Li3: multiplica por $n(n+2)^2>0$}\\
+&\iff n^2q-4nq+n<q(n^2+4n+4)\\
+&\iff n<q(n^2+4n+4-n^2+4n) \just{passa os termos com $q$ para a direita}\\
+&\iff n<q(8n+4)\\
+&\iff q>\frac{n}{8n+4}. \just{Li3: divide por $8n+4>0$}
+\end{align*}
+\textit{Em termos de $p$.} A condição $p(1-p)>c$, com $c=\frac{n}{8n+4}$, equivale a $p^2-p+c<0$, cujas raízes são $p=\frac{1\pm\sqrt{1-4c}}{2}$. Calculando o discriminante:
+\[
+1-4c=1-\frac{4n}{8n+4}=\frac{8n+4-4n}{8n+4}=\frac{4n+4}{8n+4}=\frac{n+1}{2n+1}.
+\]
+Como a parábola tem concavidade para cima, ela é negativa entre as raízes:
+\[
+\EQM(T_2)<\EQM(T_1)\iff\Big|p-\frac12\Big|<\frac12\sqrt{\frac{n+1}{2n+1}} .
+\]
+
+\textit{Conferência nos extremos.}
+\begin{itemize}
+\item Em $p=0$: $\EQM(T_1)=0$ e $\EQM(T_2)=\frac{1}{(n+2)^2}>0$, então $T_1$ vence (de fato, se $p=0$ então $Y=0$ e $T_1=0$ acerta sempre).
+\item Em $p=\frac12$: $q=\frac14$, $\EQM(T_1)=\frac{1}{4n}$ e $\EQM(T_2)=\frac{n/4}{(n+2)^2}=\frac{n}{4(n+2)^2}$. Como $n^2<(n+2)^2$, temos $\frac{n}{4(n+2)^2}<\frac{1}{4n}$, e $T_2$ vence.
+\end{itemize}
+
+\textit{Numérico com $n=10$.} $c=\frac{10}{84}\approx0{,}119$ e $\frac12\sqrt{\frac{11}{21}}\approx\frac12(0{,}7237)\approx0{,}362$. Logo $T_2$ é melhor para $p\in(0{,}138;\ 0{,}862)$ e $T_1$ é melhor fora desse intervalo.
+
+\begin{resposta}
+\textbf{Nenhum estimador é uniformemente melhor}: as curvas de EQM se cruzam.
+\begin{itemize}[leftmargin=1.2em]
+\item $T_2$ tem EQM menor quando $p$ está perto de $\frac12$, precisamente quando $\big|p-\frac12\big|<\frac12\sqrt{\frac{n+1}{2n+1}}$. Ele ``puxa'' a estimativa para $\frac12$, o que ajuda se $p$ está no centro.
+\item $T_1$ tem EQM menor quando $p$ está perto de $0$ ou $1$, e é não-viciado.
+\item Ambos são consistentes: $\B(T_2)=\frac{1-2p}{n+2}\to0$ e $\Var(T_2)\to0$.
+\item Quando $n\to\infty$, a região onde $T_2$ vence tende a $\big|p-\frac12\big|<\frac{1}{2\sqrt2}\approx0{,}354$, ou seja, $p\in(0{,}146;\ 0{,}854)$.
+\end{itemize}
+A escolha depende de conhecimento prévio sobre $p$. $T_2$ é o estimador de ``Laplace'', que também aparece como estimador bayesiano com priori uniforme.
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 7 -- Momentos para $f(y;\theta)=\theta^2ye^{-\theta y}$}
+%=====================================================================
+
+\textbf{Enunciado.} $f(y;\theta)=\theta^2ye^{-\theta y}$, $y>0$, com um parâmetro ($p=1$).
+
+\begin{ideia}
+\textbf{Reconheça o formato:} $\theta^2y^{2-1}e^{-\theta y}=\frac{\theta^2}{\Gamma(2)}y^{2-1}e^{-\theta y}$, porque $\Gamma(2)=1$. Isso é uma $\text{Gama}(2,\theta)$ (taxa $\theta$). Mesmo assim, vamos calcular pela integral.
+\end{ideia}
+
+\subsection*{Conferência: é densidade?}
+\[
+\int_0^\infty\theta^2ye^{-\theta y}\,dy=\theta^2\cdot\frac{\Gamma(2)}{\theta^2}=1 . \just{I3, I1 com $\alpha=2$; I2}
+\]
+
+\subsection*{Passo 1 -- primeiro momento populacional}
+\begin{align*}
+\E(Y)&=\int_0^\infty y\cdot\theta^2ye^{-\theta y}\,dy \just{P7}\\
+&=\theta^2\int_0^\infty y^{3-1}e^{-\theta y}\,dy \just{I3; $y\cdot y=y^2=y^{3-1}$}\\
+&=\theta^2\cdot\frac{\Gamma(3)}{\theta^3} \just{I1 com $\alpha=3$, taxa $\theta$}\\
+&=\theta^2\cdot\frac{2}{\theta^3}=\frac{2}{\theta}. \just{I2: $\Gamma(3)=2!=2$}
+\end{align*}
+
+\subsection*{Passo 2 -- igualar ao momento amostral e resolver}
+\begin{align*}
+\frac{2}{\tilde\theta}&=\bY\\
+2&=\tilde\theta\,\bY \just{multiplica por $\tilde\theta$}\\
+\tilde\theta&=\frac{2}{\bY}. \just{divide por $\bY>0$}
+\end{align*}
+
+\begin{resposta}
+$\tilde\theta=\dfrac{2}{\bY}=\dfrac{2n}{\sum_{i=1}^nY_i}$.
+\end{resposta}
+
+\subsection*{Complementos (não pedidos, mas úteis)}
+\textit{Consistência.} $\bY\convP2/\theta$ (LGN) e $g(x)=2/x$ é contínua em $2/\theta>0$. Pela aplicação contínua (Cont), $\tilde\theta\convP\frac{2}{2/\theta}=\theta$.
+
+\textit{Viés.} A soma de $n$ variáveis $\text{Gama}(2,\theta)$ independentes é $S\sim\text{Gama}(2n,\theta)$ (pelo produto das FGMs). Repetindo o cálculo do Exemplo 4 do guia, agora com $2n$ no lugar de $n$:
+\[
+\E\Big(\frac1S\Big)=\frac{\theta^{2n}}{\Gamma(2n)}\cdot\frac{\Gamma(2n-1)}{\theta^{2n-1}}=\frac{\theta}{2n-1}
+\quad\Longrightarrow\quad
+\E(\tilde\theta)=2n\cdot\frac{\theta}{2n-1}=\frac{2n}{2n-1}\theta .
+\]
+Logo $\tilde\theta$ é viciado, com $\B=\frac{\theta}{2n-1}\to0$ (assintoticamente não-viciado).
+
+\textit{EMV.} Com $\ell(\theta)=2n\log\theta+\sum_i\log y_i-\theta\sum_iy_i$, o escore é $U(\theta)=\frac{2n}{\theta}-\sum_iy_i$. Igualando a zero, $\hat\theta=\frac{2n}{\sum_iy_i}=\frac{2}{\bar y}$, que coincide com o de momentos. A informação observada é $I_o(\theta)=\frac{2n}{\theta^2}>0$, o que confirma o máximo.
+
+%=====================================================================
+\section{Exercício 8 -- Uniforme $U(0,\theta)$}
+%=====================================================================
+
+\textbf{Dados do modelo.} $f(y;\theta)=\frac1\theta$ para $0<y<\theta$, e zero fora. A f.d.a. é
+\[
+F(y)=\int_0^y\frac1\theta\,dt=\frac y\theta,\qquad0\le y\le\theta,
+\]
+com $F(y)=0$ para $y<0$ e $F(y)=1$ para $y>\theta$.
+
+\subsection*{(a) Consistência de $\hat\theta=Y_{(n)}$}
+
+\textit{Passo 1 -- f.d.a. do máximo.} Para $0\le y\le\theta$:
+\begin{align*}
+F_{Y_{(n)}}(y)=\Prob(Y_{(n)}\le y)&=\Prob(Y_1\le y,\dots,Y_n\le y) \just{Pr5}\\
+&=\prod_{i=1}^n\Prob(Y_i\le y) \just{P6}\\
+&=\Big(\frac y\theta\Big)^n . \just{P8, S5}
+\end{align*}
+
+\textit{Passo 2 -- simplificar o valor absoluto.} Toda observação é menor que $\theta$, logo $Y_{(n)}<\theta$ e $|Y_{(n)}-\theta|=\theta-Y_{(n)}$. Então
+\[
+|Y_{(n)}-\theta|\ge\varepsilon\iff\theta-Y_{(n)}\ge\varepsilon\iff Y_{(n)}\le\theta-\varepsilon .
+\]
+
+\textit{Passo 3 -- calcular a probabilidade.} Separamos em dois casos.
+
+Caso $\varepsilon\ge\theta$: então $\theta-\varepsilon\le0$ e, como $Y_{(n)}>0$, a probabilidade é $0$.
+
+Caso $0<\varepsilon<\theta$:
+\begin{align*}
+\Prob(|Y_{(n)}-\theta|\ge\varepsilon)&=\Prob(Y_{(n)}\le\theta-\varepsilon)=F_{Y_{(n)}}(\theta-\varepsilon) \just{Passo 2}\\
+&=\Big(\frac{\theta-\varepsilon}{\theta}\Big)^n . \just{Passo 1}
+\end{align*}
+Como $0<\frac{\theta-\varepsilon}{\theta}<1$, temos $r^n\to0$ para $0\le r<1$, e a probabilidade vai a zero.
+
+\textit{Caminho alternativo (via EQM).} A densidade do máximo é a derivada da f.d.a.: $f_{Y_{(n)}}(y)=\frac{ny^{n-1}}{\theta^n}$, $0<y<\theta$.
+\begin{align*}
+\E(Y_{(n)})&=\int_0^\theta y\cdot\frac{ny^{n-1}}{\theta^n}\,dy=\frac{n}{\theta^n}\cdot\frac{\theta^{n+1}}{n+1}=\frac{n\theta}{n+1}, \just{P7, I3, I4}\\
+\E(Y_{(n)}^2)&=\frac{n}{\theta^n}\int_0^\theta y^{n+1}\,dy=\frac{n}{\theta^n}\cdot\frac{\theta^{n+2}}{n+2}=\frac{n\theta^2}{n+2}, \just{P7, I3, I4}\\
+\Var(Y_{(n)})&=\frac{n\theta^2}{n+2}-\frac{n^2\theta^2}{(n+1)^2}
+=n\theta^2\,\frac{(n+1)^2-n(n+2)}{(n+1)^2(n+2)}
+=\frac{n\theta^2}{(n+1)^2(n+2)}, \just{P4}\\
+\B(Y_{(n)})&=\frac{n\theta}{n+1}-\theta=-\frac{\theta}{n+1}.
+\end{align*}
+Na variância, o numerador é $(n+1)^2-n(n+2)=n^2+2n+1-n^2-2n=1$. Então
+\begin{align*}
+\EQM(Y_{(n)})&=\frac{n\theta^2}{(n+1)^2(n+2)}+\frac{\theta^2}{(n+1)^2} \just{Decomp}\\
+&=\frac{\theta^2\,[n+(n+2)]}{(n+1)^2(n+2)} \just{denominador comum}\\
+&=\frac{2\theta^2(n+1)}{(n+1)^2(n+2)}=\frac{2\theta^2}{(n+1)(n+2)}\xrightarrow[n\to\infty]{}0 .
+\end{align*}
+
+\begin{resposta}
+$\hat\theta=Y_{(n)}$ \textbf{é consistente}: $\Prob(|Y_{(n)}-\theta|\ge\varepsilon)=\big(\frac{\theta-\varepsilon}{\theta}\big)^n\to0$ para $0<\varepsilon<\theta$ (e vale $0$ para $\varepsilon\ge\theta$). Também é consistente em MQ, com $\EQM=\frac{2\theta^2}{(n+1)(n+2)}$. É viciado (subestima, pois $Y_{(n)}<\theta$), com $\B=-\frac{\theta}{n+1}\to0$.
+\end{resposta}
+
+\subsection*{(b) Estimador de momentos}
+\begin{align*}
+\E(Y)&=\int_0^\theta y\cdot\frac1\theta\,dy=\frac1\theta\cdot\frac{\theta^2}{2}=\frac\theta2 . \just{P7, I3, I4}
+\end{align*}
+Igualando ao momento amostral:
+\[
+\frac{\tilde\theta}{2}=\bY\quad\Longrightarrow\quad\tilde\theta=2\bY .
+\]
+\textit{Propriedades.} Com $\Var(Y)=\frac{(\theta-0)^2}{12}=\frac{\theta^2}{12}$:
+\begin{align*}
+\E(\tilde\theta)&=2\E(\bY)=2\cdot\frac\theta2=\theta, \just{P1}\\
+\Var(\tilde\theta)&=4\Var(\bY)=4\cdot\frac{\theta^2/12}{n}=\frac{\theta^2}{3n}, \just{P2}\\
+\EQM(\tilde\theta)&=\frac{\theta^2}{3n}\to0 . \just{Decomp, Li1}
+\end{align*}
+\begin{resposta}
+$\tilde\theta=2\bY$: não-viciado, com $\EQM=\frac{\theta^2}{3n}$, e consistente.
+\end{resposta}
+
+\subsection*{(c) Comparação}
+\textit{Quando $Y_{(n)}$ tem EQM menor?}
+\begin{align*}
+\frac{2\theta^2}{(n+1)(n+2)}<\frac{\theta^2}{3n}
+&\iff6n<(n+1)(n+2) \just{Li3: multiplica por $\frac{3n(n+1)(n+2)}{\theta^2}>0$}\\
+&\iff0<n^2+3n+2-6n=n^2-3n+2\\
+&\iff(n-1)(n-2)>0\\
+&\iff n\ge3 \quad(n\text{ inteiro positivo}).
+\end{align*}
+Para $n=1$ e $n=2$ os EQM são iguais (confira: com $n=1$ ambos valem $\frac{\theta^2}{3}$; com $n=2$ ambos valem $\frac{\theta^2}{6}$).
+
+\textit{Ordem de convergência.} $\EQM(Y_{(n)})\approx\frac{2\theta^2}{n^2}$ vai a zero como $1/n^2$, enquanto $\EQM(2\bY)=\frac{\theta^2}{3n}$ vai como $1/n$. A eficiência relativa é
+\[
+\operatorname{ef}(Y_{(n)},2\bY)=\frac{\theta^2/(3n)}{2\theta^2/[(n+1)(n+2)]}=\frac{(n+1)(n+2)}{6n}\xrightarrow[n\to\infty]{}\infty .
+\]
+Por exemplo, com $n=20$ ela vale $\frac{21\cdot22}{120}=3{,}85$.
+
+\textit{Compatibilidade com os dados.} Como $\theta\ge Y_{(n)}$ sempre, uma estimativa razoável deve satisfazer $\tilde\theta\ge y_{(n)}$. Mas $2\bar y$ pode ser menor que o máximo observado. Com a amostra $(1,\,2,\,9)$: $\bar y=4$ e $2\bar y=8<9=y_{(n)}$. O modelo ajustado diria que observar $9$ era impossível.
+
+\begin{resposta}
+\begin{itemize}[leftmargin=1.2em]
+\item \textbf{Viés:} $2\bY$ é não-viciado; $Y_{(n)}$ é viciado (subestima), mas assintoticamente não-viciado.
+\item \textbf{EQM:} para todo $n\ge3$ e todo $\theta$, $\EQM(Y_{(n)})<\EQM(2\bY)$; para $n=1,2$ eles empatam. Logo $Y_{(n)}$ é melhor pelo critério do EQM, e a vantagem cresce com $n$ (ordem $1/n^2$ contra $1/n$).
+\item \textbf{Consistência:} ambos são consistentes.
+\item \textbf{Coerência:} $Y_{(n)}$ nunca contradiz os dados; $2\bY$ pode dar estimativa menor que o máximo observado.
+\item \textbf{Observação:} o limite de Cramér--Rao não se aplica aqui, porque o suporte depende de $\theta$. Por isso é possível ter EQM de ordem $1/n^2$. A versão corrigida $\frac{n+1}{n}Y_{(n)}$ é não-viciada, com variância $\frac{\theta^2}{n(n+2)}$, também menor que $\frac{\theta^2}{3n}$ para $n\ge2$.
+\end{itemize}
+\end{resposta}
+
+%=====================================================================
+\section{Exercício 9 -- Uniforme $U(-\theta,\theta)$}
+%=====================================================================
+
+\textbf{Dados do modelo.} $f(y;\theta)=\frac{1}{\theta-(-\theta)}=\frac{1}{2\theta}$ para $-\theta<y<\theta$, com $\theta>0$.
+
+\subsection*{Passo 1 -- o primeiro momento não serve}
+\begin{align*}
+\E(Y)&=\int_{-\theta}^{\theta}y\cdot\frac{1}{2\theta}\,dy=\frac1{2\theta}\cdot\frac{\theta^2-(-\theta)^2}{2}=\frac{1}{2\theta}\cdot0=0 . \just{P7, I3, I4}
+\end{align*}
+$\E(Y)=0$ \textbf{não depende de $\theta$}: igualar a $\bY$ dá a equação $0=\bY$, que não envolve $\theta$. Por isso passamos ao segundo momento, como manda o roteiro do método.
+
+\subsection*{Passo 2 -- segundo momento}
+\begin{align*}
+\E(Y^2)&=\int_{-\theta}^{\theta}y^2\cdot\frac{1}{2\theta}\,dy \just{P7}\\
+&=\frac1{2\theta}\cdot\frac{\theta^3-(-\theta)^3}{3} \just{I3, I4}\\
+&=\frac1{2\theta}\cdot\frac{2\theta^3}{3}=\frac{\theta^2}{3}. \just{$(-\theta)^3=-\theta^3$}
+\end{align*}
+(Confere com a tabela: $\Var(Y)=\frac{(2\theta)^2}{12}=\frac{\theta^2}{3}$ e $\E(Y^2)=\Var(Y)+0^2$.)
+
+\subsection*{Passo 3 -- igualar e resolver}
+\begin{align*}
+\frac{\tilde\theta^2}{3}&=M_2=\frac1n\sum_{i=1}^nY_i^2\\
+\tilde\theta^2&=\frac3n\sum_{i=1}^nY_i^2 \just{multiplica por 3}\\
+\tilde\theta&=\sqrt{\frac3n\sum_{i=1}^nY_i^2}. \just{raiz positiva, pois $\theta>0$}
+\end{align*}
+
+\begin{resposta}
+$\tilde\theta=\sqrt{3M_2}=\sqrt{\dfrac{3}{n}\displaystyle\sum_{i=1}^nY_i^2}$.
+\end{resposta}
+
+\subsection*{Comentários}
+\textit{Consistência.} $M_2\convP\E(Y^2)=\theta^2/3$ (LGN aplicada a $Y_i^2$), e $g(x)=\sqrt{3x}$ é contínua em $x=\theta^2/3>0$. Logo $\tilde\theta\convP\sqrt{3\cdot\theta^2/3}=\theta$ (Cont).
+
+\textit{Não-unicidade.} Outra opção seria usar $\E|Y|$:
+\[
+\E|Y|=\int_{-\theta}^{\theta}|y|\frac{1}{2\theta}\,dy=2\int_0^\theta\frac{y}{2\theta}\,dy=\frac{\theta}{2},
+\]
+o que levaria a $\tilde\theta'=\frac2n\sum_i|Y_i|$. Ilustra que ``o'' estimador de momentos depende de quais momentos se escolhe; o padrão do curso é usar os momentos $\E(Y^k)$ em ordem crescente, o que dá $\sqrt{3M_2}$.
+
+\textit{Compatibilidade.} Os dados exigem $\theta>\max_i|y_i|$, e $\tilde\theta$ pode violar isso, como no Exercício 8. O estimador natural baseado nos extremos é $\max_i|Y_i|$.
+
+\end{document}
