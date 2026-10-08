@@ -1,0 +1,196 @@
+\documentclass[8pt]{extarticle}
+\usepackage[landscape,a4paper,margin=0.5cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{multicol,amsmath,amssymb}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*,itemsep=0pt,topsep=0pt}
+\setlength{\parindent}{0pt}\setlength{\parskip}{1pt}
+\setlength{\columnsep}{8pt}\setlength{\columnseprule}{0.2pt}
+\setlength{\abovedisplayskip}{2pt}\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{1pt}\setlength{\belowdisplayshortskip}{1pt}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0pt}{3pt}{1pt}{\normalsize\bfseries\sffamily}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0pt}{2pt}{0.5pt}{\small\bfseries}}
+\makeatother
+\pagestyle{empty}
+\newcommand{\by}{\mathbf{y}}\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\Var}{\mathrm{Var}}\newcommand{\E}{\mathrm{E}}\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\vies}{\mathrm{B}}\newcommand{\EQM}{\mathrm{EQM}}
+\newcommand{\Ind}[1]{I_{#1}}
+\begin{document}
+\begin{multicols*}{4}
+\begin{center}{\large\bfseries CE309 -- Inferência Estatística}\\{\small Cheatsheet: Estimadores, MM, EMV, $I_o$, $I_e$, IC, Testes}\end{center}
+
+\section{1. Matemática básica}
+\textbf{Potências:} $a^m a^n=a^{m+n}$; $a^m/a^n=a^{m-n}$; $(a^m)^n=a^{mn}$; $a^{-n}=1/a^n$; $a^{1/n}=\sqrt[n]{a}$; $(ab)^n=a^nb^n$.\\
+\textbf{Logaritmos:} $\ln(ab)=\ln a+\ln b$; $\ln(a/b)=\ln a-\ln b$; $\ln a^k=k\ln a$; $\ln e^x=x$; $e^{\ln x}=x$; $\ln 1=0$.\\
+\textbf{Produtório/Somatório (chave p/ $L$):}
+$\prod_{i=1}^n c=c^n$;\ $\prod a^{y_i}=a^{\sum y_i}$;\ $\prod e^{g(y_i)}=e^{\sum g(y_i)}$;\ $\ln\prod f_i=\sum\ln f_i$;\ $\sum_{i=1}^n c=nc$;\ $\sum y_i=n\bar y$.\\
+$\sum(y_i-\bar y)=0$;\ $\sum(y_i-\bar y)^2=\sum y_i^2-n\bar y^2$;\ $\sum(y_i-\mu)^2=\sum(y_i-\bar y)^2+n(\bar y-\mu)^2$.\\
+\textbf{Fatoração:} $a^2-b^2=(a-b)(a+b)$; $(a\pm b)^2=a^2\pm2ab+b^2$; $\frac{1}{p}+\frac{1}{1-p}=\frac{1}{p(1-p)}$; $\frac{a}{\theta}-\frac{b}{1-\theta}=0\Leftrightarrow\theta=\frac{a}{a+b}$.\\
+\textbf{Derivadas:} $(x^n)'=nx^{n-1}$; $(\ln x)'=1/x$; $(\ln g)'=g'/g$; $(e^{g})'=g'e^{g}$; $(a^x)'=a^x\ln a$; $(uv)'=u'v+uv'$; $(u/v)'=\frac{u'v-uv'}{v^2}$; $(1/x)'=-1/x^2$; $(\ln(1-x))'=-\frac{1}{1-x}$; $\frac{d}{d\theta}\ln\Gamma(\theta)=\psi(\theta)$ (digama), $\psi'(\theta)$ trigama; $\frac{d}{dk}y^k=y^k\ln y$.\\
+\textbf{Integrais:} $\int x^n dx=\frac{x^{n+1}}{n+1}$; $\int e^{ax}dx=\frac{e^{ax}}{a}$; $\int\frac{dx}{x}=\ln|x|$; partes: $\int u\,dv=uv-\int v\,du$.\\
+$\Gamma(\alpha)=\int_0^\infty x^{\alpha-1}e^{-x}dx$; $\Gamma(\alpha+1)=\alpha\Gamma(\alpha)$; $\Gamma(n)=(n-1)!$; $\Gamma(\tfrac12)=\sqrt\pi$.\\
+$\displaystyle\int_0^\infty y^{a-1}e^{-by}dy=\frac{\Gamma(a)}{b^a}$;\quad $\displaystyle\int_0^\infty e^{-by}dy=\frac1b$.\\
+\textbf{Séries:} $\sum_{y\ge0}\frac{\lambda^y}{y!}=e^\lambda$; $\sum_{y\ge0}r^y=\frac{1}{1-r}$; $\sum_{y=0}^n\binom ny a^yb^{n-y}=(a+b)^n$.
+
+\section{2. Distribuições}
+\renewcommand{\arraystretch}{1.05}
+{\scriptsize\setlength{\tabcolsep}{1pt}
+\begin{tabular}{@{}l|l|l|l@{}}
+Dist. & $f(y;\theta)$ & $\E(Y)$ & $\Var(Y)$\\\hline
+$Ber(p)$ & $p^y(1-p)^{1-y}$, $y\in\{0,1\}$ & $p$ & $p(1-p)$\\
+$Bin(m,p)$ & $\binom my p^y(1-p)^{m-y}$ & $mp$ & $mp(1-p)$\\
+$P(\lambda)$ & $e^{-\lambda}\lambda^y/y!$, $y\in\mathbb N$ & $\lambda$ & $\lambda$\\
+$BN(\mu,\phi)$ & $\frac{\Gamma(y+\phi)}{\Gamma(\phi)y!}\big(\frac{\mu}{\mu+\phi}\big)^y\big(\frac{\phi}{\mu+\phi}\big)^\phi$ & $\mu$ & $\mu+\frac{\mu^2}{\phi}$\\
+$Exp(\lambda)$ & $\lambda e^{-\lambda y}$, $y>0$ & $1/\lambda$ & $1/\lambda^2$\\
+$G(\alpha,\beta)$ & $\frac{\beta^\alpha}{\Gamma(\alpha)}y^{\alpha-1}e^{-\beta y}$ & $\alpha/\beta$ & $\alpha/\beta^2$\\
+$N(\mu,\sigma^2)$ & $\frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{(y-\mu)^2}{2\sigma^2}}$ & $\mu$ & $\sigma^2$\\
+$LN(\mu,\sigma^2)$ & $\frac{1}{y\sqrt{2\pi\sigma^2}}e^{-\frac{(\ln y-\mu)^2}{2\sigma^2}}$ & $e^{\mu+\sigma^2/2}$ & $(e^{\sigma^2}\!-\!1)e^{2\mu+\sigma^2}$\\
+$U(a,b)$ & $\frac{1}{b-a}\Ind{[a,b]}(y)$ & $\frac{a+b}2$ & $\frac{(b-a)^2}{12}$\\
+$Weib(\theta,k)$ & $\theta k y^{k-1}e^{-\theta y^k}$ & \multicolumn{2}{l}{$Y^k\sim Exp(\theta)$}\\
+$\chi^2_\nu$ & $G(\nu/2,1/2)$ & $\nu$ & $2\nu$
+\end{tabular}}\\
+\textbf{Fatos úteis:} $\sum Y_i\sim Bin(n,p)$ (Ber); $\sum Y_i\sim P(n\lambda)$; $\sum Y_i\sim G(n,\lambda)$ (Exp); $\ln Y\sim N(\mu,\sigma^2)$ se $Y\sim LN$; $Y^2\sim Exp(\theta)$ se $f=2\theta ye^{-\theta y^2}$.\\
+Se $T\sim G(n,\lambda)$: $\E(1/T)=\frac{\lambda}{n-1}$, $\E(1/T^2)=\frac{\lambda^2}{(n-1)(n-2)}$.\\
+\textbf{Normal:} $\bar Y\sim N(\mu,\sigma^2/n)$; $\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}$; $\bar Y\perp S^2$; $\frac{\bar Y-\mu}{S/\sqrt n}\sim t_{n-1}$.\\
+\textbf{Estat. de ordem} ($F$ acum.): $F_{Y_{(n)}}(y)=[F(y)]^n$; $F_{Y_{(1)}}(y)=1-[1-F(y)]^n$.\\
+$U(0,\theta)$: $f_{Y_{(n)}}=\frac{ny^{n-1}}{\theta^n}$, $\E=\frac{n\theta}{n+1}$, $\E(Y_{(n)}^2)=\frac{n\theta^2}{n+2}$, $\Var=\frac{n\theta^2}{(n+1)^2(n+2)}$.
+
+\section{3. Esperança e variância}
+$\E(aX+b)=a\E X+b$; $\Var(aX+b)=a^2\Var X$; $\Var X=\E X^2-(\E X)^2$; indep.: $\Var(\sum a_iY_i)=\sum a_i^2\Var Y_i$; $\Cov(X,Y)=\E XY-\E X\E Y$.\\
+i.i.d.: $\E\bar Y=\mu$, $\Var\bar Y=\sigma^2/n$; $\E(S^2)=\sigma^2$ com $S^2=\frac{1}{n-1}\sum(Y_i-\bar Y)^2$.\\
+\textbf{Chebyshev:} $P(|T-\theta|\ge\varepsilon)\le\frac{\E(T-\theta)^2}{\varepsilon^2}=\frac{\EQM(T)}{\varepsilon^2}$.\\
+\textbf{Cauchy--Schwarz:} $\Cov(X,Y)^2\le\Var X\,\Var Y$.
+
+\section{4. Propriedades de estimadores}
+$T=T(Y_1,\dots,Y_n)$ estimador; $t$ estimativa.
+\begin{itemize}
+\item \textbf{Viés:} $\vies(T)=\E(T)-\theta$. Não-viciado $\Leftrightarrow\E(T)=\theta\ \forall\theta$. Assint. não-viciado: $\lim_n\E T=\theta$.
+\item \textbf{EQM:} $\EQM(T)=\E(T-\theta)^2=\Var(T)+[\vies(T)]^2$.
+\item \textbf{Consist. médio quadrática:} $\lim_{n\to\infty}\EQM(T)=0$ $\Leftrightarrow$ $\Var T\to0$ e $\vies\to0$.
+\item \textbf{Consist. em probabilidade:} $\lim_n P(|T-\theta|<\varepsilon)=1,\ \forall\varepsilon>0$. MQ $\Rightarrow$ prob. (via Chebyshev): $0\le P(|T-\theta|\ge\varepsilon)\le\EQM/\varepsilon^2\to0$.
+\item \textbf{Eficiência relativa:} $T_1$ melhor que $T_2$ se $\EQM(T_1)\le\EQM(T_2)$ $\forall\theta$ (com desig. estrita p/ algum). Se curvas se cruzam: nenhum domina.
+\item \textbf{Comb. linear} $\sum a_iY_i$ não-viciada p/ $\E Y$ $\Leftrightarrow\sum a_i=1$. Var mínima: $a_i=1/n$.
+\item $\frac{Y_1+Y_2}{2}$: $\E=\mu$, $\Var=\sigma^2/2\not\to0$ $\Rightarrow$ não consistente (não depende de $n$).
+\end{itemize}
+
+\section{5. Método dos momentos}
+Momentos populacionais $\mu'_k=\E(Y^k)$; amostrais $m'_k=\frac1n\sum Y_i^k$. Igualar $\mu'_k(\theta)=m'_k$, $k=1,\dots,p$ ($p$ = nº parâmetros) e resolver: $\tilde\theta$.\\
+Se $\E Y$ não depende de $\theta$ (ex.: $U(-\theta,\theta)$, $\E Y=0$), usar $k=2$: $\frac{\theta^2}{3}=\frac1n\sum Y_i^2\Rightarrow\tilde\theta=\sqrt{\frac{3}{n}\sum Y_i^2}$.\\
+MM: em geral consistente, nem sempre não-viciado, pode cair fora de $\Theta$ (ex.: $2\bar Y<Y_{(n)}$ em $U(0,\theta)$).
+
+\section{6. Notação padrão de verossimilhança}
+\textbf{Gatilho Zzx (início obrigatório):} \emph{``Considere $Y_1,\dots,Y_n$ uma amostra aleatória de uma variável aleatória $Y\sim\dots$, com $f(y;\theta)=\dots$. Dado que observamos a amostra $\by=(y_1,\dots,y_n)^\top$, a função de verossimilhança é \dots''}
+\begin{itemize}
+\item $L(\theta;\by)=\prod_{i=1}^n f(y_i;\theta)$ (fdp/fp conjunta de $\by$ vista como função de $\theta$).
+\item $l(\theta;\by)=\ln L(\theta;\by)=\sum_{i=1}^n\ln f(y_i;\theta)$.
+\item Escore: $U(\theta;\by)=\frac{\partial}{\partial\theta}l(\theta;\by)$; EMV: $U(\hat\theta;\by)=0$ e $I_o(\hat\theta)>0$.
+\item Inf. observada: $I_o(\theta;\by)=-\frac{\partial^2}{\partial\theta^2}l(\theta;\by)=-\frac{\partial}{\partial\theta}U(\theta;\by)$.\\
+Multiparâmetro: $I_o(\boldsymbol\theta)=-\Big[\frac{\partial^2 l}{\partial\theta_j\partial\theta_k}\Big]$ ($-$Hessiana); EMV é máximo se $I_o(\hat{\boldsymbol\theta})$ pos. definida.
+\item Inf. esperada (Fisher): $I_e(\theta)=\Var[U(\theta;\bY)]=\E[U(\theta;\bY)^2]=\E[I_o(\theta;\bY)]$. i.i.d.: $I_e(\theta)=n\,i_1(\theta)$.
+\item Razão de verossimilhança: $LR(\theta)=L(\theta)/L(\hat\theta)\in(0,1]$.
+\item Deviance: $D(\theta)=-2\ln LR(\theta)=2[\,l(\hat\theta)-l(\theta)\,]\ \dot\sim\ \chi^2_1$.
+\end{itemize}
+\textbf{Suporte dependente de $\theta$:} escrever $f$ com indicadora e expandir:\\
+$\prod_{i=1}^n\Ind{[0,\theta]}(y_i)=1\Leftrightarrow\Ind{[0,\theta]}(y_i)=1\ \forall i\Leftrightarrow0\le y_i\le\theta\ \forall i\Leftrightarrow0\le y_{(1)}\le\dots\le y_{(n)}\le\theta\Leftrightarrow\Ind{[0,\infty)}(y_{(1)})\,\Ind{[y_{(n)},\infty)}(\theta)=1$.\\
+Ex. $U(0,\theta)$: $L(\theta;\by)=\theta^{-n}\Ind{[y_{(n)},\infty)}(\theta)$, decrescente em $\theta\Rightarrow\hat\theta=Y_{(n)}$ (\emph{não} derivar!).\\
+$U(-\theta,\theta)$: $-\theta\le y_i\le\theta\ \forall i\Leftrightarrow\theta\ge\max|y_i|=\max(-y_{(1)},y_{(n)})\Rightarrow L=(2\theta)^{-n}\Ind{[\max|y_i|,\infty)}(\theta)$, $\hat\theta=\max|Y_i|$.\\
+$U(\theta-1,\theta+1)$: $\theta-1\le y_{(1)}$ e $y_{(n)}\le\theta+1\Leftrightarrow y_{(n)}-1\le\theta\le y_{(1)}+1$; $L=2^{-n}$ constante: \emph{qualquer} $\hat\theta\in[y_{(n)}-1,\,y_{(1)}+1]$ é EMV (não único).\\
+Caso discreto com $\Theta$ finito: calcular $L(\theta)$ p/ cada $\theta\in\Theta$ e escolher o maior.
+
+\section{7. Regularidade e propriedades}
+\textbf{Condições de regularidade:} (i) $\theta$ identificável ($f(y;\theta_1)=f(y;\theta_2)$ q.t.p. $\Rightarrow\theta_1=\theta_2$); (ii) suporte de $f$ não depende de $\theta$; (iii) $\theta_0\in$ interior de $\Theta$; (iv) $f$ 2 vezes cont. diferenciável em $\theta$; (v) $\frac{\partial}{\partial\theta}$ e $\int$ (ou $\sum$) podem ser intercambiados.\\
+\textbf{Identidades de Bartlett:} de $\int f(y;\theta)dy=1$ e $\frac{\partial f}{\partial\theta}=f\,\frac{\partial\ln f}{\partial\theta}$:
+\[\E[U(\theta;\bY)]=0,\qquad \E[U(\theta;\bY)^2]=-\E[U'(\theta;\bY)]\]
+$\Rightarrow I_e(\theta)=\Var(U)=\E(U^2)=\E(I_o)$.\\
+\textbf{Desig. de Cramér--Rao:} $T$ não-viciado p/ $\theta$ $\Rightarrow\Var(T)\ge I_e(\theta)^{-1}$ (LICR). Para $g(\theta)$: $\Var(T)\ge\frac{[g'(\theta)]^2}{I_e(\theta)}$.\\
+Prova: $\E T=\theta\Rightarrow\int t\,\frac{\partial f}{\partial\theta}=1\Rightarrow\E[TU]=1=\Cov(T,U)$; C--S: $1\le\Var(T)I_e(\theta)$.\\
+\textbf{Eficiente:} não-viciado e $\Var(T)=I_e(\theta)^{-1}$. Atinge LICR $\Leftrightarrow U(\theta;\by)=I_e(\theta)[T-\theta]$.\\
+\textbf{Suficiência (fatoração de Neyman):} $T$ suficiente $\Leftrightarrow L(\theta;\by)=g(T(\by);\theta)\,h(\by)$, $h$ não depende de $\theta$.\\
+\textbf{Família exponencial:} $f=\exp\{c(\theta)T(y)+d(\theta)+S(y)\}\Rightarrow\sum T(Y_i)$ suficiente.\\
+\textbf{Propriedades do EMV} (sob regularidade):
+\begin{itemize}
+\item Invariância: EMV de $g(\theta)$ é $g(\hat\theta)$.
+\item Função de estatística suficiente.
+\item Consistente; assint. não-viciado; assint. eficiente.
+\item $\hat\theta\ \dot\sim\ N(\theta,\,I_e(\theta)^{-1})$ (n grande); $\boldsymbol{\hat\theta}\ \dot\sim\ N_p(\boldsymbol\theta,I_e^{-1})$.
+\item Não necessariamente não-viciado em amostra finita (ex.: $1/\bar Y$).
+\end{itemize}
+
+\section{8. Métodos numéricos}
+Sem solução fechada para $U(\theta)=0$:\\
+\textbf{Newton--Raphson:} $\theta^{(r+1)}=\theta^{(r)}+\dfrac{U(\theta^{(r)})}{I_o(\theta^{(r)})}$; multiparam.: $\boldsymbol\theta^{(r+1)}=\boldsymbol\theta^{(r)}+I_o^{-1}U$.\\
+\textbf{Escore de Fisher:} troca $I_o$ por $I_e$. Parar quando $|\theta^{(r+1)}-\theta^{(r)}|<\epsilon$. Chute: estimador de momentos.\\
+\textbf{Bisseção/Brent} em $U(\theta)=0$; \textbf{otimização direta} de $l$ (\texttt{optimize}, \texttt{optim}); \textbf{perfilhamento}: substituir $\hat\theta(k)$ em $l$ e maximizar $l_p(k)=l(\hat\theta(k),k)$ em 1 dimensão.\\
+Suporte dependente de $\theta$ ou $L$ não diferenciável: \emph{não} usar NR; analisar $L$ graficamente / estat. de ordem. $\Theta$ restrito ($\theta>-1$, $\theta>0$): reparametrizar ($\theta=e^\eta-1$) ou otimizar com limites.\\
+{\footnotesize\texttt{require(stats)}\\
+\texttt{y <- c(4.2,0.7,2.5,1.9,7.9); n <- length(y)}\\
+\texttt{Uk <- function(k) n/k + sum(log(y)) -}\\
+\texttt{\ \ n*sum(y\^{}k*log(y))/sum(y\^{}k)}\\
+\texttt{k <- uniroot(Uk, c(0.1,10))\$root}\\
+\texttt{theta <- n/sum(y\^{}k)}}
+
+\section{9. Intervalos de confiança}
+\textbf{Wald (assintótico):} $\hat\theta\pm z_{1-\alpha/2}\sqrt{I_e(\hat\theta)^{-1}}$ (ou $I_o(\hat\theta)^{-1}$).\\
+\textbf{Deviance (verossimilhança):} $\{\theta:\ D(\theta)\le\chi^2_{1;1-\alpha}\}$, i.e. $LR(\theta)\ge e^{-\chi^2_{1;1-\alpha}/2}$ ($\chi^2_{1;0.95}=3.841$, $c\approx0.1465$). Resolver $2[l(\hat\theta)-l(\theta)]=3.841$ (numérico); IC não necessariamente simétrico; invariante.\\
+\textbf{Quantidade pivotal} $Q(\bY,\theta)$, distribuição livre de $\theta$: $P(q_1\le Q\le q_2)=1-\alpha$ e isolar $\theta$.\\
+Ex.: $\frac{\bar Y-\mu}{\sigma/\sqrt n}\sim N(0,1)$; $\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}$; Exp: $2\lambda\sum Y_i\sim\chi^2_{2n}$; $U(0,\theta)$: $Y_{(n)}/\theta\sim Beta(n,1)$, $P(Y_{(n)}/\theta\le q)=q^n$.\\
+$z_{0.975}=1.96$, $z_{0.95}=1.645$, $z_{0.995}=2.576$.
+
+\section{10. Algoritmo metama (Estimação + IC)}
+\begin{enumerate}
+\item \textbf{Zzx} + $f(y;\theta)$ com suporte (indicadora se depender de $\theta$).
+\item $L(\theta;\by)=\prod f(y_i;\theta)$: separar o que depende de $\theta$ ($\prod a^{y_i}=a^{\sum y_i}$, $\prod c=c^n$).
+\item $l(\theta;\by)=\ln L$: termos sem $\theta$ como constante.
+\item $U(\theta;\by)=\frac{\partial l}{\partial\theta}$; $U(\hat\theta)=0\Rightarrow\hat\theta$; trocar $y_i\to Y_i$ para o estimador.
+\item $I_o(\theta;\by)=-\frac{\partial U}{\partial\theta}$; verificar $I_o(\hat\theta)>0$ (máximo).
+\item $I_e(\theta)=\E[I_o(\theta;\bY)]$ (usar $\E Y_i$).
+\item Propriedades: $\E\hat\theta$ (viés), $\Var$, LICR $=I_e^{-1}$, suficiência, consistência, dist. assintótica.
+\item IC: (a) Wald; (b) Deviance; (c) Quantidade pivotal.
+\end{enumerate}
+
+\section{11. Algoritmo thm (Testes de hipóteses)}
+\begin{enumerate}
+\item $H_0:\theta=\theta_0$ vs $H_1:\theta\ne\theta_0$ ($>$ ou $<$).
+\item Nível $\alpha=P(\text{rej. }H_0\mid H_0\text{ verd.})$ (erro tipo I); $\beta=P(\text{não rej. }H_0\mid H_1)$; poder $\pi=1-\beta$.
+\item Tipo: bilateral / unilateral (direita/esquerda).
+\item Estatística de teste (sob $H_0$):\\
+Wald: $W=\frac{(\hat\theta-\theta_0)^2}{I_e(\hat\theta)^{-1}}$ ou $Z=\frac{\hat\theta-\theta_0}{\sqrt{I_e(\hat\theta)^{-1}}}\sim N(0,1)$;\\
+Escore: $S=\frac{U(\theta_0)^2}{I_e(\theta_0)}\dot\sim\chi^2_1$;\\
+RV: $D(\theta_0)=2[l(\hat\theta)-l(\theta_0)]\dot\sim\chi^2_1$ ($\chi^2_q$, $q$ = nº restrições).\\
+Neyman--Pearson (simples $\theta_0$ vs $\theta_1$): rejeitar se $\frac{L(\theta_0)}{L(\theta_1)}\le k$.
+\item Região crítica: $RC=\{|Z|>z_{1-\alpha/2}\}$, $\{Z>z_{1-\alpha}\}$, $\{D>\chi^2_{1;1-\alpha}\}$. p-valor $=P(\text{estat.}\ \ge\ \text{obs.}\mid H_0)$.
+\item Conclusão: estat. $\in RC$ (ou p-valor $<\alpha$) $\Rightarrow$ rejeita $H_0$ ao nível $\alpha$; caso contrário não rejeita. Interpretar no contexto.
+\end{enumerate}
+
+\section{12. Respostas-chave -- Lista 6}
+\textbf{E1 Ber:} $\E\hat p=p$; $\Var\hat p=\EQM=\frac{p(1-p)}{n}\to0$.\\
+\textbf{E2 Normal:} $\E\hat\mu=\mu$; $\Var=\EQM=\sigma^2/n\to0$.\\
+\textbf{E3:} $\sum(Y_i-\bar Y)^2=\sigma^2 Q$, $Q\sim\chi^2_{n-1}$.\\
+$\hat\sigma_1^2=\frac{\sigma^2}{n}Q$: $\E=\frac{n-1}{n}\sigma^2$ (viés $-\sigma^2/n$), $\Var=\frac{2(n-1)\sigma^4}{n^2}$, $\EQM=\frac{(2n-1)\sigma^4}{n^2}$.\\
+$\hat\sigma_2^2=S^2$: não-viciado, $\Var=\EQM=\frac{2\sigma^4}{n-1}$. Ambos $\to0$.\\
+Compar.: $\frac{2n-1}{n^2}<\frac{2}{n-1}\Leftrightarrow 2n^2-3n+1<2n^2$ (sempre): $\hat\sigma^2_1$ tem menor EQM, apesar de viciado.\\
+\textbf{E4:} $\bar Y_2=\frac{Y_1+Y_2}{2}$: $\E=\mu$, $\EQM=\sigma^2/2$ constante $\Rightarrow$ não consistente.\\
+\textbf{E5:} $\E(\sum a_iY_i)=\mu\sum a_i=\mu\Leftrightarrow\sum a_i=1$.\\
+\textbf{E6:} $\EQM(T_1)=\frac{p(1-p)}{n}$; $T_2$: $\E=\frac{np+1}{n+2}$, viés $\frac{1-2p}{n+2}$, $\EQM(T_2)=\frac{np(1-p)+(1-2p)^2}{(n+2)^2}$. Curvas se cruzam: $T_2$ melhor p/ $p$ perto de $1/2$, $T_1$ perto de 0 ou 1 $\Rightarrow$ nenhum uniformemente melhor.\\
+\textbf{E7:} $f=\theta^2ye^{-\theta y}$ é $G(2,\theta)$: $\E Y=2/\theta=\bar Y\Rightarrow\tilde\theta=2/\bar Y$.\\
+\textbf{E8 $U(0,\theta)$:} $\EQM(Y_{(n)})=\frac{2\theta^2}{(n+1)(n+2)}\to0$ (consistente, viciado); $\tilde\theta=2\bar Y$: não-viciado, $\EQM=\frac{\theta^2}{3n}$. Para $n\ge3$: $\EQM(Y_{(n)})<\EQM(2\bar Y)$.\\
+\textbf{E9 $U(-\theta,\theta)$:} $\E Y^2=\theta^2/3\Rightarrow\tilde\theta=\sqrt{3m'_2}$.
+
+\section{13. Respostas-chave -- Lista 7}
+\textbf{1 Poisson:} $l=-n\lambda+\sum y_i\ln\lambda-\sum\ln y_i!$; $U=-n+\frac{\sum y_i}{\lambda}$; $\hat\lambda=\bar Y$; $I_o=\frac{\sum y_i}{\lambda^2}$; $I_e=\frac{n}{\lambda}$; $\Var\hat\lambda=\frac\lambda n=$ LICR: não-viciado, eficiente, consistente, $\sum Y_i$ suficiente.\\
+\textbf{2 Bernoulli:} $U=\frac{\sum y_i}{p}-\frac{n-\sum y_i}{1-p}$; $\hat p=\bar Y$; $I_o=\frac{\sum y_i}{p^2}+\frac{n-\sum y_i}{(1-p)^2}$; $I_e=\frac{n}{p(1-p)}$: eficiente.\\
+\textbf{3/7 Exp:} $l=n\ln\lambda-\lambda\sum y_i$; $U=\frac n\lambda-\sum y_i$; $\hat\lambda=1/\bar Y$; $I_o=I_e=\frac{n}{\lambda^2}$; $\E\hat\lambda=\frac{n\lambda}{n-1}$ (viciado; $\frac{n-1}{\sum Y_i}$ é não-viciado); consistente, assint. eficiente.\\
+\textbf{4 Gama:} $l=n\alpha\ln\beta-n\ln\Gamma(\alpha)+(\alpha-1)\sum\ln y_i-\beta\sum y_i$.\\
+$\alpha$ conh.: $U_\beta=\frac{n\alpha}{\beta}-\sum y_i\Rightarrow\hat\beta=\frac{\alpha}{\bar Y}$; $I_e=\frac{n\alpha}{\beta^2}$.\\
+$\beta$ conh.: $U_\alpha=n\ln\beta-n\psi(\alpha)+\sum\ln y_i=0\Rightarrow\psi(\hat\alpha)=\ln\beta+\frac1n\sum\ln y_i$ (numérico, NR); $I_o=I_e=n\psi'(\alpha)$.\\
+\textbf{5 BN ($\phi$ conh.):} $l=\sum y_i\ln\mu-(\sum y_i+n\phi)\ln(\mu+\phi)+c$; $U=\frac{\sum y_i}{\mu}-\frac{\sum y_i+n\phi}{\mu+\phi}\Rightarrow\hat\mu=\bar Y$; $I_e=\frac{n\phi}{\mu(\mu+\phi)}$; $\Var\bar Y=\frac{\mu+\mu^2/\phi}{n}=I_e^{-1}$: eficiente.\\
+\textbf{6 Log-normal:} $l=-\frac n2\ln(2\pi\sigma^2)-\sum\ln y_i-\frac{1}{2\sigma^2}\sum(\ln y_i-\mu)^2$; $\hat\mu=\frac1n\sum\ln Y_i$; $\hat\sigma^2=\frac1n\sum(\ln Y_i-\hat\mu)^2$ (viciado); $I_e=\mathrm{diag}\big(\frac{n}{\sigma^2},\frac{n}{2\sigma^4}\big)$.\\
+\textbf{8:} $L=(2\theta)^n\prod y_i\,e^{-\theta\sum y_i^2}=g(\sum y_i^2;\theta)h(\by)$ $\Rightarrow\sum Y_i^2$ suficiente; $\hat\theta=\frac{n}{\sum Y_i^2}$; $I_e=\frac{n}{\theta^2}$.\\
+\textbf{9 Weibull:} $k$ conh.: $\hat\theta=\frac{n}{\sum Y_i^k}$. $k$ desconh.: $U_k=\frac nk+\sum\ln y_i-\theta\sum y_i^k\ln y_i$; perfilhar $\hat\theta(k)$: $\frac nk+\sum\ln y_i-\frac{n\sum y_i^k\ln y_i}{\sum y_i^k}=0$ (NR/bisseção). Dados: $\hat k\approx1.422$, $\hat\theta\approx0.150$.\\
+\textbf{10:} (a) $(\theta+1)x^\theta$: regular; $U=\frac{n}{\theta+1}+\sum\ln x_i$, $\hat\theta=-1-\frac{n}{\sum\ln x_i}$, $I_o=\frac{n}{(\theta+1)^2}$; fechado, NR converge (respeitar $\theta>-1$). (b) $U(-\theta,\theta)$: suporte depende de $\theta$, $\hat\theta=\max|x_i|$, sem derivação (NR inadequado). (c) $U(\theta-1,\theta+1)$: $L$ plana em $[x_{(n)}-1,x_{(1)}+1]$, EMV não único; otimizador numérico retorna qualquer ponto do intervalo.
+
+\end{multicols*}
+\end{document}
