@@ -1,0 +1,854 @@
+\documentclass[8pt]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[a4paper,landscape,margin=0.15cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{environ}
+
+\allowdisplaybreaks
+
+% ---------- Layout ----------
+\setlength{\columnsep}{3mm}
+\setlength{\columnseprule}{0.2pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1pt}
+\pagestyle{empty}
+\sloppy
+\setlength{\emergencystretch}{3em}
+
+\AtBeginDocument{%
+  \setlength{\abovedisplayskip}{2pt}%
+  \setlength{\belowdisplayskip}{2pt}%
+  \setlength{\abovedisplayshortskip}{1pt}%
+  \setlength{\belowdisplayshortskip}{1pt}%
+  \setlength{\jot}{1pt}%
+}
+
+% ---------- Encaixe garantido na coluna (só reduz se não couber) ----------
+\newsavebox{\fitbox}
+\newcommand{\fit}[1]{\par\vspace{1pt}\noindent\sbox{\fitbox}{$\displaystyle #1$}%
+  \ifdim\wd\fitbox>\linewidth\resizebox{\linewidth}{!}{\usebox{\fitbox}}%
+  \else\makebox[\linewidth]{\usebox{\fitbox}}\fi\par\vspace{1pt}}
+
+% todo align* vira um bloco 'aligned' que encolhe se não couber
+\RenewEnviron{align*}{\fit{\begin{aligned}\BODY\end{aligned}}}
+% todo \[ ... \] passa pela mesma caixa
+\def\[#1\]{\fit{#1}}
+
+% ---------- Operadores ----------
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\EQM}{\operatorname{EQM}}
+\newcommand{\Efr}{\mathit{Ef}_r}
+\newcommand{\Bin}{\operatorname{Bin}}
+\newcommand{\ov}[1]{\overset{\text{#1}}{=}}
+\newcommand{\ovl}[1]{\overset{\text{#1}}{\le}}
+
+% ---------- Blocos ----------
+\newcommand{\ex}[1]{\par\vspace{5pt}\noindent{\normalsize\bfseries Exercício #1}\par\vspace{1pt}\hrule\vspace{2pt}}
+\newcommand{\sub}[1]{\par\vspace{3pt}\noindent\textbf{#1}\par}
+\newcommand{\rac}[1]{\par{\scriptsize\itshape\textbf{Raciocínio:} #1}\par}
+\newcommand{\prova}{\par\noindent\textbf{Na Prova:}\par}
+\newcommand{\sep}{\par\noindent\textbf{Em separado:}\par}
+\newcommand{\teo}[2]{\par\noindent\textbf{#1:} #2\par}
+\newcommand{\obs}[1]{\par{\scriptsize\textbf{Obs.:} #1}\par}
+\newcommand{\res}[1]{\par\vspace{1pt}\noindent{\bfseries\boldmath #1}\par\vspace{1pt}}
+\newcommand{\erro}[1]{\par{\scriptsize\textbf{Erro comum:} #1}\par}
+\newenvironment{cola}{\par\vspace{2pt}\noindent\textbf{Cola}\begin{itemize}[leftmargin=*,nosep,label=\textbullet]\scriptsize}{\end{itemize}}
+
+\begin{document}
+
+\begin{center}
+{\large\bfseries CE309 -- Inferência Estatística \quad\textbullet\quad Lista 7: Propriedades de Estimadores e Método dos Momentos (Ex.~1--9)}
+\end{center}
+\vspace{-2pt}
+
+\begin{multicols*}{4}
+\raggedcolumns
+
+%==================================================
+\ex{1}
+\obs{Com $Y_i\overset{iid}{\sim}\Bin(n,p)$, $E(Y_i)=np$, logo $E(\hat p)=np\neq p$ (viés $B(\hat p)=(n-1)p$) e o item (a) seria falso. Resolvido para $Y_i\overset{iid}{\sim}\Bin(m,p)$, $i=1,\dots,n$, com $\hat p=\frac{1}{nm}\sum_{i=1}^n Y_i$; $m=1$ (Bernoulli) é o $\hat p$ do enunciado. A letra $m$ não veio das aulas.}
+
+\sub{(a) Viés}
+\sep
+\rac{Esperança da binomial: nº de ensaios $\times$ probabilidade.}
+\[E(Y_i)=mp,\quad i=1,\dots,n\]
+\rac{Constante sai; esperança da soma = soma das esperanças (lin. vale sem independência).}
+\prova
+\begin{align*}
+E(\hat p)&=E\Big(\frac{1}{nm}\sum_{i=1}^n Y_i\Big)\\
+&\ov{lin.}\frac{1}{nm}\sum_{i=1}^n E(Y_i)
+\end{align*}
+\rac{Mesma distribuição $\Rightarrow$ mesma esperança $mp$; $n$ termos iguais.}
+\prova
+\begin{align*}
+&\ov{i.d.}\frac{1}{nm}\cdot n\cdot mp\\
+&=p
+\end{align*}
+Como $E(\hat p)=p$, $\hat p$ é não viesado para $p$.
+\res{$\hat p$ é não viesado para $p$.}
+
+\sub{(b) Variância}
+\sep
+\rac{Variância da binomial.}
+\[\Var(Y_i)=mp(1-p),\quad i=1,\dots,n\]
+\rac{$\Var(cX)=c^2\Var(X)$.}
+\prova
+\begin{align*}
+\Var(\hat p)&=\Var\Big(\frac{1}{nm}\sum_{i=1}^n Y_i\Big)\\
+&\ov{prop.}\frac{1}{n^2m^2}\Var\Big(\sum_{i=1}^n Y_i\Big)
+\end{align*}
+\rac{$Y_i$ independentes (a.a.): Var da soma = soma das Var; depois mesma variância.}
+\prova
+\begin{align*}
+&\ov{ind.}\frac{1}{n^2m^2}\sum_{i=1}^n\Var(Y_i)\\
+&\ov{i.d.}\frac{1}{n^2m^2}\cdot n\cdot mp(1-p)\\
+&=\frac{p(1-p)}{nm}
+\end{align*}
+\res{$\Var(\hat p)=\dfrac{p(1-p)}{nm}$}
+\rac{Verificação: $m=1$ dá $p(1-p)/n$, variância da proporção amostral.}
+
+\sub{(c) Erro quadrático médio}
+\teo{Decomposição do EQM}{$\EQM(\hat\theta)=E[(\hat\theta-\theta)^2]=\Var(\hat\theta)+B^2(\hat\theta)$.}
+\sep
+\rac{Viés sai do item (a).}
+\[B(\hat p)=E(\hat p)-p\ov{(a)}p-p=0\]
+\prova
+\begin{align*}
+\EQM(\hat p)&=\Var(\hat p)+B^2(\hat p)\\
+&\ov{(a),(b)}\frac{p(1-p)}{nm}+0^2\\
+&=\frac{p(1-p)}{nm}
+\end{align*}
+\res{$\EQM(\hat p)=\dfrac{p(1-p)}{nm}$}
+
+\sub{(d) Médio quadrático consistente}
+\teo{Definição}{$\hat\theta$ é médio quadrático consistente para $\theta$ se $\lim_{n\to\infty}\EQM(\hat\theta)=0$.}
+\rac{$p(1-p)$ e $m$ fixos; só o denominador cresce.}
+\prova
+\begin{align*}
+\lim_{n\to\infty}\EQM(\hat p)&\ov{(c)}\lim_{n\to\infty}\frac{p(1-p)}{nm}\\
+&=0
+\end{align*}
+Como $\lim_{n\to\infty}\EQM(\hat p)=0$, $\hat p$ é médio quadrático consistente para $p$.
+\res{$\hat p$ é médio quadrático consistente para $p$.}
+
+\sub{(e) Consistente em probabilidade}
+\teo{Definição}{$\hat\theta$ é consistente em probabilidade para $\theta$ se, $\forall\,\varepsilon>0$, $\lim_{n\to\infty}P(|\hat\theta-\theta|\ge\varepsilon)=0$.}
+\teo{Chebyshev}{se $E(X)$ e $\Var(X)$ finitas, $\forall\,\varepsilon>0$: $P(|X-E(X)|\ge\varepsilon)\le\Var(X)/\varepsilon^2$.}
+\rac{Var finita (b) e $E(\hat p)=p$ (a): Chebyshev já fica centrado em $p$.}
+\prova
+Seja $\varepsilon>0$.
+\begin{align*}
+P(|\hat p-p|\ge\varepsilon)&\ov{(a)}P(|\hat p-E(\hat p)|\ge\varepsilon)\\
+&\ovl{Cheb.}\frac{\Var(\hat p)}{\varepsilon^2}\\
+&\ov{(b)}\frac{p(1-p)}{nm\,\varepsilon^2}
+\end{align*}
+\rac{Probabilidade presa entre 0 e algo que vai a 0: confronto.}
+\prova
+\begin{align*}
+0&\le P(|\hat p-p|\ge\varepsilon)\\
+&\le\frac{p(1-p)}{nm\,\varepsilon^2}\xrightarrow{n\to\infty}0\\
+\Rightarrow&\lim_{n\to\infty}P(|\hat p-p|\ge\varepsilon)=0,\ \forall\,\varepsilon>0
+\end{align*}
+Como o limite é 0 para todo $\varepsilon>0$, $\hat p$ é consistente em probabilidade para $p$.
+\res{$\hat p$ é consistente em probabilidade para $p$.}
+
+\begin{cola}
+\item Binomial: $E(Y)=mp$, $\Var(Y)=mp(1-p)$.
+\item lin.: $E(\sum a_iY_i)=\sum a_iE(Y_i)$ (sempre).
+\item $\Var(cX)=c^2\Var(X)$.
+\item ind.: $\Var(\sum Y_i)=\sum\Var(Y_i)$ (só com independência).
+\item Viés: $B(\hat\theta)=E(\hat\theta)-\theta$.
+\item $\EQM(\hat\theta)=\Var(\hat\theta)+B^2(\hat\theta)$.
+\item M.q. consistente: $\lim_{n\to\infty}\EQM(\hat\theta)=0$.
+\item Cheb.: $P(|X-E(X)|\ge\varepsilon)\le\Var(X)/\varepsilon^2$.
+\item Consist. em prob.: $\lim P(|\hat\theta-\theta|\ge\varepsilon)=0$, $\forall\,\varepsilon>0$.
+\end{cola}
+\erro{usar $E(Y_i)=p$ para binomial com mais de um ensaio (só vale na Bernoulli). É a armadilha do enunciado como escrito, onde $E(\hat p)=np$.}
+
+%==================================================
+\ex{2}
+\obs{$Y_i\overset{iid}{\sim}N(\mu,\sigma^2)$, $i=1,\dots,n$, $\hat\mu=\frac1n\sum_{i=1}^n Y_i$.}
+
+\sub{(a) Viés}
+\sep
+\rac{Esperança da normal.}
+\[E(Y_i)=\mu,\quad i=1,\dots,n\]
+\rac{Constante sai; lin. vale sem independência.}
+\prova
+\begin{align*}
+E(\hat\mu)&=E\Big(\frac1n\sum_{i=1}^n Y_i\Big)\\
+&\ov{lin.}\frac1n\sum_{i=1}^n E(Y_i)
+\end{align*}
+\rac{Todas com esperança $\mu$; $n$ termos iguais.}
+\prova
+\begin{align*}
+&\ov{i.d.}\frac1n\cdot n\mu\\
+&=\mu
+\end{align*}
+Como $E(\hat\mu)=\mu$, $\hat\mu$ é não viesado para $\mu$.
+\res{$\hat\mu$ é não viesado para $\mu$.}
+
+\sub{(b) Variância}
+\sep
+\rac{Variância da normal.}
+\[\Var(Y_i)=\sigma^2,\quad i=1,\dots,n\]
+\rac{$\Var(cX)=c^2\Var(X)$.}
+\prova
+\begin{align*}
+\Var(\hat\mu)&=\Var\Big(\frac1n\sum_{i=1}^n Y_i\Big)\\
+&\ov{prop.}\frac{1}{n^2}\Var\Big(\sum_{i=1}^n Y_i\Big)
+\end{align*}
+\rac{$Y_i$ independentes (a.a.); depois mesma variância $\sigma^2$.}
+\prova
+\begin{align*}
+&\ov{ind.}\frac{1}{n^2}\sum_{i=1}^n\Var(Y_i)\\
+&\ov{i.d.}\frac{1}{n^2}\cdot n\sigma^2\\
+&=\frac{\sigma^2}{n}
+\end{align*}
+\res{$\Var(\hat\mu)=\dfrac{\sigma^2}{n}$}
+\rac{Verificação: comb. linear de normais independentes é normal, $\hat\mu\sim N(\mu,\sigma^2/n)$; bate com (a) e (b).}
+
+\sub{(c) Erro quadrático médio}
+\teo{Decomposição do EQM}{$\EQM(\hat\theta)=E[(\hat\theta-\theta)^2]=\Var(\hat\theta)+B^2(\hat\theta)$.}
+\sep
+\rac{Viés sai do item (a).}
+\[B(\hat\mu)=E(\hat\mu)-\mu\ov{(a)}\mu-\mu=0\]
+\prova
+\begin{align*}
+\EQM(\hat\mu)&=\Var(\hat\mu)+B^2(\hat\mu)\\
+&\ov{(a),(b)}\frac{\sigma^2}{n}+0^2\\
+&=\frac{\sigma^2}{n}
+\end{align*}
+\res{$\EQM(\hat\mu)=\dfrac{\sigma^2}{n}$}
+
+\sub{(d) Médio quadrático consistente}
+\teo{Definição}{$\hat\theta$ é m.q. consistente para $\theta$ se $\lim_{n\to\infty}\EQM(\hat\theta)=0$.}
+\rac{$\sigma^2$ fixo e finito.}
+\prova
+\begin{align*}
+\lim_{n\to\infty}\EQM(\hat\mu)&\ov{(c)}\lim_{n\to\infty}\frac{\sigma^2}{n}\\
+&=0
+\end{align*}
+Como $\lim_{n\to\infty}\EQM(\hat\mu)=0$, $\hat\mu$ é médio quadrático consistente para $\mu$.
+\res{$\hat\mu$ é médio quadrático consistente para $\mu$.}
+
+\sub{(e) Consistente em probabilidade}
+\teo{Definição}{$\forall\,\varepsilon>0$, $\lim_{n\to\infty}P(|\hat\theta-\theta|\ge\varepsilon)=0$.}
+\teo{Chebyshev}{se $E(X)$ e $\Var(X)$ finitas, $\forall\,\varepsilon>0$: $P(|X-E(X)|\ge\varepsilon)\le\Var(X)/\varepsilon^2$.}
+\rac{$\Var(\hat\mu)=\sigma^2/n$ finita (b); $E(\hat\mu)=\mu$ (a).}
+\prova
+Seja $\varepsilon>0$.
+\begin{align*}
+P(|\hat\mu-\mu|\ge\varepsilon)&\ov{(a)}P(|\hat\mu-E(\hat\mu)|\ge\varepsilon)\\
+&\ovl{Cheb.}\frac{\Var(\hat\mu)}{\varepsilon^2}\\
+&\ov{(b)}\frac{\sigma^2}{n\varepsilon^2}
+\end{align*}
+\rac{Confronto.}
+\prova
+\begin{align*}
+0&\le P(|\hat\mu-\mu|\ge\varepsilon)\\
+&\le\frac{\sigma^2}{n\varepsilon^2}\xrightarrow{n\to\infty}0\\
+\Rightarrow&\lim_{n\to\infty}P(|\hat\mu-\mu|\ge\varepsilon)=0,\ \forall\,\varepsilon>0
+\end{align*}
+Como o limite é 0 para todo $\varepsilon>0$, $\hat\mu$ é consistente em probabilidade para $\mu$.
+\res{$\hat\mu$ é consistente em probabilidade para $\mu$.}
+
+\begin{cola}
+\item Normal: $E(Y)=\mu$, $\Var(Y)=\sigma^2$.
+\item lin.: $E(\sum a_iY_i)=\sum a_iE(Y_i)$ (sempre).
+\item $\Var(cX)=c^2\Var(X)$.
+\item ind.: $\Var(\sum Y_i)=\sum\Var(Y_i)$ (só com independência).
+\item $\hat\mu\sim N(\mu,\sigma^2/n)$.
+\item $B(\hat\theta)=E(\hat\theta)-\theta$; $\EQM=\Var+B^2$.
+\item M.q. consistente: $\lim\EQM=0$.
+\item Cheb.: $P(|X-E(X)|\ge\varepsilon)\le\Var(X)/\varepsilon^2$.
+\item Consist. em prob.: $\lim P(|\hat\theta-\theta|\ge\varepsilon)=0$, $\forall\,\varepsilon>0$.
+\end{cola}
+\erro{tirar o $\frac1n$ da variância sem elevar ao quadrado: dá $\Var(\hat\mu)=\sigma^2$, o EQM não vai a zero e a consistência ``falha''.}
+
+%==================================================
+\ex{3}
+\obs{Notação auxiliar (não veio das aulas): $Q=\sum_{i=1}^n(Y_i-\hat\mu)^2$, logo $\hat\sigma^2_1=\frac Qn$ e $\hat\sigma^2_2=\frac{Q}{n-1}=S^2$. $\chi^2_k$: qui-quadrado com $k$ g.l.}
+
+\sub{(a) Viés}
+\rac{Os dois são múltiplos de $Q$: basta $E(Q)$. Expando o quadrado e uso $\sum Y_i=n\hat\mu$ (def. de $\hat\mu$).}
+\prova
+\begin{align*}
+Q&=\sum_{i=1}^n(Y_i-\hat\mu)^2\\
+&=\sum_{i=1}^n Y_i^2-2\hat\mu\sum_{i=1}^n Y_i+n\hat\mu^2\\
+&\ov{def.}\sum_{i=1}^n Y_i^2-2n\hat\mu^2+n\hat\mu^2\\
+&=\sum_{i=1}^n Y_i^2-n\hat\mu^2
+\end{align*}
+\sep
+\rac{$E(X^2)=\Var(X)+E^2(X)$ (variância finita). Para $\hat\mu$: Ex.~2, $E(\hat\mu)=\mu$, $\Var(\hat\mu)=\sigma^2/n$.}
+\begin{align*}
+E(Y_i^2)&=\Var(Y_i)+E^2(Y_i)\\
+&=\sigma^2+\mu^2\\
+E(\hat\mu^2)&=\Var(\hat\mu)+E^2(\hat\mu)\\
+&\ov{Ex.\,2}\frac{\sigma^2}{n}+\mu^2
+\end{align*}
+\rac{Volto à conta principal: lin. na soma; mesmo $E(Y_i^2)$ para todo $i$.}
+\prova
+\begin{align*}
+E(Q)&\ov{lin.}\sum_{i=1}^n E(Y_i^2)-n\,E(\hat\mu^2)\\
+&\ov{i.d.}n(\sigma^2+\mu^2)-n\Big(\frac{\sigma^2}{n}+\mu^2\Big)\\
+&=n\sigma^2+n\mu^2-\sigma^2-n\mu^2\\
+&=(n-1)\sigma^2
+\end{align*}
+\begin{align*}
+E(\hat\sigma^2_1)&=E\Big(\frac Qn\Big)\ov{lin.}\frac{(n-1)\sigma^2}{n}\\
+B(\hat\sigma^2_1)&=\frac{(n-1)\sigma^2}{n}-\sigma^2=-\frac{\sigma^2}{n}\\
+E(\hat\sigma^2_2)&=E\Big(\frac{Q}{n-1}\Big)\ov{lin.}\frac{(n-1)\sigma^2}{n-1}=\sigma^2\\
+B(\hat\sigma^2_2)&=\sigma^2-\sigma^2=0
+\end{align*}
+Como $E(\hat\sigma^2_1)\neq\sigma^2$, $\hat\sigma^2_1$ é viesado para $\sigma^2$. Como $E(\hat\sigma^2_2)=\sigma^2$, $\hat\sigma^2_2$ é não viesado para $\sigma^2$.
+\res{$\hat\sigma^2_1$ é viesado, com $B(\hat\sigma^2_1)=-\sigma^2/n$; $\hat\sigma^2_2$ é não viesado para $\sigma^2$.}
+\rac{Verificação: $B(\hat\sigma^2_1)\to0$, então $\hat\sigma^2_1$ é assintoticamente não viesado; sinal negativo: subestima $\sigma^2$ em média.}
+
+\sub{(b) Variância}
+\teo{Resultado (amostra normal)}{se $Y_i\overset{iid}{\sim}N(\mu,\sigma^2)$, então $\frac{Q}{\sigma^2}=\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}$. Se $X\sim\chi^2_k$: $E(X)=k$, $\Var(X)=2k$.}
+\rac{Normalidade está no enunciado. Escrevo $Q=\sigma^2\cdot\frac{Q}{\sigma^2}$ e tiro $\sigma^2$ ao quadrado.}
+\prova
+\begin{align*}
+\Var(Q)&=\Var\Big(\sigma^2\cdot\frac{Q}{\sigma^2}\Big)\\
+&\ov{prop.}\sigma^4\Var\Big(\frac{Q}{\sigma^2}\Big)\\
+&\overset{\chi^2_{n-1}}{=}2(n-1)\sigma^4
+\end{align*}
+\begin{align*}
+\Var(\hat\sigma^2_1)&=\Var\Big(\frac Qn\Big)\ov{prop.}\frac{1}{n^2}\Var(Q)\\
+&=\frac{2(n-1)\sigma^4}{n^2}
+\end{align*}
+\begin{align*}
+\Var(\hat\sigma^2_2)&=\Var\Big(\frac{Q}{n-1}\Big)\\
+&\ov{prop.}\frac{1}{(n-1)^2}\Var(Q)\\
+&=\frac{2(n-1)\sigma^4}{(n-1)^2}\\
+&=\frac{2\sigma^4}{n-1}
+\end{align*}
+\res{$\Var(\hat\sigma^2_1)=\dfrac{2(n-1)\sigma^4}{n^2}$ e $\Var(\hat\sigma^2_2)=\dfrac{2\sigma^4}{n-1}$}
+\rac{Verificação: pelo resultado, $E(Q)=\sigma^2(n-1)$, bate com (a).}
+
+\sub{(c) Erro quadrático médio}
+\teo{Decomposição do EQM}{$\EQM(\hat\theta)=\Var(\hat\theta)+B^2(\hat\theta)$.}
+\prova
+\begin{align*}
+\EQM(\hat\sigma^2_1)&=\Var(\hat\sigma^2_1)+B^2(\hat\sigma^2_1)\\
+&\ov{(a),(b)}\frac{2(n-1)\sigma^4}{n^2}+\Big(-\frac{\sigma^2}{n}\Big)^2\\
+&=\frac{2(n-1)\sigma^4}{n^2}+\frac{\sigma^4}{n^2}\\
+&=\frac{(2n-1)\sigma^4}{n^2}
+\end{align*}
+\begin{align*}
+\EQM(\hat\sigma^2_2)&=\Var(\hat\sigma^2_2)+B^2(\hat\sigma^2_2)\\
+&\ov{(a),(b)}\frac{2\sigma^4}{n-1}+0^2\\
+&=\frac{2\sigma^4}{n-1}
+\end{align*}
+\res{$\EQM(\hat\sigma^2_1)=\dfrac{(2n-1)\sigma^4}{n^2}$ e $\EQM(\hat\sigma^2_2)=\dfrac{2\sigma^4}{n-1}$}
+
+\sub{(d) Médio quadrático consistente}
+\teo{Definição}{$\lim_{n\to\infty}\EQM(\hat\theta)=0$.}
+\rac{Divido numerador e denominador por $n^2$; $\sigma^4$ fixo e finito.}
+\prova
+\begin{align*}
+\lim_{n\to\infty}\EQM(\hat\sigma^2_1)&\ov{(c)}\lim_{n\to\infty}\frac{(2n-1)\sigma^4}{n^2}\\
+&=\lim_{n\to\infty}\Big(\frac2n-\frac{1}{n^2}\Big)\sigma^4\\
+&=0
+\end{align*}
+\begin{align*}
+\lim_{n\to\infty}\EQM(\hat\sigma^2_2)&\ov{(c)}\lim_{n\to\infty}\frac{2\sigma^4}{n-1}\\
+&=0
+\end{align*}
+Como os dois limites são 0, $\hat\sigma^2_1$ e $\hat\sigma^2_2$ são médio quadrático consistentes para $\sigma^2$.
+\res{$\hat\sigma^2_1$ e $\hat\sigma^2_2$ são médio quadrático consistentes para $\sigma^2$.}
+
+\sub{(e) Consistente em probabilidade}
+\teo{Definição}{$\forall\,\varepsilon>0$, $\lim_{n\to\infty}P(|\hat\theta-\theta|\ge\varepsilon)=0$.}
+\teo{Chebyshev (forma geral)}{para qualquer constante $c$ e $\varepsilon>0$: $P(|X-c|\ge\varepsilon)\le E[(X-c)^2]/\varepsilon^2$.}
+\rac{$\hat\sigma^2_1$ é viesado: não dá para centrar em $E(\hat\sigma^2_1)$. Uso $c=\sigma^2$; o numerador vira o EQM. Vale para $j=1,2$.}
+\prova
+Seja $\varepsilon>0$ e $j=1,2$.
+\begin{align*}
+P(|\hat\sigma^2_j-\sigma^2|\ge\varepsilon)&\ovl{Cheb.}\frac{E[(\hat\sigma^2_j-\sigma^2)^2]}{\varepsilon^2}\\
+&\ov{def.}\frac{\EQM(\hat\sigma^2_j)}{\varepsilon^2}
+\end{align*}
+\rac{Pelo item (d), o EQM vai a 0; confronto.}
+\prova
+\begin{align*}
+0&\le P(|\hat\sigma^2_j-\sigma^2|\ge\varepsilon)\\
+&\le\frac{\EQM(\hat\sigma^2_j)}{\varepsilon^2}\xrightarrow[\text{(d)}]{n\to\infty}0\\
+\Rightarrow&\lim_{n\to\infty}P(|\hat\sigma^2_j-\sigma^2|\ge\varepsilon)=0,\\
+&\forall\,\varepsilon>0,\ j=1,2
+\end{align*}
+Como o limite é 0 para todo $\varepsilon>0$, $\hat\sigma^2_1$ e $\hat\sigma^2_2$ são consistentes em probabilidade para $\sigma^2$.
+\res{$\hat\sigma^2_1$ e $\hat\sigma^2_2$ são consistentes em probabilidade para $\sigma^2$.}
+\rac{Observação: o argumento mostra que m.q. consistente $\Rightarrow$ consistente em probabilidade.}
+
+\sub{(f) Comparação}
+\teo{Eficiência relativa}{$\Efr(\hat\theta_1,\hat\theta_2)=\EQM(\hat\theta_1)/\EQM(\hat\theta_2)$; se $<1$, $\hat\theta_1$ é superior a $\hat\theta_2$.}
+\prova
+\begin{align*}
+\Efr(\hat\sigma^2_1,\hat\sigma^2_2)&\ov{(c)}\frac{(2n-1)\sigma^4/n^2}{2\sigma^4/(n-1)}\\
+&=\frac{(2n-1)(n-1)}{2n^2}\\
+&=\frac{2n^2-3n+1}{2n^2}\\
+&=1-\frac{3n-1}{2n^2}
+\end{align*}
+\rac{Para $n\ge2$ (para $S^2$ existir), $3n-1>0$. Verificação $n=2$: $\frac{3\cdot1}{8}=\frac38<1$.}
+\prova
+\begin{align*}
+&\frac{3n-1}{2n^2}>0,\ \forall\,n\ge2\\
+\Rightarrow\ &\Efr(\hat\sigma^2_1,\hat\sigma^2_2)<1\\
+&\lim_{n\to\infty}\Efr(\hat\sigma^2_1,\hat\sigma^2_2)=1
+\end{align*}
+Como $\Efr(\hat\sigma^2_1,\hat\sigma^2_2)<1$, $\hat\sigma^2_1$ é superior a $\hat\sigma^2_2$ em EQM.
+\res{$\hat\sigma^2_1$ é viesado, mas tem EQM menor que $\hat\sigma^2_2$ para todo $n\ge2$; $\hat\sigma^2_2$ é não viesado, mas tem variância maior. Para $n$ grande, são equivalentes.}
+\rac{Compromisso viés-variância: aceitar um viés pequeno (que some com $n$) reduz o erro total. ``Não viesado'' não significa ``melhor''.}
+
+\begin{cola}
+\item $\sum(Y_i-\hat\mu)^2=\sum Y_i^2-n\hat\mu^2$.
+\item $E(X^2)=\Var(X)+E^2(X)$.
+\item $E(\hat\mu)=\mu$, $\Var(\hat\mu)=\sigma^2/n$.
+\item $E(Q)=(n-1)\sigma^2$ (não exige normalidade).
+\item Normal: $Q/\sigma^2\sim\chi^2_{n-1}$; $\chi^2_k$: $E=k$, $\Var=2k$.
+\item $\Var(cX)=c^2\Var(X)$; $\EQM=\Var+B^2$.
+\item Cheb. geral: $P(|X-c|\ge\varepsilon)\le E[(X-c)^2]/\varepsilon^2$.
+\item M.q. consistente $\Rightarrow$ consistente em prob.
+\item $\Efr=\EQM_1/\EQM_2$; se $<1$, o 1 é superior.
+\end{cola}
+\erro{concluir que $S^2$ é ``melhor'' só por ser não viesado. O critério é o EQM, e por ele $\hat\sigma^2_1$ ganha.}
+
+%==================================================
+\ex{4}
+\obs{Falta no enunciado: a distribuição. Uso só $E(Y_i)=\mu$ e $\Var(Y_i)=\sigma^2$, com $0<\sigma^2<\infty$ (se $\sigma^2=0$ as $Y_i$ seriam constantes e a afirmação seria falsa). $Y_i$ i.i.d., $i=1,\dots,n$, $T=\frac{Y_1+Y_2}{2}$.}
+
+\sub{Não viesado}
+\prova
+\begin{align*}
+E(T)&=E\Big(\frac{Y_1+Y_2}{2}\Big)\\
+&\ov{lin.}\frac12[E(Y_1)+E(Y_2)]\\
+&\ov{i.d.}\frac12\cdot2\mu\\
+&=\mu
+\end{align*}
+Como $E(T)=\mu$, $T$ é não viesado para $\mu$.
+\res{$T$ é não viesado para $\mu$.}
+
+\sub{Não consistente}
+\sep
+\rac{$Y_1$, $Y_2$ independentes: Var da soma = soma das Var; $\frac12$ sai ao quadrado.}
+\begin{align*}
+\Var(T)&\ov{prop.}\frac14\Var(Y_1+Y_2)\\
+&\ov{ind.}\frac14[\Var(Y_1)+\Var(Y_2)]\\
+&\ov{i.d.}\frac14\cdot2\sigma^2\\
+&=\frac{\sigma^2}{2}
+\end{align*}
+\teo{Definição}{$\hat\theta$ é consistente em probabilidade para $\theta$ se, $\forall\,\varepsilon>0$, $\lim_{n\to\infty}P(|\hat\theta-\theta|\ge\varepsilon)=0$.}
+\rac{$T$ usa só $Y_1,Y_2$: sua distribuição é a mesma para todo $n$, logo a probabilidade é constante em $n$.}
+\prova
+Para $\varepsilon>0$, seja $p_\varepsilon=P(|T-\mu|\ge\varepsilon)$. Como $p_\varepsilon$ não depende de $n$:
+\[\lim_{n\to\infty}P(|T-\mu|\ge\varepsilon)=p_\varepsilon\]
+\rac{Basta achar $\varepsilon$ com $p_\varepsilon>0$. Por contradição: se todas fossem nulas, $T=\mu$ com prob. 1 e $\Var(T)=0$. Subaditividade: $P(\bigcup A_k)\le\sum P(A_k)$.}
+\prova
+Suponha $p_\varepsilon=0$ para todo $\varepsilon>0$. Então:
+\begin{align*}
+P(|T-\mu|>0)&=P\Big(\bigcup_{k=1}^\infty\big\{|T-\mu|\ge\tfrac1k\big\}\Big)\\
+&\ovl{subad.}\sum_{k=1}^\infty p_{1/k}\\
+&=0\\
+\Rightarrow P(T=\mu)&=1\ \Rightarrow\ \Var(T)=0
+\end{align*}
+Isso contradiz $\Var(T)=\sigma^2/2>0$. Logo existe $\varepsilon_0>0$ com:
+\[\lim_{n\to\infty}P(|T-\mu|\ge\varepsilon_0)=p_{\varepsilon_0}>0\]
+Como o limite não é 0 para todo $\varepsilon>0$, $T$ não é consistente em probabilidade para $\mu$.
+\res{$T$ é não viesado, mas não é consistente para $\mu$.}
+\rac{Complemento: também não é m.q. consistente.}
+\prova
+\begin{align*}
+\lim_{n\to\infty}\EQM(T)&=\lim_{n\to\infty}[\Var(T)+B^2(T)]\\
+&=\lim_{n\to\infty}\Big(\frac{\sigma^2}{2}+0\Big)\\
+&=\frac{\sigma^2}{2}\neq0
+\end{align*}
+\rac{Intuição: aumentar $n$ não traz informação nova, pois $T$ ignora $Y_3,\dots,Y_n$.}
+
+\begin{cola}
+\item lin.: $E(aY_1+bY_2)=aE(Y_1)+bE(Y_2)$.
+\item $\Var\big(\frac{Y_1+Y_2}{2}\big)=\frac14(\sigma^2+\sigma^2)=\frac{\sigma^2}{2}$ (ind.).
+\item Distribuição de $T$ não depende de $n$ $\Rightarrow$ o limite é a própria probabilidade.
+\item Com $E(T)=\mu$: $P(T=\mu)=1\iff\Var(T)=0$.
+\item Subaditividade: $P(\bigcup A_k)\le\sum P(A_k)$.
+\item Não viés e consistência são independentes: uma não implica a outra.
+\end{cola}
+\erro{concluir não consistência porque a cota de Chebyshev $\frac{\sigma^2}{2\varepsilon^2}$ não vai a zero. Chebyshev é cota superior: serve para provar consistência, nunca para negá-la.}
+
+%==================================================
+\ex{5}
+\obs{Hipóteses: $Y_1,\dots,Y_n$ a.a. de $Y$, $E(Y)=\mu$ finita; $a_i$ constantes conhecidas que não dependem de $\mu$ (garante que $T$ é estatística). Independência não é necessária. $T=\sum_{i=1}^n a_iY_i$.}
+\rac{Constantes saem por lin.; mesma esperança $\mu$, que sai da soma.}
+\prova
+\begin{align*}
+E(T)&=E\Big(\sum_{i=1}^n a_iY_i\Big)\\
+&\ov{lin.}\sum_{i=1}^n a_i\,E(Y_i)\\
+&\ov{i.d.}\sum_{i=1}^n a_i\,\mu\\
+&=\mu\sum_{i=1}^n a_i
+\end{align*}
+\rac{Não viés exige $E(T)=\mu$ para \textbf{todo} $\mu$: vira identidade em $\mu$.}
+\prova
+\begin{align*}
+&E(T)=\mu,\ \forall\,\mu\\
+\iff&\mu\sum_{i=1}^n a_i=\mu,\ \forall\,\mu\\
+\iff&\mu\Big(\sum_{i=1}^n a_i-1\Big)=0,\ \forall\,\mu
+\end{align*}
+\rac{Produto nulo para todo $\mu$ $\Rightarrow$ fator constante nulo (basta tomar $\mu\neq0$); a volta também vale.}
+\prova
+\[\iff\sum_{i=1}^n a_i=1\]
+Como $E(T)=\mu\sum a_i$, $T$ é não viesado para $E(Y)$ se e somente se $\sum a_i=1$.
+\res{Condição: $\displaystyle\sum_{i=1}^n a_i=1$.}
+\rac{Verificação: $a_i=\frac1n$ dá $T=\bar Y$, $\sum a_i=1$ (Ex.~2); $a_1=a_2=\frac12$, demais nulos, dá o $T$ do Ex.~4, $\sum a_i=1$.}
+
+\begin{cola}
+\item lin.: $E(\sum a_iY_i)=\sum a_iE(Y_i)$ (sem independência).
+\item i.d.: $E(Y_i)=\mu$ para todo $i$.
+\item Não viesado: $E(T)=\theta$ \textbf{para todo} $\theta$.
+\item $\mu c=0$ para todo $\mu$ $\iff$ $c=0$.
+\item Comb. linear não viesada para a média $\iff\sum a_i=1$.
+\end{cola}
+\erro{esquecer o ``para todo $\mu$'': com $\mu=0$ qualquer $a_i$ serve, mas isso não garante não viés em geral; é o quantificador que força $\sum a_i=1$.}
+
+%==================================================
+\ex{6}
+\obs{$Y\sim\Bin(n,p)$, $T_1=\frac Yn$, $T_2=\frac{Y+1}{n+2}$.}
+\sep
+\[E(Y)=np,\qquad\Var(Y)=np(1-p)\]
+\teo{Decomposição do EQM}{$\EQM(\hat\theta)=E[(\hat\theta-\theta)^2]=\Var(\hat\theta)+B^2(\hat\theta)$.}
+
+\sub{EQM de $T_1$}
+\prova
+\begin{align*}
+E(T_1)&=E\Big(\frac Yn\Big)\ov{lin.}\frac{np}{n}=p\\
+\Rightarrow B(T_1)&=p-p=0
+\end{align*}
+\rac{$\frac1n$ sai da variância ao quadrado.}
+\prova
+\begin{align*}
+\Var(T_1)&=\Var\Big(\frac Yn\Big)\ov{prop.}\frac{np(1-p)}{n^2}\\
+&=\frac{p(1-p)}{n}
+\end{align*}
+\begin{align*}
+\EQM(T_1)&=\Var(T_1)+B^2(T_1)\\
+&=\frac{p(1-p)}{n}+0^2
+\end{align*}
+\res{$\EQM(T_1)=\dfrac{p(1-p)}{n}$}
+
+\sub{EQM de $T_2$}
+\prova
+\begin{align*}
+E(T_2)&=E\Big(\frac{Y+1}{n+2}\Big)\ov{lin.}\frac{np+1}{n+2}\\
+B(T_2)&=\frac{np+1}{n+2}-p\\
+&=\frac{np+1-np-2p}{n+2}\\
+&=\frac{1-2p}{n+2}
+\end{align*}
+\rac{Somar 1 não altera a variância; $\frac{1}{n+2}$ sai ao quadrado.}
+\prova
+\begin{align*}
+\Var(T_2)&=\Var\Big(\frac{Y+1}{n+2}\Big)\\
+&\ov{prop.}\frac{\Var(Y)}{(n+2)^2}=\frac{np(1-p)}{(n+2)^2}
+\end{align*}
+\begin{align*}
+\EQM(T_2)&=\Var(T_2)+B^2(T_2)\\
+&=\frac{np(1-p)}{(n+2)^2}+\frac{(1-2p)^2}{(n+2)^2}
+\end{align*}
+\res{$\EQM(T_2)=\dfrac{np(1-p)+(1-2p)^2}{(n+2)^2}$}
+\rac{Verificação: $T_2$ é viesado exceto em $p=\frac12$; $B(T_2)\to0$, então é assintoticamente não viesado.}
+
+\sub{Comparação}
+\rac{Melhor = EQM menor para \textbf{todo} $p\in[0,1]$. Testo dois valores.}
+\prova
+Para $p=0$:
+\begin{align*}
+\EQM(T_1)&=0\\
+\EQM(T_2)&=\frac{0+1}{(n+2)^2}=\frac{1}{(n+2)^2}>0\\
+\Rightarrow\ &\EQM(T_1)<\EQM(T_2)
+\end{align*}
+Para $p=\frac12$:
+\begin{align*}
+\EQM(T_1)&=\frac{1}{4n}\\
+\EQM(T_2)&=\frac{n/4+0}{(n+2)^2}=\frac{n}{4(n+2)^2}
+\end{align*}
+Como $n^2<(n+2)^2$:
+\begin{align*}
+&\frac{n}{4(n+2)^2}<\frac{n}{4n^2}=\frac{1}{4n}\\
+\Rightarrow\ &\EQM(T_2)<\EQM(T_1)
+\end{align*}
+\rac{A ordem se inverte: nenhum é uniformemente melhor. Para a região exata, uso $q=p(1-p)$ e $(1-2p)^2=1-4p+4p^2=1-4q$.}
+\sep
+\[\EQM(T_2)=\frac{nq+1-4q}{(n+2)^2}=\frac{(n-4)q+1}{(n+2)^2}\]
+\rac{Multiplico por $n(n+2)^2>0$, sem inverter o sinal.}
+\prova
+\begin{align*}
+&\EQM(T_2)<\EQM(T_1)\\
+\iff&\frac{(n-4)q+1}{(n+2)^2}<\frac qn\\
+\iff&n(n-4)q+n<q(n+2)^2\\
+\iff&n<q[n^2+4n+4-n^2+4n]\\
+\iff&n<q(8n+4)\\
+\iff&p(1-p)>\frac{n}{8n+4}
+\end{align*}
+\rac{Inequação do 2º grau $p^2-p+\frac{n}{8n+4}<0$: vale entre as raízes.}
+\prova
+\begin{align*}
+\Delta&=1-\frac{4n}{8n+4}=\frac{8n+4-4n}{8n+4}\\
+&=\frac{4n+4}{8n+4}=\frac{n+1}{2n+1}
+\end{align*}
+\begin{align*}
+\Rightarrow\ &\EQM(T_2)<\EQM(T_1)\\
+\iff&\Big|p-\frac12\Big|<\frac12\sqrt{\frac{n+1}{2n+1}}
+\end{align*}
+Como a ordem dos EQMs depende de $p$, nenhum dos estimadores é uniformemente melhor que o outro.
+\res{Nenhum é melhor para todo $p$. $T_2$ tem EQM menor quando $p$ está perto de $\frac12$, isto é, $|p-\frac12|<\frac12\sqrt{\frac{n+1}{2n+1}}$; $T_1$ tem EQM menor perto de 0 ou de 1.}
+\rac{Verificação: $p=\frac12$ está dentro da região e $p=0$ fora. Com $n\to\infty$, o raio tende a $\frac{1}{2\sqrt2}\approx0{,}354$: $T_2$ ganha para $p\in(0{,}146;\,0{,}854)$. Intuição: $T_2$ ``puxa'' a estimativa para $\frac12$.}
+
+\begin{cola}
+\item Binomial: $E(Y)=np$, $\Var(Y)=np(1-p)$.
+\item $\Var(aY+b)=a^2\Var(Y)$ (a constante somada some).
+\item $\EQM=\Var+B^2$.
+\item $B(T_2)=\frac{1-2p}{n+2}$, nulo só em $p=\frac12$.
+\item $(1-2p)^2=1-4p(1-p)$.
+\item Uniformemente melhor: EQM menor para \textbf{todo} $\theta$.
+\item Dois valores de $p$ com ordem invertida provam que não há estimador uniformemente melhor.
+\end{cola}
+\erro{comparar os EQMs num único $p$ (ex.: $p=\frac12$) e declarar $T_2$ melhor. A comparação precisa valer para todo $p$; aqui as curvas se cruzam.}
+
+%==================================================
+\ex{7}
+\obs{$Y_i\overset{iid}{\sim}f(y;\theta)$, $i=1,\dots,n$, $f(y;\theta)=\theta^2\,y\,e^{-\theta y}$, $y>0$, $\theta>0$.}
+\teo{Método dos momentos}{com $p$ parâmetros, $\tilde\theta$ resolve $m_r=\mu_r$, $r=1,\dots,p$, com $m_r=\frac1n\sum_{i=1}^n Y_i^r$ e $\mu_r=E(Y^r)$.}
+\rac{Um parâmetro ($p=1$): basta $m_1=\bar Y$ e $\mu_1=E(Y)$.}
+\sep
+\rac{Definição de esperança (v.a. contínua), suporte $y>0$.}
+\begin{align*}
+E(Y)&\ov{def.}\int_0^\infty y\,\theta^2\,y\,e^{-\theta y}\,dy\\
+&=\theta^2\int_0^\infty y^2e^{-\theta y}\,dy
+\end{align*}
+\rac{$t=\theta y$, $y=t/\theta$, $dy=dt/\theta$; como $\theta>0$, limites continuam $0$ e $\infty$.}
+\begin{align*}
+&\ov{subst.}\theta^2\int_0^\infty\Big(\frac t\theta\Big)^2e^{-t}\,\frac{dt}{\theta}\\
+&=\frac{\theta^2}{\theta^3}\int_0^\infty t^{3-1}e^{-t}\,dt\\
+&\ov{$\Gamma$}\frac1\theta\,\Gamma(3)
+\end{align*}
+\rac{$\Gamma(\alpha+1)=\alpha\Gamma(\alpha)$ e $\Gamma(1)=1$.}
+\begin{align*}
+\Gamma(3)&=2\,\Gamma(2)=2\cdot1\cdot\Gamma(1)=2\\
+\Rightarrow E(Y)&=\frac2\theta
+\end{align*}
+\rac{Verificação: $f$ é $\text{Gama}(2,\theta)$ pela taxa ($\theta^2/\Gamma(2)=\theta^2$), logo $E(Y)=\alpha/\theta=2/\theta$.}
+\prova
+\begin{align*}
+m_1&=\mu_1\\
+\bar Y&=\frac{2}{\tilde\theta}
+\end{align*}
+\rac{Isolo $\tilde\theta$; válido pois $Y_i>0\Rightarrow\bar Y>0$.}
+\prova
+\[\tilde\theta=\frac{2}{\bar Y}=\frac{2n}{\sum_{i=1}^n Y_i}\]
+O estimador de momentos de $\theta$ é $\tilde\theta=2/\bar Y$.
+\res{$\tilde\theta=\dfrac{2}{\bar Y}$}
+\rac{Verificação: positivo, como $\theta$; $\bar Y$ alto $\Rightarrow$ taxa pequena, coerente com uma taxa.}
+
+\begin{cola}
+\item MM: $m_r=\mu_r$; um parâmetro $\Rightarrow\bar Y=E(Y)$.
+\item $E(Y)=\int y\,f(y;\theta)\,dy$ no suporte.
+\item $t=\theta y$, $dy=dt/\theta$ para cair em $\Gamma$.
+\item $\Gamma(\alpha)=\int_0^\infty t^{\alpha-1}e^{-t}dt$, $\Gamma(\alpha+1)=\alpha\Gamma(\alpha)$, $\Gamma(1)=1$.
+\item $\text{Gama}(\alpha,\theta)$ (taxa): $E(Y)=\alpha/\theta$; aqui $\alpha=2$.
+\end{cola}
+\erro{escrever $E(2/\bar Y)=2/E(\bar Y)=\theta$ e concluir não viés. A esperança não passa por $1/x$; por Jensen, $E(\tilde\theta)>\theta$.}
+
+%==================================================
+\ex{8}
+\obs{$Y_i\overset{iid}{\sim}U(0,\theta)$, $i=1,\dots,n$, $f(y;\theta)=\frac1\theta$, $0\le y\le\theta$.}
+\sep
+Acumulada de $Y$:
+\begin{align*}
+F_Y(y)&=0,\quad y<0\\
+F_Y(y)&=\int_0^y\frac1\theta\,dt=\frac y\theta,\quad 0\le y\le\theta\\
+F_Y(y)&=1,\quad y>\theta
+\end{align*}
+
+\sub{(a) Consistência de $\hat\theta=Y_{(n)}$}
+\rac{Método da acumulada: o máximo fica abaixo de $y$ sse todas ficam abaixo de $y$.}
+\prova
+Para $0\le y\le\theta$:
+\begin{align*}
+F_{\hat\theta}(y)&=P(Y_{(n)}\le y)\\
+&=P(Y_1\le y,\dots,Y_n\le y)\\
+&\ov{ind.}\prod_{i=1}^n P(Y_i\le y)\\
+&\ov{i.d.}[F_Y(y)]^n\\
+&=\Big(\frac y\theta\Big)^n
+\end{align*}
+Derivando:
+\[f_{\hat\theta}(y)=\frac{d}{dy}F_{\hat\theta}(y)=\frac{n\,y^{n-1}}{\theta^n},\quad0\le y\le\theta\]
+\teo{Definição}{$\hat\theta$ é consistente em probabilidade se, $\forall\,\varepsilon>0$, $\lim_{n\to\infty}P(|\hat\theta-\theta|\ge\varepsilon)=0$.}
+\rac{$\hat\theta\le\theta$ sempre, então $|\hat\theta-\theta|=\theta-\hat\theta$ e $\{|\hat\theta-\theta|\ge\varepsilon\}=\{\hat\theta\le\theta-\varepsilon\}$. Dois casos: $\theta-\varepsilon$ dentro ou fora do suporte.}
+\prova
+Caso $0<\varepsilon<\theta$:
+\begin{align*}
+P(|\hat\theta-\theta|\ge\varepsilon)&=P(\hat\theta\le\theta-\varepsilon)\\
+&=F_{\hat\theta}(\theta-\varepsilon)\\
+&=\Big(\frac{\theta-\varepsilon}{\theta}\Big)^n\\
+&=\Big(1-\frac\varepsilon\theta\Big)^n\xrightarrow{n\to\infty}0
+\end{align*}
+pois $0<1-\frac\varepsilon\theta<1$.
+
+Caso $\varepsilon\ge\theta$:
+\begin{align*}
+P(|\hat\theta-\theta|\ge\varepsilon)&=P(\hat\theta\le\theta-\varepsilon)\\
+&\le P(\hat\theta\le0)=0
+\end{align*}
+Nos dois casos:
+\[\lim_{n\to\infty}P(|\hat\theta-\theta|\ge\varepsilon)=0,\ \forall\,\varepsilon>0\]
+Como o limite é 0 para todo $\varepsilon>0$, $\hat\theta$ é consistente em probabilidade para $\theta$.
+\res{$\hat\theta=Y_{(n)}$ é consistente em probabilidade para $\theta$.}
+
+\sub{(b) Estimador dos momentos}
+\teo{MM}{resolver $m_r=\mu_r$, $r=1,\dots,p$.}
+\rac{Um parâmetro: $\bar Y=E(Y)$.}
+\sep
+\[E(Y)\ov{def.}\int_0^\theta y\cdot\frac1\theta\,dy=\frac1\theta\cdot\frac{\theta^2}{2}=\frac\theta2\]
+\prova
+\begin{align*}
+m_1&=\mu_1\\
+\bar Y&=\frac{\tilde\theta}{2}\\
+\tilde\theta&=2\bar Y
+\end{align*}
+\res{$\tilde\theta=2\bar Y$}
+
+\sub{(c) Comparação}
+\teo{Decomposição do EQM}{$\EQM(\hat\theta)=\Var(\hat\theta)+B^2(\hat\theta)$.}
+\teo{Eficiência relativa}{$\Efr(\hat\theta_1,\hat\theta_2)=\EQM(\hat\theta_1)/\EQM(\hat\theta_2)$; se $<1$, $\hat\theta_1$ é superior.}
+
+\textbf{EQM de $\hat\theta=Y_{(n)}$}
+\sep
+\rac{Uso $f_{\hat\theta}$ do item (a).}
+\begin{align*}
+E(\hat\theta)&\ov{def.}\int_0^\theta y\cdot\frac{n\,y^{n-1}}{\theta^n}\,dy\\
+&=\frac{n}{\theta^n}\cdot\frac{\theta^{n+1}}{n+1}=\frac{n\theta}{n+1}
+\end{align*}
+\begin{align*}
+E(\hat\theta^2)&\ov{def.}\int_0^\theta y^2\cdot\frac{n\,y^{n-1}}{\theta^n}\,dy\\
+&=\frac{n}{\theta^n}\cdot\frac{\theta^{n+2}}{n+2}=\frac{n\theta^2}{n+2}
+\end{align*}
+\rac{$\Var=E(\hat\theta^2)-E^2(\hat\theta)$; denominador comum $(n+2)(n+1)^2$; $(n+1)^2-n(n+2)=1$.}
+\prova
+\begin{align*}
+\Var(\hat\theta)&=E(\hat\theta^2)-E^2(\hat\theta)\\
+&=\frac{n\theta^2}{n+2}-\frac{n^2\theta^2}{(n+1)^2}\\
+&=\frac{n\theta^2[(n+1)^2-n(n+2)]}{(n+2)(n+1)^2}\\
+&=\frac{n\theta^2}{(n+2)(n+1)^2}
+\end{align*}
+\[B(\hat\theta)=\frac{n\theta}{n+1}-\theta=-\frac{\theta}{n+1}\]
+\begin{align*}
+\EQM(\hat\theta)&=\frac{n\theta^2}{(n+2)(n+1)^2}+\frac{\theta^2}{(n+1)^2}\\
+&=\frac{\theta^2[n+(n+2)]}{(n+2)(n+1)^2}\\
+&=\frac{2\theta^2(n+1)}{(n+2)(n+1)^2}\\
+&=\frac{2\theta^2}{(n+1)(n+2)}
+\end{align*}
+
+\textbf{EQM de $\tilde\theta=2\bar Y$}
+\sep
+\begin{align*}
+E(Y^2)&=\int_0^\theta y^2\cdot\frac1\theta\,dy=\frac{\theta^2}{3}\\
+\Var(Y)&=E(Y^2)-E^2(Y)\\
+&=\frac{\theta^2}{3}-\frac{\theta^2}{4}=\frac{\theta^2}{12}
+\end{align*}
+\rac{Como no Ex.~2 (lin., ind., i.d.): $E(\bar Y)=E(Y)$, $\Var(\bar Y)=\Var(Y)/n$.}
+\prova
+\begin{align*}
+E(\tilde\theta)&=2E(\bar Y)\ov{lin.}2\cdot\frac\theta2=\theta\\
+\Rightarrow B(\tilde\theta)&=0
+\end{align*}
+\begin{align*}
+\Var(\tilde\theta)&=4\Var(\bar Y)\\
+&\ov{ind., i.d.}4\cdot\frac{\theta^2}{12n}=\frac{\theta^2}{3n}
+\end{align*}
+\[\EQM(\tilde\theta)=\frac{\theta^2}{3n}+0^2=\frac{\theta^2}{3n}\]
+
+\textbf{Eficiência relativa}
+\prova
+\begin{align*}
+\Efr(\hat\theta,\tilde\theta)&=\frac{2\theta^2/[(n+1)(n+2)]}{\theta^2/(3n)}\\
+&=\frac{6n}{(n+1)(n+2)}
+\end{align*}
+\rac{$(n+1)(n+2)>0$: multiplico sem inverter o sinal.}
+\prova
+\begin{align*}
+&\frac{6n}{(n+1)(n+2)}<1\\
+\iff&6n<n^2+3n+2\\
+\iff&n^2-3n+2>0\\
+\iff&(n-1)(n-2)>0\\
+\iff&n\ge3
+\end{align*}
+Para $n=1$ ou $n=2$, $\Efr(\hat\theta,\tilde\theta)=1$.
+
+Como $\Efr(\hat\theta,\tilde\theta)<1$ para $n\ge3$, $\hat\theta$ é superior a $\tilde\theta$.
+\res{$\tilde\theta=2\bar Y$ é não viesado; $\hat\theta=Y_{(n)}$ é viesado (subestima $\theta$), mas tem EQM menor para todo $n\ge3$ e empata para $n=1,2$. Portanto $\hat\theta$ é superior.}
+\rac{Verificação: $n=1$, $\hat\theta=Y_1$ e $\tilde\theta=2Y_1$, ambos com EQM $\theta^2/3$. Intuição: EQM de $\hat\theta$ cai como $1/n^2$, o de $\tilde\theta$ como $1/n$; além disso $\tilde\theta$ pode ficar abaixo da maior observação (ex.: $y=(1;\,1;\,7)\Rightarrow\tilde\theta=6<7$), o que é impossível para $\theta$.}
+
+\begin{cola}
+\item $U(0,\theta)$: $F_Y(y)=y/\theta$, $E(Y)=\theta/2$, $\Var(Y)=\theta^2/12$.
+\item Método da acumulada (máximo): $F_{Y_{(n)}}(y)=[F_Y(y)]^n$ (ind., i.d.).
+\item $f_{Y_{(n)}}(y)=n\,y^{n-1}/\theta^n$, $0\le y\le\theta$.
+\item $\hat\theta\le\theta$ $\Rightarrow$ $\{|\hat\theta-\theta|\ge\varepsilon\}=\{\hat\theta\le\theta-\varepsilon\}$.
+\item $E(Y_{(n)})=\frac{n\theta}{n+1}$, $\EQM(Y_{(n)})=\frac{2\theta^2}{(n+1)(n+2)}$.
+\item MM: $\tilde\theta=2\bar Y$, $\EQM=\theta^2/(3n)$.
+\item $\Efr=\frac{6n}{(n+1)(n+2)}<1\iff n\ge3$.
+\end{cola}
+\erro{esquecer a potência $n$ no método da acumulada, ou escrever $f_{Y_{(n)}}=[f_Y]^n$. É a \textbf{acumulada} que vira potência; a densidade sai derivando depois.}
+
+%==================================================
+\ex{9}
+\obs{$Y_i\overset{iid}{\sim}U(-\theta,\theta)$, $i=1,\dots,n$, $f(y;\theta)=\frac{1}{2\theta}$, $-\theta\le y\le\theta$, $\theta>0$.}
+\teo{MM}{resolver $m_r=\mu_r$, $m_r=\frac1n\sum_{i=1}^n Y_i^r$, $\mu_r=E(Y^r)$.}
+\sep
+Primeiro momento
+\rac{Um parâmetro: começar por $r=1$.}
+\begin{align*}
+\mu_1=E(Y)&\ov{def.}\int_{-\theta}^{\theta}y\cdot\frac{1}{2\theta}\,dy\\
+&=\frac{1}{2\theta}\Big[\frac{y^2}{2}\Big]_{-\theta}^{\theta}\\
+&=\frac{1}{2\theta}\Big(\frac{\theta^2}{2}-\frac{\theta^2}{2}\Big)\\
+&=0
+\end{align*}
+\rac{$\mu_1=0$ não depende de $\theta$: $\bar Y=0$ não tem $\theta$ para isolar. Passo ao primeiro momento que depende de $\theta$: $r=2$.}
+\sep
+Segundo momento
+\rac{$y^2$ é par e o intervalo é simétrico em torno de 0.}
+\begin{align*}
+\mu_2=E(Y^2)&\ov{def.}\int_{-\theta}^{\theta}y^2\cdot\frac{1}{2\theta}\,dy\\
+&=\frac{1}{2\theta}\Big[\frac{y^3}{3}\Big]_{-\theta}^{\theta}\\
+&=\frac{1}{2\theta}\Big(\frac{\theta^3}{3}+\frac{\theta^3}{3}\Big)\\
+&=\frac{\theta^2}{3}
+\end{align*}
+\rac{Verificação: $\Var(Y)=E(Y^2)-E^2(Y)=\frac{\theta^2}{3}$, igual a $\frac{(b-a)^2}{12}=\frac{(2\theta)^2}{12}$.}
+\prova
+\begin{align*}
+m_2&=\mu_2\\
+\frac1n\sum_{i=1}^n Y_i^2&=\frac{\tilde\theta^2}{3}\\
+\tilde\theta^2&=\frac3n\sum_{i=1}^n Y_i^2
+\end{align*}
+\rac{Raiz positiva, pois $\theta>0$.}
+\prova
+\[\tilde\theta=\sqrt{\frac3n\sum_{i=1}^n Y_i^2}\]
+O estimador de momentos de $\theta$ é $\tilde\theta=\sqrt{3\,m_2}$.
+\res{$\tilde\theta=\sqrt{\dfrac3n\displaystyle\sum_{i=1}^n Y_i^2}$}
+\rac{Verificação: sempre não negativo. Se todos os $|Y_i|\approx\theta$ (extremidades), $\tilde\theta\approx\sqrt3\,\theta$; com pontos espalhados uniformemente, $m_2\approx\theta^2/3$ e $\tilde\theta\approx\theta$.}
+
+\begin{cola}
+\item $U(-\theta,\theta)$: $f(y;\theta)=\frac{1}{2\theta}$, $-\theta\le y\le\theta$.
+\item Integrando ímpar em intervalo simétrico $\Rightarrow$ integral nula: $E(Y)=0$.
+\item $E(Y^2)=\theta^2/3$.
+\item Se $\mu_1$ não depende de $\theta$, usar o menor $r$ com $\mu_r$ dependente de $\theta$.
+\item $m_2=\frac1n\sum Y_i^2$ (não é $S^2$: não centra em $\bar Y$).
+\item Raiz: sinal compatível com o espaço paramétrico ($\theta>0$).
+\end{cola}
+\erro{igualar o segundo momento a $S^2$ ou a $\hat\sigma^2=\frac1n\sum(Y_i-\bar Y)^2$ em vez de $m_2=\frac1n\sum Y_i^2$. Isso é outro método (igualar variâncias); o MM das aulas usa momentos \textbf{não centrados}.}
+
+\end{multicols*}
+\end{document}
